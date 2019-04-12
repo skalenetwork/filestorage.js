@@ -1,0 +1,183 @@
+/**
+ * @license
+ * SKALE Filestorage-js
+ * Copyright (C) 2019-Present SKALE Labs
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file index.js
+ * @date 2019
+ */
+const Web3 = require('web3');
+const path = require('path');
+const constants = require('./common/constants');
+const Helper = require('./common/helper');
+const FilestorageContract = require('./FilestorageContract');
+let streamSaver = null;
+if (typeof window !== 'undefined') {
+    streamSaver = require('streamsaver');
+}
+
+class FilestorageClient {
+
+    /**
+     * Initialization of Filestorage API client
+     *
+     * @constructor
+     *
+     * @param {string|object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes.
+     * @param {boolean} [enableLogs=false] - Enable/disable console logs.
+     */
+    constructor(web3Provider, enableLogs = false) {
+        this.web3 = new Web3(web3Provider);
+        this.contract = new FilestorageContract(this.web3);
+        this.enableLogs = enableLogs;
+    }
+
+    /**
+     * Upload file into Filestorage
+     *
+     * @method uploadFile
+     *
+     * @param {string} address - Account address.
+     * @param {string} fileName - Name of uploaded file.
+     * @param {ArrayBuffer} fileBuffer - Data of the file, in bytes.
+     * @param {string} [privateKey] - Account private key.
+     * @returns {string} Storage path.
+     */
+    async uploadFile(address, fileName, fileBuffer, privateKey) {
+        let fileSize = fileBuffer.length;
+        await this.contract.startUpload(address, fileName, fileSize, privateKey);
+        if (this.enableLogs) console.log('File was created!');
+
+        let ptrPosition = 0;
+        let i = 0;
+        while (ptrPosition < fileSize) {
+            let rawChunk = fileBuffer.slice(ptrPosition, ptrPosition +
+                Math.min(fileSize - ptrPosition, constants.CHUNK_LENGTH));
+            let chunk = Helper.bufferToHex(rawChunk);
+            await this.contract.uploadChunk(address, fileName, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
+            ptrPosition += chunk.length / 2;
+            if (this.enableLogs) {
+                console.log('Chunk ' + i + ' was loaded ' + ptrPosition);
+                ++i;
+            }
+        }
+
+        if (this.enableLogs) console.log('Checking file validity...');
+        await this.contract.finishUpload(address, fileName, privateKey);
+        if (this.enableLogs) console.log('File was uploaded!');
+        return path.join(Helper.rmBytesSymbol(address), fileName);
+    }
+
+    /**
+     * Download file from Filestorage into browser downloads folder
+     *
+     * @method downloadToFile
+     *
+     * @param {string} storagePath - Path of the file in Filestorage.
+     */
+    async downloadToFile(storagePath) {
+        if (!streamSaver) {
+            throw new Error('Method downloadToFile can only be used with a browser');
+        }
+
+        const fileName = path.basename(storagePath);
+        let wstream = streamSaver.createWriteStream(fileName).getWriter();
+        await this._downloadFile(storagePath, wstream);
+        wstream.close();
+    }
+
+    /**
+     * Download file from Filestorage into buffer
+     *
+     * @method downloadToBuffer
+     *
+     * @param {string} storagePath - Path of the file in Filestorage.
+     * @returns {Buffer} - File data in bytes.
+     */
+    async downloadToBuffer(storagePath) {
+        return await this._downloadFile(storagePath);
+    }
+
+    /**
+     * Delete file from Filestorage
+     *
+     * @method deleteFile
+     *
+     * @param {string} address - Account address.
+     * @param {string} fileName - Name of the file to be deleted.
+     * @param {string} [privateKey] - Account private key.
+     */
+    async deleteFile(address, fileName, privateKey) {
+        await this.contract.deleteFile(address, fileName, privateKey);
+        if (this.enableLogs) console.log('File was deleted');
+    }
+
+    /**
+     * Get information about files in Filestorage of the specific account
+     *
+     * @method getFileInfoListByAddress
+     *
+     * @param {string} address - Account address.
+     * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description.
+     */
+    async getFileInfoListByAddress(address) {
+        let rawFiles = await this.contract.getFileInfoList(address);
+        let files = rawFiles.map(file => {
+            let storagePath = path.join(Helper.rmBytesSymbol(address), file['name']);
+            let chunkStatusList = file['isChunkUploaded'];
+            let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
+            let uploadingProgress = Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
+            return {
+                name: file['name'],
+                size: parseInt(file['size'], 10),
+                storagePath: storagePath,
+                uploadingProgress: uploadingProgress
+            };
+        });
+        return files;
+    }
+
+    async _downloadFile(storagePath, stream) {
+        let ptrPosition = 0;
+        let i = 0;
+        let buffers = [];
+        const fileSize = await this.contract.getFileSize(storagePath);
+        if (this.enableLogs) console.log('File size: ', fileSize);
+
+        while (ptrPosition < fileSize) {
+            let currentLength = Math.min(constants.CHUNK_LENGTH, fileSize - ptrPosition);
+            let rawData = await this.contract.readChunk(storagePath, ptrPosition, currentLength);
+            let data = Helper.concatBytes32Array(rawData, 2 * currentLength);
+            // eslint-disable-next-line
+            let buffer = new Buffer.from(data, 'hex');
+
+            if (stream) stream.write(buffer);
+            buffers.push(buffer);
+            ptrPosition += currentLength;
+            if (this.enableLogs) {
+                console.log('Chunk ' + i + ' was downloaded! Received bytes:' + ptrPosition);
+                ++i;
+            }
+        }
+        if (this.enableLogs) console.log('File was downloaded!');
+        return Buffer.concat(buffers);
+    }
+}
+
+module.exports = FilestorageClient;
+module.exports.FilestorageContract = FilestorageContract;

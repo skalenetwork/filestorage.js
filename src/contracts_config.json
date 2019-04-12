@@ -1,0 +1,200 @@
+{
+  "FileStorage.sol:FileStorage": {
+    "abi": [
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "storagePath",
+            "type": "string"
+          }
+        ],
+        "name": "getFileStatus",
+        "outputs": [
+          {
+            "name": "",
+            "type": "int256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x122f4fba"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "fileName",
+            "type": "string"
+          },
+          {
+            "name": "position",
+            "type": "uint256"
+          },
+          {
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "name": "uploadChunk",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0x61e46db5"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "storagePath",
+            "type": "string"
+          },
+          {
+            "name": "position",
+            "type": "uint256"
+          },
+          {
+            "name": "length",
+            "type": "uint256"
+          }
+        ],
+        "name": "readChunk",
+        "outputs": [
+          {
+            "name": "out",
+            "type": "bytes32[32768]"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x79210e8e"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "fileName",
+            "type": "string"
+          }
+        ],
+        "name": "finishUpload",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0x81a8235a"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "userAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getFileInfoList",
+        "outputs": [
+          {
+            "components": [
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "size",
+                "type": "uint256"
+              },
+              {
+                "name": "isChunkUploaded",
+                "type": "bool[]"
+              }
+            ],
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0x9863f539"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "fileName",
+            "type": "string"
+          },
+          {
+            "name": "fileSize",
+            "type": "uint256"
+          }
+        ],
+        "name": "startUpload",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0x9a9a5593"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "fileName",
+            "type": "string"
+          }
+        ],
+        "name": "deleteFile",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0xa9910054"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "storagePath",
+            "type": "string"
+          }
+        ],
+        "name": "getFileSize",
+        "outputs": [
+          {
+            "name": "fileSize",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+        "signature": "0xb5732122"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "fileName",
+            "type": "string"
+          },
+          {
+            "name": "checksum",
+            "type": "bytes32"
+          }
+        ],
+        "name": "finishUpload",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "signature": "0xc3188f68"
+      }
+    ],
+    "address": "0x69362535ec535F0643cBf62D16aDeDCAf32Ee6F7"
+  }
+}

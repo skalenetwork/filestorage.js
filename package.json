@@ -1,0 +1,41 @@
+{
+  "name": "@skalenetwork/filestorage-js",
+  "author": "SKALE Labs and contributors",
+  "keywords": [
+    "SKALE",
+    "ethereum",
+    "blockchain"
+  ],
+  "version": "0.1.0",
+  "description": "SKALE Filestorage client tools",
+  "license": "LGPL-3.0",
+  "main": "lib/filestorage.min.js",
+  "dependencies": {
+    "web3": "1.0.0-beta.37",
+    "streamsaver": "^1.0.1"
+  },
+  "scripts": {
+    "build-patch": "ENV=patch ./build",
+    "build-minor": "ENV=minor ./build",
+    "build-major": "ENV=major ./build",
+    "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
+    "test": "mocha --exit --timeout 20000",
+    "lint": "eslint --cache --fix src/*.js test/*.js",
+    "prepush": "npm run lint && npm test"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.4",
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.15.3",
+    "eslint-loader": "^2.1.2",
+    "semver": "^5.6.0",
+    "webpack": "4.19.1",
+    "webpack-cli": "^2.0.12",
+    "mocha": "^6.0.2",
+    "randomstring": "^1.1.5",
+    "dotenv": "^7.0.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "codecov": "^3.3.0"
+  }
+}

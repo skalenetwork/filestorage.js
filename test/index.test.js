@@ -1,0 +1,285 @@
+/**
+ * @license
+ * SKALE Filestorage-js
+ * Copyright (C) 2019-Present SKALE Labs
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file index.test.js
+ * @date 2019
+ */
+const assert = require('chai').assert;
+const expect = require('chai').expect;
+const FilestorageClient = require('../src/index');
+const helper = require('../src/common/helper');
+let randomstring = require('randomstring');
+let fs = require('fs');
+const path = require('path');
+require('dotenv').config();
+
+describe('Test FilestorageClient', function () {
+    let filestorage;
+    let address;
+    let privateKey;
+    let foreignAddress;
+    let foreignPrivateKey;
+    let bigFilePath;
+    const transactionErrorMessage = 'Transaction has been reverted by the EVM:';
+    const callErrorMessage = 'empty execution result';
+    const keypairErrorMessage = 'Keypair mismatch';
+    const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
+    before(function () {
+        // eslint-disable-next-line
+        filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT);
+        address = process.env.ADDRESS;
+        privateKey = process.env.PRIVATEKEY;
+        foreignAddress = process.env.FOREIGN_ADDRESS;
+        foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
+        bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
+    });
+
+    describe('Test uploading', function () {
+
+        let fileName;
+        let data;
+        describe('Positive tests', function () {
+            beforeEach(function () {
+                fileName = 'test_' + randomstring.generate();
+                data = Buffer.from(fileName);
+            });
+
+            it('Uploading file with private key', async function () {
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+            });
+
+            it('Uploading file with private key and address beginning with 0x', async function () {
+                await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+            });
+
+            it('Uploading file with private key without 0x', async function () {
+                await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+            });
+
+            it('Uploading file with private key and address beginning with 0x', async function () {
+                await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+            });
+
+            it('Uploading file with private key without 0x and address beginning with 0x', async function () {
+                await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+            });
+
+            afterEach('Checking file\'s existance', async function () {
+                let fileList = await filestorage.getFileInfoListByAddress(address);
+                let isFind = fileList.find(obj => {
+                    return obj.name === fileName;
+                });
+                assert.isObject(isFind, 'File doesn\'t exist');
+            });
+        });
+
+        describe('Negative tests', function () {
+            let data;
+            let fileName;
+            beforeEach(function () {
+                data = Buffer.from(randomstring.generate());
+                fileName = randomstring.generate();
+            });
+
+            it('Uploading file with foreign privateKey', async function () {
+                try {
+                    await filestorage.uploadFile(address, fileName, data, foreignPrivateKey);
+                    assert.fail('File was unexpectfully uploaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, keypairErrorMessage);
+                }
+            });
+
+            it('Uploading file with size > 100mb', async function () {
+                try {
+                    let fileData = fs.readFileSync(bigFilePath);
+                    await filestorage.uploadFile(address, fileName, fileData, privateKey);
+                    assert.fail('File was unexpectfully uploaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, transactionErrorMessage);
+                }
+            });
+
+            it('Uploading file with name > 256 chars', async function () {
+                let fileName = randomstring.generate(256);
+                try {
+                    await filestorage.uploadFile(address, fileName, data, privateKey);
+                    assert.fail('File was unexpectfully uploaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, transactionErrorMessage);
+                }
+            });
+
+            it('Uploading file with existing name', async function () {
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+                try {
+                    await filestorage.uploadFile(address, fileName, data, privateKey);
+                    assert.fail('File was unexpectfully uploaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, transactionErrorMessage);
+                }
+            });
+
+            it('Uploading file with filename contained "/"', async function () {
+                let fileName = '/hack';
+                try {
+                    await filestorage.uploadFile(address, fileName, data, privateKey);
+                    assert.fail('File was unexpectfully uploaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, transactionErrorMessage);
+                }
+            });
+        });
+    });
+
+    describe('Test downloading', function () {
+        describe('Positive tests', function () {
+            let fileName;
+            let data;
+            beforeEach(function () {
+                fileName = 'test_' + randomstring.generate();
+                data = Buffer.from(randomstring.generate());
+            });
+
+            it('Download own file', async function () {
+                let storagePath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                let buffer = await filestorage.downloadToBuffer(storagePath);
+                expect(buffer).to.be.instanceOf(Buffer);
+                assert.deepEqual(buffer, data, 'File downloaded incorrectly');
+            });
+
+            it('Download foreign file', async function () {
+                let storagePath = await filestorage.uploadFile(foreignAddress, fileName, data, foreignPrivateKey);
+                let buffer = await filestorage.downloadToBuffer(storagePath);
+                expect(buffer).to.be.instanceOf(Buffer);
+                assert.deepEqual(buffer, data, 'File downloaded incorrectly');
+            });
+        });
+
+        describe('Negative tests', function () {
+            it('Download unexisted file', async function () {
+                let storagePath = randomstring.generate();
+                try {
+                    await filestorage.downloadToBuffer(storagePath);
+
+                    assert.fail('File was unexpectfully downloaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, callErrorMessage);
+                }
+            });
+
+            it('Download using downloadToFile', async function () {
+                let storagePath = randomstring.generate();
+                try {
+                    await filestorage.downloadToFile(storagePath);
+
+                    assert.fail('File was unexpectfully downloaded');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, invalidDownloadErrorMessage);
+                }
+            });
+            // TODO: Download unfinished file
+        });
+    });
+
+    describe('Test deleting', function () {
+        describe('Positive tests', function () {
+            let fileName;
+            beforeEach(async function () {
+                fileName = 'delete_' + randomstring.generate();
+                let data = Buffer.from(randomstring.generate());
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+            });
+
+            afterEach(async function () {
+                let fileList = await filestorage.getFileInfoListByAddress(address);
+                let isFind = fileList.find(obj => {
+                    return obj.name === fileName;
+                });
+                assert.isUndefined(isFind, 'File not deleted');
+            });
+
+            it('should delete existing own file', async function () {
+                await filestorage.deleteFile(address, fileName, privateKey);
+            });
+
+            // TODO: Delete unfinished file
+        });
+
+        describe('Negative tests', function () {
+            it('should delete unexisting own file', async function () {
+                let fileName = 'delete_' + randomstring.generate();
+                try {
+                    await filestorage.deleteFile(address, fileName, privateKey);
+                    assert.fail('File was unexpectfully deleted');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, transactionErrorMessage);
+                }
+            });
+
+            it('should delete foreign file', async function () {
+                let fileName = 'delete_' + randomstring.generate();
+                let data = Buffer.from(randomstring.generate());
+                await filestorage.uploadFile(foreignAddress, fileName, data, foreignPrivateKey);
+                try {
+                    await filestorage.deleteFile(address, fileName, privateKey);
+                    assert.fail('File was unexpectfully deleted');
+                } catch (error) {
+                    assert.throws(() => {
+                        throw new Error(error.message);
+                    }, transactionErrorMessage);
+                }
+            });
+        });
+    });
+
+    describe('Test getFileInfoListByAddress', function () {
+        describe('Positive tests', function () {
+            it('should return fileInfo list', async function () {
+                let fileInfoArray = await filestorage.getFileInfoListByAddress(address);
+                assert.isNotEmpty(fileInfoArray, 'Array is empty');
+                assert.isArray(fileInfoArray, 'Object is not array');
+                let fileInfoObject = fileInfoArray[fileInfoArray.length - 1];
+                assert.isString(fileInfoObject['name'], 'fileInfo.name is not String');
+                assert.isNumber(fileInfoObject['size'], 'fileInfo.size is not Number');
+                assert.isString(fileInfoObject['storagePath'], 'fileInfo.storagePath is not String');
+                assert.isNumber(fileInfoObject['uploadingProgress'], 'fileInfo.uploadedChunks is not Number');
+                assert.isTrue(fileInfoObject['uploadingProgress'] >= 0);
+                assert.isTrue(fileInfoObject['uploadingProgress'] <= 100);
+            });
+        });
+    });
+});

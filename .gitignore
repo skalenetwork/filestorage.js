@@ -1,0 +1,14 @@
+# Environments
+.env
+
+# Test files
+test/test.txt
+
+# Dependency directories
+node_modules/
+
+# Idea files
+.idea/
+
+# Temporary files
+.eslintcache
