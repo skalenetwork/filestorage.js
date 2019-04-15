@@ -140,8 +140,8 @@ Each description `Object` contains:
 ## Development
 #### Install
 ```
-git clone git@github.com:skalenetwork/filestorage-js.git
-cd filestorage-js
+git clone git@github.com:skalenetwork/filestorage.js.git
+cd filestorage.js
 npm install
 ```
 
@@ -189,7 +189,7 @@ The version scheme for this repo is {major}.{minor}.{patch} For more details see
 
 
 #### Lint
-Conforming to linting rules is a prerequisite to commit to filestorage-js.
+Conforming to linting rules is a prerequisite to commit to filestorage.js.
 ```bash
 npm run lint
 ```
