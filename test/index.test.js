@@ -24,10 +24,12 @@
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 const FilestorageClient = require('../src/index');
+const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 let randomstring = require('randomstring');
 let fs = require('fs');
 const path = require('path');
+const Web3 = require('web3');
 require('dotenv').config();
 
 describe('Test FilestorageClient', function () {
@@ -41,6 +43,7 @@ describe('Test FilestorageClient', function () {
     const callErrorMessage = 'empty execution result';
     const keypairErrorMessage = 'Keypair mismatch';
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
+
     before(function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT);
@@ -49,6 +52,24 @@ describe('Test FilestorageClient', function () {
         foreignAddress = process.env.FOREIGN_ADDRESS;
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
+    });
+
+    describe('Test contructors', function () {
+        it('should initialize with web3', function () {
+            const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
+            let web3 = new Web3(web3Provider);
+            let filestorageClient = new FilestorageClient(web3);
+            assert.instanceOf(filestorageClient, FilestorageClient);
+            assert.instanceOf(filestorageClient.web3, Web3);
+            assert.instanceOf(filestorageClient.contract, FilestorageContract);
+        });
+
+        it('should intitialize with http endpoint', function () {
+            let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT);
+            assert.instanceOf(filestorageClient, FilestorageClient);
+            assert.instanceOf(filestorageClient.web3, Web3);
+            assert.instanceOf(filestorageClient.contract, FilestorageContract);
+        });
     });
 
     describe('Test uploading', function () {
