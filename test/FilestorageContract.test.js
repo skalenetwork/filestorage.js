@@ -48,6 +48,17 @@ describe('FilestorageContract', function () {
         emptyAddress = process.env.EMPTY_ADDRESS;
     });
 
+    describe('Test contructor', function () {
+        it('should initialize with web3', function () {
+            const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
+            let web3 = new Web3(web3Provider);
+            let filestorageContractInstance = new FilestorageContract(web3);
+            assert.instanceOf(filestorageContractInstance, FilestorageContract);
+            assert.instanceOf(filestorageContractInstance.web3, Web3);
+            assert.instanceOf(filestorageContractInstance.contract, web3.eth.Contract);
+        });
+    });
+
     describe('Test startUpload', function () {
         describe('Positive tests', function () {
             let fileName;

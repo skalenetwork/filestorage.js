@@ -43,7 +43,6 @@ describe('Test FilestorageClient', function () {
     const callErrorMessage = 'empty execution result';
     const keypairErrorMessage = 'Keypair mismatch';
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
-
     before(function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT);
@@ -54,7 +53,7 @@ describe('Test FilestorageClient', function () {
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
     });
 
-    describe('Test contructors', function () {
+    describe('Test contructor', function () {
         it('should initialize with web3', function () {
             const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
             let web3 = new Web3(web3Provider);
@@ -69,6 +68,11 @@ describe('Test FilestorageClient', function () {
             assert.instanceOf(filestorageClient, FilestorageClient);
             assert.instanceOf(filestorageClient.web3, Web3);
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
+        });
+
+        it('should intitialize with enabled logs', function () {
+            let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
+            assert.isTrue(filestorageClient.enableLogs);
         });
     });
 
