@@ -1,6 +1,6 @@
 # SKALE Filestorage.js
 
-[![npm version](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js.svg)](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js)
+[![npm version](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js.svg)](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js) [![Discord](https://img.shields.io/discord/534485763354787851.svg)](https://discord.gg/vvUtWJB)
 
 Javascript library which implements client for decentralized file storage on SKALE chains.
 
@@ -212,3 +212,7 @@ Example:
 **If you have any questions please ask our development community on [Discord](https://discord.gg/vvUtWJB).**
 
 [![Discord](https://img.shields.io/discord/534485763354787851.svg)](https://discord.gg/vvUtWJB)
+
+# License
+
+All contributions are made under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl-3.0.en.html). See [LICENSE](LICENSE).
