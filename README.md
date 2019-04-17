@@ -23,7 +23,7 @@ Example: `http://some.local-or-remote.node:8546`
 
 Construct new **Filestorage** object:
 ```javascript
-let filestorage = new Filestorage(web3Provider, enableLogs);
+new Filestorage(web3Provider, enableLogs);
 ```
 ##### Parameters
 |Parameter                                       |Description                                                                                                                |
@@ -35,7 +35,7 @@ let filestorage = new Filestorage(web3Provider, enableLogs);
 Initialize with **SKALE endpoint**:
 ```javascript
 const Filestorage = require('@skalenetwork/filestorage-js/src/index');
-let filestorage = new FileStorage('----SKALE ENDPOINT----');
+let filestorage = new Filestorage('----SKALE ENDPOINT----');
 ```
 Initialize with external **web3 provider**:
 ```javascript
@@ -43,7 +43,7 @@ const Filestorage = require('@skalenetwork/filestorage-js/src/index');
 const Web3 = require('web3');
 
 const web3Provider = new Web3.providers.HttpProvider('----SKALE ENDPOINT----');
-let filestorage = new FileStorage(web3Provider);
+let filestorage = new Filestorage(web3Provider);
 ```
 
 
@@ -183,7 +183,7 @@ npm run build-minor
 # build major version
 npm run build-major
 ```
-To publish on npm: 
+**Publishing on npm:** 
 ```bash
 npm publish
 ```
