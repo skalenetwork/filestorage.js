@@ -1,6 +1,9 @@
 # SKALE Filestorage.js
 
-[![npm version](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js.svg)](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js) [![Discord](https://img.shields.io/discord/534485763354787851.svg)](https://discord.gg/vvUtWJB)
+[![npm version](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js.svg)](https://badge.fury.io/js/%40skalenetwork%2Ffilestorage-js)
+[![Build Status](https://travis-ci.com/skalenetwork/filestorage.js.svg?branch=develop)](https://travis-ci.com/skalenetwork/filestorage.js)
+[![codecov](https://codecov.io/gh/skalenetwork/filestorage.js/branch/develop/graph/badge.svg)](https://codecov.io/gh/skalenetwork/filestorage.js)
+[![Discord](https://img.shields.io/discord/534485763354787851.svg)](https://discord.gg/vvUtWJB)
 
 Javascript library which implements client for decentralized file storage on SKALE chains.
 
