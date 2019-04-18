@@ -1,12 +1,12 @@
 {
-  "name": "@skalenetwork/filestorage-js",
+  "name": "@skalenetwork/filestorage.js",
   "author": "SKALE Labs and contributors",
   "keywords": [
     "SKALE",
     "ethereum",
     "blockchain"
   ],
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "SKALE Filestorage client tools",
   "license": "LGPL-3.0",
   "main": "dist/filestorage.min.js",
