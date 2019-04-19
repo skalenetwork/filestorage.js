@@ -62,7 +62,7 @@ filestorage.uploadFile(address, fileName, fileBuffer);
 |-------------------------|--------------------------------------------------------------------|
 |`String` address         |Account address                                                     |
 |`String` fileName        |Name of uploaded file                                               |
-|`ArrayBuffer` fileBuffer |Uploaded file data                                                  |
+|`Buffer` fileBuffer      |Uploaded file data                                                  |
 |`String` privateKey      |*(optional)* Account private key, to sign transactions internally   |
 
 ##### Returns

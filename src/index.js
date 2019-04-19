@@ -54,7 +54,7 @@ class FilestorageClient {
      *
      * @param {string} address - Account address.
      * @param {string} fileName - Name of uploaded file.
-     * @param {ArrayBuffer} fileBuffer - Data of the file, in bytes.
+     * @param {Buffer} fileBuffer - Uploaded file data.
      * @param {string} [privateKey] - Account private key.
      * @returns {string} Storage path.
      */
