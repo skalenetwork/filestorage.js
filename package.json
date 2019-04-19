@@ -6,10 +6,18 @@
     "ethereum",
     "blockchain"
   ],
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "SKALE Filestorage client tools",
   "license": "LGPL-3.0",
   "main": "dist/filestorage.min.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skalenetwork/filestorage.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skalenetwork/filestorage.js/issues"
+  },
+  "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
   "dependencies": {
     "web3": "1.0.0-beta.37",
     "streamsaver": "^1.0.1"
