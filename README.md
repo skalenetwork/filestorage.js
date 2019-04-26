@@ -23,7 +23,7 @@ To use **Filestorage.js** you should have **SKALE endpoint**.
 
 Example: `http://some.local-or-remote.node:8546`
 
-#### Initiating of Filestorage
+### Initiating of Filestorage
 
 Construct new **Filestorage** object:
 
@@ -102,8 +102,6 @@ filestorage.downloadToFile(storagePath);
 | -------------------- | ------------------------------------------- |
 | `String` storagePath | [Path of file in Filestorage](#storagePath) |
 
-# 
-
 #### Download buffer
 
 Download file from Filestorage into buffer
@@ -123,8 +121,6 @@ filestorage.downloadToBuffer(storagePath);
 |   Type   | Description  |
 | :------: | ------------ |
 | `Buffer` | File content |
-
-# 
 
 #### Delete file
 
@@ -147,8 +143,6 @@ filestorage.deleteFile(yourAddress, fileName);
 | `String` address    | Account address                           |
 | `String` fileName   | Name of the file to be deleted            |
 | `String` privateKey | Account private key, to sign transactions |
-
-# 
 
 #### Get file info
 
@@ -181,15 +175,19 @@ Each description `Object` contains:
 
 #### Install
 
-    git clone git@github.com:skalenetwork/filestorage.js.git
-    cd filestorage.js
-    npm install
+```bash
+git clone git@github.com:skalenetwork/filestorage.js.git
+cd filestorage.js
+npm install
+```
 
 #### Testing
 
 First of all, please create random files for testing:
 
-    npm run generate
+```bash
+npm run generate
+```
 
 To run tests locally you need environment variables defining test file path
 and three keypairs (address, foreign, empty):
@@ -252,7 +250,9 @@ Storage path is a label used to point to file in Filestorage. It contains 2 part
 
 Example:
 
-    77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt
+```bash
+77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt
+```
 
 ## Contributing
 
@@ -260,7 +260,7 @@ Example:
 
 [![Discord](https://img.shields.io/discord/534485763354787851.svg)](https://discord.gg/vvUtWJB)
 
-# License
+## License
 
 ![GitHub](https://img.shields.io/github/license/skalenetwork/filestorage.js.svg)
 
