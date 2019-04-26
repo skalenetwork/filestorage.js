@@ -14,9 +14,9 @@
 
 ### Steps to reproduce
 
-1\.
-2\.
-3\.
+1.
+2.
+3.
 
 ### Debug output
 
@@ -32,6 +32,6 @@
 
 <!-- - ... -->
 
-### How can it be fixed?
+### How can it be fixed
 
 <!-- Fill this section in if you know how this could or should be fixed. -->
