@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
   "dependencies": {
-    "web3": "1.0.0-beta.37",
+    "web3": "1.0.0-beta.55",
     "streamsaver": "^1.0.1"
   },
   "scripts": {
