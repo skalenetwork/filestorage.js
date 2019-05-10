@@ -3,7 +3,7 @@ install:
 - npm install
 script:
 - npm run generate
-- nyc cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && codecov
+- npm run coverage
 env:
   global:
   - TEST_FILE_PATH="test.txt"
