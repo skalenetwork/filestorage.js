@@ -3,7 +3,9 @@ install:
 - npm install
 script:
 - npm run generate
-- npm run test && npm run coverage
+- npm run test 
+after_success:
+- npm run coverage
 env:
   global:
   - TEST_FILE_PATH="test.txt"
