@@ -32,18 +32,18 @@
     "prepush": "npm run lint && npm test"
   },
   "devDependencies": {
-    "babel-loader": "^7.1.4",
     "babel-eslint": "^10.0.1",
+    "babel-loader": "^7.1.4",
     "chai": "^4.2.0",
+    "codecov": "^3.3.0",
+    "dotenv": "^7.0.0",
     "eslint": "^5.15.3",
     "eslint-loader": "^2.1.2",
+    "mocha": "^6.0.2",
+    "nyc": "^14.1.0",
+    "randomstring": "^1.1.5",
     "semver": "^5.6.0",
     "webpack": "4.19.1",
-    "webpack-cli": "^2.0.12",
-    "mocha": "^6.0.2",
-    "randomstring": "^1.1.5",
-    "dotenv": "^7.0.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "codecov": "^3.3.0"
+    "webpack-cli": "^2.0.12"
   }
 }
