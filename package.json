@@ -27,7 +27,8 @@
     "build-minor": "VER=minor ./build.sh",
     "build-major": "VER=major ./build.sh",
     "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
-    "test": "mocha --exit --timeout 20000",
+    "test": "nyc --reporter=lcov mocha --exit --timeout 20000",
+    "coverage": "codecov",
     "lint": "eslint --cache --fix src/*.js test/*.js",
     "prepush": "npm run lint && npm test"
   },
