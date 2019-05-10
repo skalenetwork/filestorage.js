@@ -32,6 +32,7 @@
     "prepush": "npm run lint && npm test"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.4",
     "chai": "^4.2.0",
@@ -44,6 +45,6 @@
     "randomstring": "^1.1.5",
     "semver": "^5.6.0",
     "webpack": "4.19.1",
-    "webpack-cli": "^2.0.12"
+    "webpack-cli": "^3.3.2"
   }
 }
