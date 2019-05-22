@@ -65,22 +65,25 @@ const Helper = {
         if (account !== accountFromPrivateKey && account !== this.rmBytesSymbol(accountFromPrivateKey)) {
             throw new InvalidCredentialsException('Keypair mismatch');
         }
+        let nonce = await web3.eth.getTransactionCount(account);
         let tx = {
             from: account,
             data: encoded,
             gas: gas,
-            to: contractAddress
+            to: contractAddress,
+            nonce: nonce
         };
-
         let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
 
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
     async sendTransaction(account, transactionData, gas) {
+        let nonce = await web3.eth.getTransactionCount(account);
         return await transactionData.send({
             from: account,
-            gas: gas
+            gas: gas,
+            nonce: nonce
         });
     },
 
