@@ -78,7 +78,7 @@ const Helper = {
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
-    async sendTransaction(account, transactionData, gas) {
+    async sendTransaction(web3, account, transactionData, gas) {
         let nonce = await web3.eth.getTransactionCount(account);
         return await transactionData.send({
             from: account,
@@ -97,7 +97,7 @@ const Helper = {
             Helper.validatePrivateKey(privateKey);
             result = await Helper.signAndSendTransaction(web3, account, privateKey, transactionData, gas);
         } else {
-            result = await Helper.sendTransaction(account, transactionData, gas);
+            result = await Helper.sendTransaction(web3, account, transactionData, gas);
         }
         return result;
     }
