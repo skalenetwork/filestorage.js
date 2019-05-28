@@ -23,10 +23,14 @@
  */
 const assert = require('chai').assert;
 const helper = require('../src/common/helper');
+const constants = require('../src/common/constants');
 let randomstring = require('randomstring');
+const FilestorageContract = require('../src/FilestorageContract');
+const Web3 = require('web3');
 require('dotenv').config();
 
 describe('Helper', function () {
+    const rejectedTransactionErrorMessage = 'Transaction rejected by user.';
     describe('bufferToHex', function () {
         it('should return hex string from random buffer', function () {
             let string = randomstring.generate();
@@ -97,6 +101,38 @@ describe('Helper', function () {
             let key = randomstring.generate();
             let status = checkPrivateKey(key);
             assert.isFalse(status);
+        });
+    });
+
+    describe('sendTransactionToContract', function () {
+        let address;
+        let privateKey;
+        let web3;
+        let contract;
+        let txData;
+        before(function () {
+            address = process.env.ADDRESS;
+            privateKey = process.env.PRIVATEKEY;
+            web3 = new Web3(process.env.SKALE_ENDPOINT);
+            contract = new FilestorageContract(web3).contract;
+            txData = contract.methods.startUpload(randomstring.generate(), 0);
+        });
+
+        it('should send transaction with privateKey', async function () {
+            let result = await helper.sendTransactionToContract(web3, address, privateKey, txData,
+                constants.STANDARD_GAS);
+            assert.isTrue(result['status']);
+        });
+
+        it('should throw exception for transaction without privateKey', async function () {
+            try {
+                await helper.sendTransactionToContract(web3, address, '', txData, constants.STANDARD_GAS);
+                assert.fail('File was unexpectfully uploaded');
+            } catch (error) {
+                assert.throws(() => {
+                    throw new Error(error.message);
+                }, rejectedTransactionErrorMessage);
+            }
         });
     });
 });
