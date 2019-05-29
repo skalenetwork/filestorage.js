@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
   "dependencies": {
-    "web3": "1.0.0-beta.37",
+    "web3": "1.0.0-beta.55",
     "streamsaver": "^1.0.1"
   },
   "scripts": {
@@ -27,11 +27,13 @@
     "build-minor": "VER=minor ./build.sh",
     "build-major": "VER=major ./build.sh",
     "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
-    "test": "mocha --exit --timeout 30000",
+    "test": "nyc --reporter=lcov mocha --exit --timeout 30000",
+    "coverage": "codecov",
     "lint": "eslint --cache --fix src/*.js test/*.js",
     "prepush": "npm run lint && npm test"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.4",
     "chai": "^4.2.0",
@@ -39,12 +41,11 @@
     "dotenv": "^7.0.0",
     "eslint": "^5.15.3",
     "eslint-loader": "^2.1.2",
-    "eslint-plugin-jsdoc": "^4.8.3",
-    "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0",
     "randomstring": "^1.1.5",
     "semver": "^5.6.0",
     "webpack": "4.19.1",
-    "webpack-cli": "^2.0.12"
+    "webpack-cli": "^3.3.2"
   }
 }
