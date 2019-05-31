@@ -34,7 +34,7 @@ class FilestorageContract {
      *
      * @class
      *
-     * @param {Object} web3 - Web3 instance.
+     * @param {object} web3 - Web3 instance.
      */
     constructor(web3) {
         this.web3 = web3;
@@ -50,7 +50,7 @@ class FilestorageContract {
      * @param {string} name - Name of uploaded file.
      * @param {number} size - Size of uploaded file.
      * @param {string} [privateKey] - Account private key.
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async startUpload(address, name, size, privateKey = '') {
         let txData = this.contract.methods.startUpload(name, size);
@@ -67,7 +67,7 @@ class FilestorageContract {
      * @param {number} position - Position in the file from which chunk will be written.
      * @param {string} data - Chunk data in hex format, started with 0x
      * @param {string} [privateKey] - Account private key.
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async uploadChunk(address, name, position, data, privateKey = '') {
         let txData = this.contract.methods.uploadChunk(name, position, data);
@@ -82,7 +82,7 @@ class FilestorageContract {
      * @param {string} address - Account address.
      * @param {string} name - Name of the file to be deleted.
      * @param {string} [privateKey] - Account private key.
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async deleteFile(address, name, privateKey = '') {
         let txData = this.contract.methods.deleteFile(name);
@@ -98,7 +98,7 @@ class FilestorageContract {
      * @param {string} address - Account address.
      * @param {string} name - Name of uploaded file.
      * @param {string} [privateKey] - Account private key.
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async finishUpload(address, name, privateKey = '') {
         let txData = this.contract.methods.finishUpload(name);

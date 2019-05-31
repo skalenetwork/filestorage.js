@@ -22,7 +22,12 @@
  * @date 2019
  */
 const InvalidCredentialsException = require('../exceptions/InvalidCredentialsException');
+const constants = require('./constants');
+const configJson = require('../contracts_config.json');
 const PRIVATE_KEY_REGEX = /^(0x)?[0-9a-f]{64}$/i;
+
+const contractAddress = configJson[constants.FILESTORAGE_CONTRACTNAME]['address'];
+const confirmationBlockCount = 1;
 
 const Helper = {
 
@@ -58,8 +63,6 @@ const Helper = {
     async signAndSendTransaction(web3, account, privateKey, transactionData, gas) {
         let encoded = transactionData.encodeABI();
 
-        let contractAddress = transactionData['_parent']['_address'];
-
         let accountFromPrivateKey = web3.eth.accounts.privateKeyToAccount(privateKey)['address'];
 
         if (account !== accountFromPrivateKey && account !== this.rmBytesSymbol(accountFromPrivateKey)) {
@@ -74,7 +77,6 @@ const Helper = {
             nonce: nonce
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
-
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
@@ -89,7 +91,7 @@ const Helper = {
 
     async sendTransactionToContract(web3, account, privateKey, transactionData, gas) {
         let result;
-
+        web3.eth.transactionConfirmationBlocks = confirmationBlockCount;
         if (typeof privateKey === 'string' && privateKey.length > 0) {
             if (!this.ensureStartsWith0x(privateKey)) {
                 privateKey = '0x' + privateKey;
