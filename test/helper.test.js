@@ -30,7 +30,7 @@ const Web3 = require('web3');
 require('dotenv').config();
 
 describe('Helper', function () {
-    const rejectedTransactionErrorMessage = 'Transaction rejected by user.';
+    const rejectedTransactionErrorMessage = 'Returned error: Unknown account.';
     describe('bufferToHex', function () {
         it('should return hex string from random buffer', function () {
             let string = randomstring.generate();
