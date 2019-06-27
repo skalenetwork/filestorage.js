@@ -18,8 +18,7 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function",
-        "signature": "0x122f4fba"
+        "type": "function"
       },
       {
         "constant": false,
@@ -41,8 +40,26 @@
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
-        "type": "function",
-        "signature": "0x61e46db5"
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "storagePath",
+            "type": "string"
+          }
+        ],
+        "name": "listDir",
+        "outputs": [
+          {
+            "name": "",
+            "type": "string[]"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
       },
       {
         "constant": true,
@@ -69,8 +86,7 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function",
-        "signature": "0x79210e8e"
+        "type": "function"
       },
       {
         "constant": false,
@@ -84,8 +100,21 @@
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
-        "type": "function",
-        "signature": "0x81a8235a"
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "path",
+            "type": "string"
+          }
+        ],
+        "name": "createDir",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
       },
       {
         "constant": true,
@@ -118,8 +147,7 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function",
-        "signature": "0x9863f539"
+        "type": "function"
       },
       {
         "constant": false,
@@ -137,8 +165,7 @@
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
-        "type": "function",
-        "signature": "0x9a9a5593"
+        "type": "function"
       },
       {
         "constant": false,
@@ -152,8 +179,40 @@
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
-        "type": "function",
-        "signature": "0xa9910054"
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "path",
+            "type": "string"
+          }
+        ],
+        "name": "parseDirPath",
+        "outputs": [
+          {
+            "name": "decreasePart",
+            "type": "string[]"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "path",
+            "type": "string"
+          }
+        ],
+        "name": "deleteDir",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
       },
       {
         "constant": true,
@@ -172,27 +231,7 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function",
-        "signature": "0xb5732122"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "fileName",
-            "type": "string"
-          },
-          {
-            "name": "checksum",
-            "type": "bytes32"
-          }
-        ],
-        "name": "finishUpload",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function",
-        "signature": "0xc3188f68"
+        "type": "function"
       }
     ],
     "address": "0x69362535ec535F0643cBf62D16aDeDCAf32Ee6F7"
