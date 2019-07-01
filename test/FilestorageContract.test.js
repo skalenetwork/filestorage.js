@@ -356,9 +356,17 @@ describe('FilestorageContract', function () {
     describe('Test listDirectory', function () {
         describe('Positive tests', function () {
             it('should list content in root dir', async function () {
-                let dirs = await filestorageContract.listDirectory(address+"/");
-                assert.isNotEmpty(dirs);
-                assert.isArray(dirs);
+                let contents = await filestorageContract.listDirectory(address+"/");
+                assert.isNotEmpty(contents);
+                assert.isArray(contents);
+            });
+
+            it('should list content in nested dir', async function () {
+                let directoryName = randomstring.generate();
+                await filestorageContract.createDirectory(address, directoryName, privateKey);
+                let contents = await filestorageContract.listDirectory(path.join(address, directoryName));
+                assert.isNotEmpty(contents);
+                assert.isArray(contents);
             });
         })
     })
