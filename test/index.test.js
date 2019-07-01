@@ -307,4 +307,16 @@ describe('Test FilestorageClient', function () {
             });
         });
     });
+
+    describe('Test createDirectory', function () {
+        describe('Positive tests', function () {
+            it('should create directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                let dirs = await filestorage.listDirectory(address+"/");
+                assert.isNotEmpty(dirs);
+                expect(dirs).to.include.member(directoryName);
+            });
+        });
+    });
 });
