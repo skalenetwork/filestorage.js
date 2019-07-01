@@ -346,9 +346,9 @@ describe('FilestorageContract', function () {
             it('should create new directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
-                let dirs = await filestorageContract.listDirectory(address+"/");
-                assert.isNotEmpty(dirs);
-                assert.isTrue(dirs.indexOf(directoryName) > -1);
+                let contents = await filestorageContract.listDirectory(address+"/");
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) > -1);
             });
         })
     });

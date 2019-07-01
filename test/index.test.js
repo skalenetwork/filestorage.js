@@ -313,9 +313,9 @@ describe('Test FilestorageClient', function () {
             it('should create directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                let dirs = await filestorage.listDirectory(address+"/");
-                assert.isNotEmpty(dirs);
-                expect(dirs).to.include.member(directoryName);
+                let contents = await filestorage.listDirectory(address+"/");
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) > -1);
             });
         });
     });

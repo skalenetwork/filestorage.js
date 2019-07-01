@@ -152,6 +152,15 @@ class FilestorageClient {
         return files;
     }
 
+    async createDirectory(address, directoryPath, privateKey) {
+        await this.contract.createDirectory(address, directoryPath, privateKey);
+        if (this.enableLogs) console.log('Directory was created');
+    }
+
+    async listDirectory(storagePath) {
+        return await this.contract.listDirectory(storagePath);
+    }
+
     async _downloadFile(storagePath, stream) {
         let ptrPosition = 0;
         let i = 0;
