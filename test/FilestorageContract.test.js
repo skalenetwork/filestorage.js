@@ -363,7 +363,9 @@ describe('FilestorageContract', function () {
 
             it('should list content in nested dir', async function () {
                 let directoryName = randomstring.generate();
+                let childDirectoryName = randomstring.generate();
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
+                await filestorageContract.createDirectory(address, path.join(directoryName, childDirectoryName), privateKey);
                 let contents = await filestorageContract.listDirectory(path.join(address, directoryName));
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
