@@ -162,6 +162,11 @@ class FilestorageContract {
         let result = await this.contract.methods.getFileInfoList(address).call();
         return result;
     }
+
+    async listDirectory(storagePath) {
+        let result = await this.contract.methods.listDir(storagePath).call();
+        return result;
+    }
 }
 
 module.exports = FilestorageContract;
