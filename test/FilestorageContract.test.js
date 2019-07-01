@@ -340,4 +340,26 @@ describe('FilestorageContract', function () {
             });
         });
     });
+
+    describe('Test createDirectory', function () {
+        describe('Positive tests', function () {
+            it('should create new directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorageContract.createDirectory(address, directoryName, privateKey);
+                let dirs = await filestorageContract.listDirectory(address+"/");
+                assert.isNotEmpty(dirs);
+                expect(dirs).to.include.member(directoryName);
+            });
+        })
+    });
+
+    describe('Test listDirectory', function () {
+        describe('Positive tests', function () {
+            it('should list content in root dir', async function () {
+                let dirs = await filestorageContract.listDirectory(address+"/");
+                assert.isNotEmpty(dirs);
+                assert.isArray(dirs);
+            });
+        })
+    })
 });
