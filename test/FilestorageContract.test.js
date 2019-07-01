@@ -346,17 +346,17 @@ describe('FilestorageContract', function () {
             it('should create new directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
-                let contents = await filestorageContract.listDirectory(address+"/");
+                let contents = await filestorageContract.listDirectory(address + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) > -1);
             });
-        })
+        });
     });
 
     describe('Test listDirectory', function () {
         describe('Positive tests', function () {
             it('should list content in root dir', async function () {
-                let contents = await filestorageContract.listDirectory(address+"/");
+                let contents = await filestorageContract.listDirectory(address + '/');
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
             });
@@ -365,11 +365,12 @@ describe('FilestorageContract', function () {
                 let directoryName = randomstring.generate();
                 let childDirectoryName = randomstring.generate();
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
-                await filestorageContract.createDirectory(address, path.join(directoryName, childDirectoryName), privateKey);
+                let childDirectoryPath = path.join(directoryName, childDirectoryName);
+                await filestorageContract.createDirectory(address, childDirectoryPath, privateKey);
                 let contents = await filestorageContract.listDirectory(path.join(address, directoryName));
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
             });
-        })
-    })
+        });
+    });
 });

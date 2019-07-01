@@ -313,9 +313,39 @@ describe('Test FilestorageClient', function () {
             it('should create directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                let contents = await filestorage.listDirectory(address+"/");
+                let contents = await filestorage.listDirectory(address + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) > -1);
+            });
+        });
+    });
+
+    describe('Test listDirectory', function () {
+        describe('Positive tests', function () {
+            let fileName;
+            let directoryName;
+            before(async function () {
+                directoryName = randomstring.generate();
+                fileName = randomstring.generate();
+                let data = Buffer.from(fileName);
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+                await filestorage.uploadFile(address, path.join(directoryName, fileName), data, privateKey);
+            });
+
+            it('should list root directory', async function () {
+                let contents = await filestorage.listDirectory(address + '/');
+                assert.isArray(contents);
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) > -1, 'Directory is absent');
+                assert.isTrue(contents.indexOf(fileName) > -1, 'File is absent');
+            });
+
+            it('should list nested directory', async function () {
+                let contents = await filestorage.listDirectory(path.join(address, directoryName));
+                assert.isArray(contents);
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(fileName) > -1);
             });
         });
     });
