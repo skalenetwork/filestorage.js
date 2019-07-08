@@ -171,6 +171,7 @@ class FilestorageContract {
      * @param {string} address - Account address.
      * @param {string} directoryPath - Path of the directory to be created.
      * @param {string} [privateKey] - Account private key.
+     * @returns {Object} Transaction information
      */
     async createDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.createDir(directoryPath);
@@ -185,6 +186,7 @@ class FilestorageContract {
      * @param {string} address - Account address.
      * @param {string} directoryPath - Path of the directory to be created.
      * @param {string} [privateKey] - Account private key.
+     * @returns {Object} Transaction information
      */
     async deleteDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.deleteDir(directoryPath);
