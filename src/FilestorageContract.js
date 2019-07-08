@@ -32,9 +32,9 @@ class FilestorageContract {
     /**
      * Initialization of FilestorageContract - js wrapper for solidity smart contract
      *
-     * @constructor
+     * @class
      *
-     * @param {object} web3 - Web3 instance.
+     * @param {Object} web3 - Web3 instance.
      */
     constructor(web3) {
         this.web3 = web3;
@@ -44,13 +44,13 @@ class FilestorageContract {
     /**
      * Javascript wrapper for solidity function startUpload. Creates empty file of a preset size on SKALE chain node
      *
-     * @method startUpload
+     * @function startUpload
      *
      * @param {string} address - Account address.
      * @param {string} name - Name of uploaded file.
      * @param {number} size - Size of uploaded file.
      * @param {string} [privateKey] - Account private key.
-     * @returns {object} Transaction information
+     * @returns {Object} Transaction information
      */
     async startUpload(address, name, size, privateKey = '') {
         let txData = this.contract.methods.startUpload(name, size);
@@ -60,14 +60,14 @@ class FilestorageContract {
     /**
      * Javascript wrapper for solidity function uploadChunk. Writes chunk to the file to specific position
      *
-     * @method uploadChunk
+     * @function uploadChunk
      *
      * @param {string} address - Account address.
      * @param {string} name - Name of the file in which chunk will be written.
      * @param {number} position - Position in the file from which chunk will be written.
      * @param {string} data - Chunk data in hex format, started with 0x
      * @param {string} [privateKey] - Account private key.
-     * @returns {object} Transaction information
+     * @returns {Object} Transaction information
      */
     async uploadChunk(address, name, position, data, privateKey = '') {
         let txData = this.contract.methods.uploadChunk(name, position, data);
@@ -77,12 +77,12 @@ class FilestorageContract {
     /**
      * Javascript wrapper for solidity function deleteFile. Deletes file from SKALE chain node
      *
-     * @method deleteFile
+     * @function deleteFile
      *
      * @param {string} address - Account address.
      * @param {string} name - Name of the file to be deleted.
      * @param {string} [privateKey] - Account private key.
-     * @returns {object} Transaction information
+     * @returns {Object} Transaction information
      */
     async deleteFile(address, name, privateKey = '') {
         let txData = this.contract.methods.deleteFile(name);
@@ -93,12 +93,12 @@ class FilestorageContract {
      * Javascript wrapper for solidity function finishUpload. Finishes uploading of the file. Checks whether all
      * chunks are uploaded correctly
      *
-     * @method finishUpload
+     * @function finishUpload
      *
      * @param {string} address - Account address.
      * @param {string} name - Name of uploaded file.
      * @param {string} [privateKey] - Account private key.
-     * @returns {object} Transaction information
+     * @returns {Object} Transaction information
      */
     async finishUpload(address, name, privateKey = '') {
         let txData = this.contract.methods.finishUpload(name);
@@ -108,7 +108,7 @@ class FilestorageContract {
     /**
      * Javascript wrapper for solidity function readChunk. Reads chunk from file from specific position
      *
-     * @method readChunk
+     * @function readChunk
      *
      * @param {string} storagePath - Path of the file in Filestorage.
      * @param {number} position - Position in the file from which chunk will be read.
@@ -126,7 +126,7 @@ class FilestorageContract {
      * 1 - file is created but uploading not finished yet,
      * 2 - file is fully uploaded to Filestorage
      *
-     * @method getFileStatus
+     * @function getFileStatus
      *
      * @param {string} storagePath - Path of the file in Filestorage.
      * @returns {number} File status
@@ -139,7 +139,7 @@ class FilestorageContract {
     /**
      * Javascript wrapper for solidity function getFileSize. Get size of the file in bytes
      *
-     * @method getFileSize
+     * @function getFileSize
      *
      * @param {string} storagePath - Path of the file in Filestorage.
      * @returns {string} Size of the file in bytes
@@ -153,7 +153,7 @@ class FilestorageContract {
      * Javascript wrapper for solidity function getFileInfoList. Get information about files in Filestorage of the
      * specific account
      *
-     * @method getFileInfoList
+     * @function getFileInfoList
      *
      * @param {string} address - Account address.
      * @returns {{name:string, size:number, storagePath:string, isChunkUploaded:boolean[]}} - File description.

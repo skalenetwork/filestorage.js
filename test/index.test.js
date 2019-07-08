@@ -40,7 +40,7 @@ describe('Test FilestorageClient', function () {
     let foreignPrivateKey;
     let bigFilePath;
     const transactionErrorMessage = 'Transaction has been reverted by the EVM:';
-    const callErrorMessage = 'empty execution result';
+    const callErrorMessage = 'Returned values aren\'t valid, did it run Out of Gas?';
     const keypairErrorMessage = 'Keypair mismatch';
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
     before(function () {

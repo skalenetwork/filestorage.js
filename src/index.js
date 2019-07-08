@@ -36,9 +36,9 @@ class FilestorageClient {
     /**
      * Initialization of Filestorage API client
      *
-     * @constructor
+     * @class
      *
-     * @param {string|object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes.
+     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes.
      * @param {boolean} [enableLogs=false] - Enable/disable console logs.
      */
     constructor(web3Provider, enableLogs = false) {
@@ -50,7 +50,7 @@ class FilestorageClient {
     /**
      * Upload file into Filestorage
      *
-     * @method uploadFile
+     * @function uploadFile
      *
      * @param {string} address - Account address.
      * @param {string} fileName - Name of uploaded file.
@@ -86,7 +86,7 @@ class FilestorageClient {
     /**
      * Download file from Filestorage into browser downloads folder
      *
-     * @method downloadToFile
+     * @function downloadToFile
      *
      * @param {string} storagePath - Path of the file in Filestorage.
      */
@@ -104,7 +104,7 @@ class FilestorageClient {
     /**
      * Download file from Filestorage into buffer
      *
-     * @method downloadToBuffer
+     * @function downloadToBuffer
      *
      * @param {string} storagePath - Path of the file in Filestorage.
      * @returns {Buffer} - File data in bytes.
@@ -116,7 +116,7 @@ class FilestorageClient {
     /**
      * Delete file from Filestorage
      *
-     * @method deleteFile
+     * @function deleteFile
      *
      * @param {string} address - Account address.
      * @param {string} fileName - Name of the file to be deleted.
@@ -130,7 +130,7 @@ class FilestorageClient {
     /**
      * Get information about files in Filestorage of the specific account
      *
-     * @method getFileInfoListByAddress
+     * @function getFileInfoListByAddress
      *
      * @param {string} address - Account address.
      * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description.
