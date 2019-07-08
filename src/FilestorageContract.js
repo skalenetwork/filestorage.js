@@ -168,6 +168,11 @@ class FilestorageContract {
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
+    async deleteDirectory(address, directoryPath, privateKey = '') {
+        let txData = this.contract.methods.deleteDir(directoryPath);
+        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+    }
+
     async listDirectory(storagePath) {
         let result = await this.contract.methods.listDir(storagePath).call();
         return result;

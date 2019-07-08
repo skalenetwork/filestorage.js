@@ -157,6 +157,11 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Directory was created');
     }
 
+    async deleteDirectory(address, directoryPath, privateKey) {
+        await this.contract.deleteDirectory(address, directoryPath, privateKey);
+        if (this.enableLogs) console.log('Directory was deleted');
+    }
+
     async listDirectory(storagePath) {
         return await this.contract.listDirectory(storagePath);
     }
