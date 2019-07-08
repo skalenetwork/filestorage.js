@@ -32,7 +32,7 @@ require('dotenv').config();
 
 const STATUS_UNEXISTENT = 0;
 const STATUS_UPLOADING = 1;
-const STATUS_COMPLETED = 2;
+const STATUS_COMPLETED = 2;// TODO: delete all files after each test
 describe('FilestorageContract', function () {
     let filestorageContract;
     let address;
@@ -370,6 +370,23 @@ describe('FilestorageContract', function () {
                 let contents = await filestorageContract.listDirectory(path.join(address, directoryName));
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
+            });
+        });
+    });
+
+    describe('test deleteDirectory', function () {
+        describe('Positive tests', function () {
+            let directoryName;
+            beforeEach(async function () {
+                directoryName = randomstring.generate();
+                await filestorageContract.createDirectory(address, directoryName, privateKey);
+            });
+
+            it('should delete empty directory', async function () {
+                await filestorageContract.deleteDirectory(address, directoryName, privateKey);
+                let contents = await filestorageContract.listDirectory(address + '/');
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) === -1);
             });
         });
     });
