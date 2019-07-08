@@ -152,16 +152,42 @@ class FilestorageClient {
         return files;
     }
 
+    /**
+     * Create directory in Filestorage
+     *
+     * @function createDirectory
+     *
+     * @param {string} address - Account address.
+     * @param {string} directoryPath - Path of the directory to be created.
+     * @param {string} [privateKey] - Account private key.
+     */
     async createDirectory(address, directoryPath, privateKey) {
         await this.contract.createDirectory(address, directoryPath, privateKey);
         if (this.enableLogs) console.log('Directory was created');
     }
 
+    /**
+     * Delete directory from Filestorage
+     *
+     * @function deleteDirectory
+     *
+     * @param {string} address - Account address.
+     * @param {string} directoryPath - Path of the directory to be deleted.
+     * @param {string} [privateKey] - Account private key.
+     */
     async deleteDirectory(address, directoryPath, privateKey) {
         await this.contract.deleteDirectory(address, directoryPath, privateKey);
         if (this.enableLogs) console.log('Directory was deleted');
     }
 
+    /**
+     * List information about content of the directory
+     *
+     * @function listDirectory
+     *
+     * @param {string} storagePath - Path of the directory in Filestorage.
+     * @returns {Array.<string>} - List of content.
+     */
     async listDirectory(storagePath) {
         return await this.contract.listDirectory(storagePath);
     }
