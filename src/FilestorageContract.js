@@ -163,16 +163,42 @@ class FilestorageContract {
         return result;
     }
 
+    /**
+     * Javascript wrapper for solidity function createDir. Create directory in Filestorage
+     *
+     * @function createDirectory
+     *
+     * @param {string} address - Account address.
+     * @param {string} directoryPath - Path of the directory to be created.
+     * @param {string} [privateKey] - Account private key.
+     */
     async createDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.createDir(directoryPath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
+    /**
+     * Javascript wrapper for solidity function deleteDir. Delete directory from Filestorage
+     *
+     * @function deleteDirectory
+     *
+     * @param {string} address - Account address.
+     * @param {string} directoryPath - Path of the directory to be created.
+     * @param {string} [privateKey] - Account private key.
+     */
     async deleteDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.deleteDir(directoryPath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
+    /**
+     * Javascript wrapper for solidity function listDir. List information about content of the directory
+     *
+     * @function listDirectory
+     *
+     * @param {string} storagePath - Path of the directory in Filestorage.
+     * @returns {Array.<string>} - List of content.
+     */
     async listDirectory(storagePath) {
         let result = await this.contract.methods.listDir(storagePath).call();
         return result;
