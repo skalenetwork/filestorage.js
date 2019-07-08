@@ -349,4 +349,21 @@ describe('Test FilestorageClient', function () {
             });
         });
     });
+
+    describe('test deleteDirectory', function () {
+        describe('Positive tests', function () {
+            let directoryName;
+            beforeEach(async function () {
+                directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+            });
+
+            it('should delete empty directory', async function () {
+                await filestorage.deleteDirectory(address, directoryName, privateKey);
+                let contents = await filestorage.listDirectory(address + '/');
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) === -1);
+            });
+        });
+    });
 });
