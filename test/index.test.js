@@ -339,7 +339,7 @@ describe('Test FilestorageClient', function () {
             it('should create directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                let contents = await filestorage.listDirectory(address + '/');
+                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) > -1);
             });
@@ -360,7 +360,7 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list root directory', async function () {
-                let contents = await filestorage.listDirectory(address + '/');
+                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isArray(contents);
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) > -1, 'Directory is absent');
@@ -368,7 +368,8 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list nested directory', async function () {
-                let contents = await filestorage.listDirectory(path.join(address, directoryName));
+                let directoryPath = path.join(helper.rmBytesSymbol(address), directoryName);
+                let contents = await filestorage.listDirectory(directoryPath);
                 assert.isArray(contents);
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(fileName) > -1);
@@ -386,7 +387,7 @@ describe('Test FilestorageClient', function () {
 
             it('should delete empty directory', async function () {
                 await filestorage.deleteDirectory(address, directoryName, privateKey);
-                let contents = await filestorage.listDirectory(address + '/');
+                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) === -1);
             });

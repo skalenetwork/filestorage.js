@@ -346,7 +346,7 @@ describe('FilestorageContract', function () {
             it('should create new directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
-                let contents = await filestorageContract.listDirectory(address + '/');
+                let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) > -1);
             });
@@ -356,7 +356,7 @@ describe('FilestorageContract', function () {
     describe('Test listDirectory', function () {
         describe('Positive tests', function () {
             it('should list content in root dir', async function () {
-                let contents = await filestorageContract.listDirectory(address + '/');
+                let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
             });
@@ -367,7 +367,8 @@ describe('FilestorageContract', function () {
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
                 let childDirectoryPath = path.join(directoryName, childDirectoryName);
                 await filestorageContract.createDirectory(address, childDirectoryPath, privateKey);
-                let contents = await filestorageContract.listDirectory(path.join(address, directoryName));
+                let directoryPath = path.join(helper.rmBytesSymbol(address), directoryName);
+                let contents = await filestorageContract.listDirectory(directoryPath);
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
             });
@@ -384,7 +385,7 @@ describe('FilestorageContract', function () {
 
             it('should delete empty directory', async function () {
                 await filestorageContract.deleteDirectory(address, directoryName, privateKey);
-                let contents = await filestorageContract.listDirectory(address + '/');
+                let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) === -1);
             });
