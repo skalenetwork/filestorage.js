@@ -106,6 +106,13 @@ describe('Test FilestorageClient', function () {
                 await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
             });
 
+            it('Uploading file in directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                fileName = path.join(directoryName, fileName);
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+            });
+
             afterEach('Checking file\'s existance', async function () {
                 let fileList = await filestorage.getFileInfoListByAddress(address);
                 let isFind = fileList.find(obj => {
@@ -206,6 +213,16 @@ describe('Test FilestorageClient', function () {
                 expect(buffer).to.be.instanceOf(Buffer);
                 assert.deepEqual(buffer, data, 'File downloaded incorrectly');
             });
+
+            it('Download file from directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                fileName = path.join(directoryName, fileName);
+                let storagePath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                let buffer = await filestorage.downloadToBuffer(storagePath);
+                expect(buffer).to.be.instanceOf(Buffer);
+                assert.deepEqual(buffer, data, 'File downloaded incorrectly');
+            });
         });
 
         describe('Negative tests', function () {
@@ -256,6 +273,15 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should delete existing own file', async function () {
+                await filestorage.deleteFile(address, fileName, privateKey);
+            });
+
+            it('should delete file from directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                fileName = path.join(directoryName, fileName);
+                let data = Buffer.from(randomstring.generate());
+                await filestorage.uploadFile(address, fileName, data, privateKey);
                 await filestorage.deleteFile(address, fileName, privateKey);
             });
 
