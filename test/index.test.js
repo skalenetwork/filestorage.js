@@ -318,6 +318,11 @@ describe('Test FilestorageClient', function () {
     });
 
     describe('Test getFileInfoListByAddress', function () {
+        function isValidStoragePath(storagePath) {
+            let re = new RegExp('([0-9]|[a-f]|[A-F]){40}\\/.+');
+            return re.test(storagePath);
+        }
+
         describe('Positive tests', function () {
             it('should return fileInfo list', async function () {
                 let fileInfoArray = await filestorage.getFileInfoListByAddress(address);
@@ -327,6 +332,7 @@ describe('Test FilestorageClient', function () {
                 assert.isString(fileInfoObject['name'], 'fileInfo.name is not String');
                 assert.isNumber(fileInfoObject['size'], 'fileInfo.size is not Number');
                 assert.isString(fileInfoObject['storagePath'], 'fileInfo.storagePath is not String');
+                assert.isTrue(isValidStoragePath(fileInfoObject['storagePath']), 'fileInfo.storagePath is not valid');
                 assert.isNumber(fileInfoObject['uploadingProgress'], 'fileInfo.uploadedChunks is not Number');
                 assert.isTrue(fileInfoObject['uploadingProgress'] >= 0);
                 assert.isTrue(fileInfoObject['uploadingProgress'] <= 100);
