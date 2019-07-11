@@ -32,7 +32,7 @@ require('dotenv').config();
 
 const STATUS_UNEXISTENT = 0;
 const STATUS_UPLOADING = 1;
-const STATUS_COMPLETED = 2;
+const STATUS_COMPLETED = 2;// TODO: delete all files after each test
 describe('FilestorageContract', function () {
     let filestorageContract;
     let address;
@@ -337,6 +337,57 @@ describe('FilestorageContract', function () {
                 let files = await filestorageContract.getFileInfoList(emptyAddress);
                 assert.isArray(files, 'should return array');
                 assert.isEmpty(files, 'should contain files');
+            });
+        });
+    });
+
+    describe('Test createDirectory', function () {
+        describe('Positive tests', function () {
+            it('should create new directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorageContract.createDirectory(address, directoryName, privateKey);
+                let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) > -1);
+            });
+        });
+    });
+
+    describe('Test listDirectory', function () {
+        describe('Positive tests', function () {
+            it('should list content in root dir', async function () {
+                let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isNotEmpty(contents);
+                assert.isArray(contents);
+            });
+
+            it('should list content in nested dir', async function () {
+                let directoryName = randomstring.generate();
+                let childDirectoryName = randomstring.generate();
+                await filestorageContract.createDirectory(address, directoryName, privateKey);
+                let childDirectoryPath = path.join(directoryName, childDirectoryName);
+                await filestorageContract.createDirectory(address, childDirectoryPath, privateKey);
+                let directoryPath = path.join(helper.rmBytesSymbol(address), directoryName);
+                let contents = await filestorageContract.listDirectory(directoryPath);
+                assert.isNotEmpty(contents);
+                assert.isArray(contents);
+            });
+        });
+    });
+
+    describe('test deleteDirectory', function () {
+        describe('Positive tests', function () {
+            let directoryName;
+            beforeEach(async function () {
+                directoryName = randomstring.generate();
+                await filestorageContract.createDirectory(address, directoryName, privateKey);
+            });
+
+            it('should delete empty directory', async function () {
+                await filestorageContract.deleteDirectory(address, directoryName, privateKey);
+                let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) === -1);
             });
         });
     });
