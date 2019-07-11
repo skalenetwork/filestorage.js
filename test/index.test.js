@@ -40,7 +40,7 @@ describe('Test FilestorageClient', function () {
     let foreignPrivateKey;
     let bigFilePath;
     const transactionErrorMessage = 'Transaction has been reverted by the EVM:';
-    const callErrorMessage = 'Returned values aren\'t valid, did it run Out of Gas?';
+    const callErrorMessage = 'Returned error: EVM revert instruction without description message';
     const keypairErrorMessage = 'Keypair mismatch';
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
     before(function () {
@@ -104,6 +104,13 @@ describe('Test FilestorageClient', function () {
 
             it('Uploading file with private key without 0x and address beginning with 0x', async function () {
                 await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+            });
+
+            it('Uploading file in directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                fileName = path.join(directoryName, fileName);
+                await filestorage.uploadFile(address, fileName, data, privateKey);
             });
 
             afterEach('Checking file\'s existance', async function () {
@@ -206,6 +213,16 @@ describe('Test FilestorageClient', function () {
                 expect(buffer).to.be.instanceOf(Buffer);
                 assert.deepEqual(buffer, data, 'File downloaded incorrectly');
             });
+
+            it('Download file from directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                fileName = path.join(directoryName, fileName);
+                let storagePath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                let buffer = await filestorage.downloadToBuffer(storagePath);
+                expect(buffer).to.be.instanceOf(Buffer);
+                assert.deepEqual(buffer, data, 'File downloaded incorrectly');
+            });
         });
 
         describe('Negative tests', function () {
@@ -259,6 +276,15 @@ describe('Test FilestorageClient', function () {
                 await filestorage.deleteFile(address, fileName, privateKey);
             });
 
+            it('should delete file from directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                fileName = path.join(directoryName, fileName);
+                let data = Buffer.from(randomstring.generate());
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+                await filestorage.deleteFile(address, fileName, privateKey);
+            });
+
             // TODO: Delete unfinished file
         });
 
@@ -304,6 +330,66 @@ describe('Test FilestorageClient', function () {
                 assert.isNumber(fileInfoObject['uploadingProgress'], 'fileInfo.uploadedChunks is not Number');
                 assert.isTrue(fileInfoObject['uploadingProgress'] >= 0);
                 assert.isTrue(fileInfoObject['uploadingProgress'] <= 100);
+            });
+        });
+    });
+
+    describe('Test createDirectory', function () {
+        describe('Positive tests', function () {
+            it('should create directory', async function () {
+                let directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) > -1);
+            });
+        });
+    });
+
+    describe('Test listDirectory', function () {
+        describe('Positive tests', function () {
+            let fileName;
+            let directoryName;
+            before(async function () {
+                directoryName = randomstring.generate();
+                fileName = randomstring.generate();
+                let data = Buffer.from(fileName);
+                await filestorage.createDirectory(address, directoryName, privateKey);
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+                await filestorage.uploadFile(address, path.join(directoryName, fileName), data, privateKey);
+            });
+
+            it('should list root directory', async function () {
+                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isArray(contents);
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) > -1, 'Directory is absent');
+                assert.isTrue(contents.indexOf(fileName) > -1, 'File is absent');
+            });
+
+            it('should list nested directory', async function () {
+                let directoryPath = path.join(helper.rmBytesSymbol(address), directoryName);
+                let contents = await filestorage.listDirectory(directoryPath);
+                assert.isArray(contents);
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(fileName) > -1);
+            });
+        });
+    });
+
+    describe('test deleteDirectory', function () {
+        describe('Positive tests', function () {
+            let directoryName;
+            beforeEach(async function () {
+                directoryName = randomstring.generate();
+                await filestorage.createDirectory(address, directoryName, privateKey);
+            });
+
+            it('should delete empty directory', async function () {
+                await filestorage.deleteDirectory(address, directoryName, privateKey);
+                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isNotEmpty(contents);
+                assert.isTrue(contents.indexOf(directoryName) === -1);
             });
         });
     });
