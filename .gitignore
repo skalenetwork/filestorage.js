@@ -13,3 +13,4 @@ node_modules/
 # Temporary files
 .eslintcache
 .nyc_output
+coverage
