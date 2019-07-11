@@ -32,7 +32,8 @@ require('dotenv').config();
 
 const STATUS_UNEXISTENT = 0;
 const STATUS_UPLOADING = 1;
-const STATUS_COMPLETED = 2;// TODO: delete all files after each test
+const STATUS_COMPLETED = 2;
+// TODO: delete all files after each test
 describe('FilestorageContract', function () {
     let filestorageContract;
     let address;
