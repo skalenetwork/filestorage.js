@@ -64,6 +64,12 @@ describe('Helper', function () {
             assert.isString(storagePath);
             assert.isTrue(storagePath === 'aaa/bbb/ccc');
         });
+
+        it('should create storagePath removing extra \'/\'', function () {
+            let storagePath = helper.concatStoragePath('/aaa//','/bbb/', '//ccc/');
+            assert.isString(storagePath);
+            assert.isTrue(storagePath === '/aaa/bbb/ccc/');
+        });
     });
 
     describe('validatePrivateKey', function () {
