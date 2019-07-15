@@ -95,7 +95,7 @@ class FilestorageClient {
             throw new Error('Method downloadToFile can only be used with a browser');
         }
 
-        const fileName = path.basename(storagePath);
+        const fileName = path.posix.basename(storagePath);
         let wstream = streamSaver.createWriteStream(fileName).getWriter();
         await this._downloadFile(storagePath, wstream);
         wstream.close();

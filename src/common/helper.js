@@ -49,20 +49,6 @@ const Helper = {
         return data.map(x => this.rmBytesSymbol(x)).join('').slice(0, outputLength);
     },
 
-    concatStoragePath(...args){
-        const path = require('path');
-        for(let i = 0; i < args.length; ++i){
-            if (i !== 0) {
-                args[i] = args[i].replace(/^\/+/,'');
-            }
-            if (i !== args.length - 1) {
-                args[i] = args[i].replace(/\/+$/,'');
-            }
-        }
-        args = args.join('/');
-        return args;
-    },
-
     validatePrivateKey(privateKey) {
         if (!PRIVATE_KEY_REGEX.test(privateKey)) {
             throw new InvalidCredentialsException('Incorrect privateKey');
