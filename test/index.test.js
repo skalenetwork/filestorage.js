@@ -109,7 +109,7 @@ describe('Test FilestorageClient', function () {
             it('Uploading file in directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.join(directoryName, fileName);
+                fileName = helper.concatStoragePath(directoryName, fileName);
                 await filestorage.uploadFile(address, fileName, data, privateKey);
             });
 
@@ -217,7 +217,7 @@ describe('Test FilestorageClient', function () {
             it('Download file from directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.join(directoryName, fileName);
+                fileName = helper.concatStoragePath(directoryName, fileName);
                 let storagePath = await filestorage.uploadFile(address, fileName, data, privateKey);
                 let buffer = await filestorage.downloadToBuffer(storagePath);
                 expect(buffer).to.be.instanceOf(Buffer);
@@ -279,7 +279,7 @@ describe('Test FilestorageClient', function () {
             it('should delete file from directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.join(directoryName, fileName);
+                fileName = helper.concatStoragePath(directoryName, fileName);
                 let data = Buffer.from(randomstring.generate());
                 await filestorage.uploadFile(address, fileName, data, privateKey);
                 await filestorage.deleteFile(address, fileName, privateKey);
@@ -362,7 +362,8 @@ describe('Test FilestorageClient', function () {
                 let data = Buffer.from(fileName);
                 await filestorage.createDirectory(address, directoryName, privateKey);
                 await filestorage.uploadFile(address, fileName, data, privateKey);
-                await filestorage.uploadFile(address, path.join(directoryName, fileName), data, privateKey);
+                let filePath = helper.concatStoragePath(directoryName, fileName);
+                await filestorage.uploadFile(address, filePath, data, privateKey);
             });
 
             it('should list root directory', async function () {
@@ -374,7 +375,7 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list nested directory', async function () {
-                let directoryPath = path.join(helper.rmBytesSymbol(address), directoryName);
+                let directoryPath = helper.concatStoragePath(helper.rmBytesSymbol(address), directoryName);
                 let contents = await filestorage.listDirectory(directoryPath);
                 assert.isArray(contents);
                 assert.isNotEmpty(contents);
