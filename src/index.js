@@ -80,7 +80,7 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Checking file validity...');
         await this.contract.finishUpload(address, fileName, privateKey);
         if (this.enableLogs) console.log('File was uploaded!');
-        return Helper.concatStoragePath(Helper.rmBytesSymbol(address), fileName);
+        return path.posix.join(Helper.rmBytesSymbol(address), fileName);
     }
 
     /**
@@ -138,7 +138,7 @@ class FilestorageClient {
     async getFileInfoListByAddress(address) {
         let rawFiles = await this.contract.getFileInfoList(address);
         let files = rawFiles.map(file => {
-            let storagePath = Helper.concatStoragePath(Helper.rmBytesSymbol(address), file['name']);
+            let storagePath = path.posix.join(Helper.rmBytesSymbol(address), file['name']);
             let chunkStatusList = file['isChunkUploaded'];
             let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
             let uploadingProgress = Math.floor(uploadedChunksCount / chunkStatusList.length * 100);

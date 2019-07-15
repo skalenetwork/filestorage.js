@@ -87,36 +87,36 @@ describe('Test FilestorageClient', function () {
             });
 
             it('Uploading file with private key', async function () {
-                let path = await filestorage.uploadFile(address, fileName, data, privateKey);
-                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let filepath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                assert.isTrue(filepath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key and address beginning with 0x', async function () {
-                let path = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
-                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let filePath = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key without 0x', async function () {
-                let path = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
-                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let filePath = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key and address beginning with 0x', async function () {
-                let path = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
-                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let filePath = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key without 0x and address beginning with 0x', async function () {
-                let path = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
-                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let filePath = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file in directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = helper.concatStoragePath(directoryName, fileName);
-                let path = await filestorage.uploadFile(address, fileName, data, privateKey);
-                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                fileName = path.posix.join(directoryName, fileName);
+                let filePath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             afterEach('Checking file\'s existance', async function () {
@@ -223,7 +223,7 @@ describe('Test FilestorageClient', function () {
             it('Download file from directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = helper.concatStoragePath(directoryName, fileName);
+                fileName = path.posix.join(directoryName, fileName);
                 let storagePath = await filestorage.uploadFile(address, fileName, data, privateKey);
                 let buffer = await filestorage.downloadToBuffer(storagePath);
                 expect(buffer).to.be.instanceOf(Buffer);
@@ -285,7 +285,7 @@ describe('Test FilestorageClient', function () {
             it('should delete file from directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = helper.concatStoragePath(directoryName, fileName);
+                fileName = path.posix.join(directoryName, fileName);
                 let data = Buffer.from(randomstring.generate());
                 await filestorage.uploadFile(address, fileName, data, privateKey);
                 await filestorage.deleteFile(address, fileName, privateKey);
@@ -368,7 +368,7 @@ describe('Test FilestorageClient', function () {
                 let data = Buffer.from(fileName);
                 await filestorage.createDirectory(address, directoryName, privateKey);
                 await filestorage.uploadFile(address, fileName, data, privateKey);
-                let filePath = helper.concatStoragePath(directoryName, fileName);
+                let filePath = path.posix.join(directoryName, fileName);
                 await filestorage.uploadFile(address, filePath, data, privateKey);
             });
 
@@ -381,7 +381,7 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list nested directory', async function () {
-                let directoryPath = helper.concatStoragePath(helper.rmBytesSymbol(address), directoryName);
+                let directoryPath = path.posix.join(helper.rmBytesSymbol(address), directoryName);
                 let contents = await filestorage.listDirectory(directoryPath);
                 assert.isArray(contents);
                 assert.isNotEmpty(contents);
