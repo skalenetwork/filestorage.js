@@ -27,7 +27,7 @@
     "build-minor": "VER=minor ./build.sh",
     "build-major": "VER=major ./build.sh",
     "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
-    "generate-win": "IF NOT EXIST aa.txt fsutil file createnew \\test\\test.txt 104857600",
+    "generate-win": "IF NOT EXIST \\test\\test.txt fsutil file createnew \\test\\test.txt 104857600",
     "test": "nyc --reporter=lcov mocha --exit --timeout 120000",
     "coverage": "codecov",
     "lint": "eslint --cache --fix src/*.js test/*.js",
