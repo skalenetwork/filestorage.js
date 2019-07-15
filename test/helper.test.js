@@ -48,25 +48,25 @@ describe('Helper', function () {
 
     describe('concatStoragePath', function () {
         it('should create storagePath', function () {
-            let storagePath = helper.concatStoragePath('aaa','bbb');
+            let storagePath = helper.concatStoragePath('aaa', 'bbb');
             assert.isString(storagePath);
             assert.isTrue(storagePath === 'aaa/bbb');
         });
 
         it('should create storagePath from several strings', function () {
-            let storagePath = helper.concatStoragePath('aaa','bbb', 'ccc');
+            let storagePath = helper.concatStoragePath('aaa', 'bbb', 'ccc');
             assert.isString(storagePath);
             assert.isTrue(storagePath === 'aaa/bbb/ccc');
         });
 
         it('should create storagePath removing extra \'/\'', function () {
-            let storagePath = helper.concatStoragePath('aaa//','/bbb/', '//ccc');
+            let storagePath = helper.concatStoragePath('aaa//', '/bbb/', '//ccc');
             assert.isString(storagePath);
             assert.isTrue(storagePath === 'aaa/bbb/ccc');
         });
 
         it('should create storagePath removing extra \'/\'', function () {
-            let storagePath = helper.concatStoragePath('/aaa//','/bbb/', '//ccc/');
+            let storagePath = helper.concatStoragePath('/aaa//', '/bbb/', '//ccc/');
             assert.isString(storagePath);
             assert.isTrue(storagePath === '/aaa/bbb/ccc/');
         });

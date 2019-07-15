@@ -27,7 +27,6 @@ const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
 const Web3 = require('web3');
-const path = require('path');
 require('dotenv').config();
 
 const STATUS_UNEXISTENT = 0;
@@ -276,14 +275,14 @@ describe('FilestorageContract', function () {
             let completedFileStoragePath;
             before(async function () {
                 let emptyFileName = randomstring.generate();
-                emptyFileStoragePath = path.join(helper.rmBytesSymbol(address), emptyFileName);
+                emptyFileStoragePath = helper.concatStoragePath(helper.rmBytesSymbol(address), emptyFileName);
                 let loadingFileName = randomstring.generate();
                 await filestorageContract.startUpload(address, loadingFileName, 0, privateKey);
-                loadingFileStoragePath = path.join(helper.rmBytesSymbol(address), loadingFileName);
+                loadingFileStoragePath = helper.concatStoragePath(helper.rmBytesSymbol(address), loadingFileName);
                 let completedFileName = randomstring.generate();
                 await filestorageContract.startUpload(address, completedFileName, 0, privateKey);
                 await filestorageContract.finishUpload(address, completedFileName, privateKey);
-                completedFileStoragePath = path.join(helper.rmBytesSymbol(address), completedFileName);
+                completedFileStoragePath = helper.concatStoragePath(helper.rmBytesSymbol(address), completedFileName);
             });
 
             it('should return 0 when file is not existed', async function () {

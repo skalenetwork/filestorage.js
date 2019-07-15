@@ -87,30 +87,36 @@ describe('Test FilestorageClient', function () {
             });
 
             it('Uploading file with private key', async function () {
-                await filestorage.uploadFile(address, fileName, data, privateKey);
+                let path = await filestorage.uploadFile(address, fileName, data, privateKey);
+                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key and address beginning with 0x', async function () {
-                await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                let path = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key without 0x', async function () {
-                await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                let path = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key and address beginning with 0x', async function () {
-                await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                let path = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key without 0x and address beginning with 0x', async function () {
-                await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                let path = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file in directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
                 fileName = helper.concatStoragePath(directoryName, fileName);
-                await filestorage.uploadFile(address, fileName, data, privateKey);
+                let path = await filestorage.uploadFile(address, fileName, data, privateKey);
+                assert.isTrue(path === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             afterEach('Checking file\'s existance', async function () {
