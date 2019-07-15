@@ -45,7 +45,7 @@ describe('Test FilestorageClient', function () {
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
     before(function () {
         // eslint-disable-next-line
-        filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT);
+        filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
         address = process.env.ADDRESS;
         privateKey = process.env.PRIVATEKEY;
         foreignAddress = process.env.FOREIGN_ADDRESS;
@@ -87,30 +87,36 @@ describe('Test FilestorageClient', function () {
             });
 
             it('Uploading file with private key', async function () {
-                await filestorage.uploadFile(address, fileName, data, privateKey);
+                let filepath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                assert.isTrue(filepath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key and address beginning with 0x', async function () {
-                await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                let filePath = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key without 0x', async function () {
-                await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                let filePath = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key and address beginning with 0x', async function () {
-                await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                let filePath = await filestorage.uploadFile(helper.addBytesSymbol(address), fileName, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file with private key without 0x and address beginning with 0x', async function () {
-                await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                let filePath = await filestorage.uploadFile(address, fileName, data, helper.rmBytesSymbol(privateKey));
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             it('Uploading file in directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.join(directoryName, fileName);
-                await filestorage.uploadFile(address, fileName, data, privateKey);
+                fileName = path.posix.join(directoryName, fileName);
+                let filePath = await filestorage.uploadFile(address, fileName, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
             });
 
             afterEach('Checking file\'s existance', async function () {
@@ -217,7 +223,7 @@ describe('Test FilestorageClient', function () {
             it('Download file from directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.join(directoryName, fileName);
+                fileName = path.posix.join(directoryName, fileName);
                 let storagePath = await filestorage.uploadFile(address, fileName, data, privateKey);
                 let buffer = await filestorage.downloadToBuffer(storagePath);
                 expect(buffer).to.be.instanceOf(Buffer);
@@ -279,7 +285,7 @@ describe('Test FilestorageClient', function () {
             it('should delete file from directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.join(directoryName, fileName);
+                fileName = path.posix.join(directoryName, fileName);
                 let data = Buffer.from(randomstring.generate());
                 await filestorage.uploadFile(address, fileName, data, privateKey);
                 await filestorage.deleteFile(address, fileName, privateKey);
@@ -318,6 +324,11 @@ describe('Test FilestorageClient', function () {
     });
 
     describe('Test getFileInfoListByAddress', function () {
+        function isValidStoragePath(storagePath) {
+            let re = new RegExp('([0-9]|[a-f]|[A-F]){40}\\/.+');
+            return re.test(storagePath);
+        }
+
         describe('Positive tests', function () {
             it('should return fileInfo list', async function () {
                 let fileInfoArray = await filestorage.getFileInfoListByAddress(address);
@@ -327,6 +338,7 @@ describe('Test FilestorageClient', function () {
                 assert.isString(fileInfoObject['name'], 'fileInfo.name is not String');
                 assert.isNumber(fileInfoObject['size'], 'fileInfo.size is not Number');
                 assert.isString(fileInfoObject['storagePath'], 'fileInfo.storagePath is not String');
+                assert.isTrue(isValidStoragePath(fileInfoObject['storagePath']), 'fileInfo.storagePath is not valid');
                 assert.isNumber(fileInfoObject['uploadingProgress'], 'fileInfo.uploadedChunks is not Number');
                 assert.isTrue(fileInfoObject['uploadingProgress'] >= 0);
                 assert.isTrue(fileInfoObject['uploadingProgress'] <= 100);
@@ -356,7 +368,8 @@ describe('Test FilestorageClient', function () {
                 let data = Buffer.from(fileName);
                 await filestorage.createDirectory(address, directoryName, privateKey);
                 await filestorage.uploadFile(address, fileName, data, privateKey);
-                await filestorage.uploadFile(address, path.join(directoryName, fileName), data, privateKey);
+                let filePath = path.posix.join(directoryName, fileName);
+                await filestorage.uploadFile(address, filePath, data, privateKey);
             });
 
             it('should list root directory', async function () {
@@ -368,7 +381,7 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list nested directory', async function () {
-                let directoryPath = path.join(helper.rmBytesSymbol(address), directoryName);
+                let directoryPath = path.posix.join(helper.rmBytesSymbol(address), directoryName);
                 let contents = await filestorage.listDirectory(directoryPath);
                 assert.isArray(contents);
                 assert.isNotEmpty(contents);

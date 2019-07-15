@@ -80,7 +80,7 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Checking file validity...');
         await this.contract.finishUpload(address, fileName, privateKey);
         if (this.enableLogs) console.log('File was uploaded!');
-        return path.join(Helper.rmBytesSymbol(address), fileName);
+        return path.posix.join(Helper.rmBytesSymbol(address), fileName);
     }
 
     /**
@@ -95,7 +95,7 @@ class FilestorageClient {
             throw new Error('Method downloadToFile can only be used with a browser');
         }
 
-        const fileName = path.basename(storagePath);
+        const fileName = path.posix.basename(storagePath);
         let wstream = streamSaver.createWriteStream(fileName).getWriter();
         await this._downloadFile(storagePath, wstream);
         wstream.close();
@@ -138,7 +138,7 @@ class FilestorageClient {
     async getFileInfoListByAddress(address) {
         let rawFiles = await this.contract.getFileInfoList(address);
         let files = rawFiles.map(file => {
-            let storagePath = path.join(Helper.rmBytesSymbol(address), file['name']);
+            let storagePath = path.posix.join(Helper.rmBytesSymbol(address), file['name']);
             let chunkStatusList = file['isChunkUploaded'];
             let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
             let uploadingProgress = Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
