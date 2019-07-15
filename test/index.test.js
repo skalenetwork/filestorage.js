@@ -45,7 +45,7 @@ describe('Test FilestorageClient', function () {
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
     before(function () {
         // eslint-disable-next-line
-        filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT);
+        filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
         address = process.env.ADDRESS;
         privateKey = process.env.PRIVATEKEY;
         foreignAddress = process.env.FOREIGN_ADDRESS;
