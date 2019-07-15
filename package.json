@@ -47,7 +47,7 @@
     "nyc": "^14.1.0",
     "randomstring": "^1.1.5",
     "semver": "^5.6.0",
-    "webpack": "4.19.1",
-    "webpack-cli": "^3.3.2"
+    "webpack": "4.35.3",
+    "webpack-cli": "^3.3.6"
   }
 }
