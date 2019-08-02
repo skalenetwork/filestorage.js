@@ -21,14 +21,18 @@
  * @file helper.test.js
  * @date 2019
  */
-const assert = require('chai').assert;
+const chai = require('chai');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
-let randomstring = require('randomstring');
 const FilestorageContract = require('../src/FilestorageContract');
 const Web3 = require('web3');
+const assert = chai.assert;
 require('dotenv').config();
 
+chai.should();
+chai.use(require('chai-as-promised'));
+
+let randomstring = require('randomstring');
 describe('Helper', function () {
     const rejectedTransactionErrorMessage = 'Returned error: Transaction rejected by user.';
     describe('bufferToHex', function () {
@@ -125,14 +129,10 @@ describe('Helper', function () {
         });
 
         it('should throw exception for transaction without privateKey', async function () {
-            try {
-                await helper.sendTransactionToContract(web3, address, '', txData, constants.STANDARD_GAS);
-                assert.fail('File was unexpectfully uploaded');
-            } catch (error) {
-                assert.throws(() => {
-                    throw new Error(error.message);
-                }, rejectedTransactionErrorMessage);
-            }
+            await helper.sendTransactionToContract(web3, address, '', txData, constants.STANDARD_GAS)
+                .should
+                .eventually
+                .rejectedWith(rejectedTransactionErrorMessage);
         });
     });
 });
