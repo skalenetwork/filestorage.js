@@ -22,6 +22,7 @@
  * @date 2019
  */
 const InvalidCredentialsException = require('../exceptions/InvalidCredentialsException');
+const FilestorageContractException = require('../exceptions/FilestorageContractException');
 const PRIVATE_KEY_REGEX = /^(0x)?[0-9a-f]{64}$/i;
 
 const Helper = {
@@ -105,7 +106,7 @@ const Helper = {
             if (error.message.includes('revertReason')){
                 let errorMessage = error.message.substr(TransactionErrorMessageLength);
                 let revertReason = JSON.parse(errorMessage).revertReason;
-                throw new Error(revertReason);
+                throw new FilestorageContractException(revertReason);
             } else {
                 throw new Error(error);
             }
