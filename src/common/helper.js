@@ -89,17 +89,27 @@ const Helper = {
 
     async sendTransactionToContract(web3, account, privateKey, transactionData, gas) {
         let result;
-
-        if (typeof privateKey === 'string' && privateKey.length > 0) {
-            if (!this.ensureStartsWith0x(privateKey)) {
-                privateKey = '0x' + privateKey;
+        const TransactionErrorMessageLength = 42;
+        try {
+            if (typeof privateKey === 'string' && privateKey.length > 0) {
+                if (!this.ensureStartsWith0x(privateKey)) {
+                    privateKey = '0x' + privateKey;
+                }
+                Helper.validatePrivateKey(privateKey);
+                result = await Helper.signAndSendTransaction(web3, account, privateKey, transactionData, gas);
+            } else {
+                result = await Helper.sendTransaction(web3, account, transactionData, gas);
             }
-            Helper.validatePrivateKey(privateKey);
-            result = await Helper.signAndSendTransaction(web3, account, privateKey, transactionData, gas);
-        } else {
-            result = await Helper.sendTransaction(web3, account, transactionData, gas);
+            return result;
+        } catch (error) {
+            if (error.message.includes('revertReason')){
+                let errorMessage = error.message.substr(TransactionErrorMessageLength);
+                let revertReason = JSON.parse(errorMessage).revertReason;
+                throw new Error(revertReason);
+            } else {
+                throw new Error(error);
+            }
         }
-        return result;
     }
 };
 
