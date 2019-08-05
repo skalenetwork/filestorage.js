@@ -27,7 +27,14 @@ const CHUNK_LENGTH = 1048576;
 const STANDARD_GAS = 1000000;
 const WRITING_GAS = 160000000;
 
+const errorMessages = {
+    INVALID_TRANSACTION: 'Transaction has been reverted by the EVM:',
+    INVALID_KEYPAIR: 'Keypair mismatch',
+    INVALID_PRIVATEKEY: 'Incorrect privateKey'
+};
+
 module.exports.WRITING_GAS = WRITING_GAS;
 module.exports.STANDARD_GAS = STANDARD_GAS;
 module.exports.CHUNK_LENGTH = CHUNK_LENGTH;
 module.exports.FILESTORAGE_CONTRACTNAME = FILESTORAGE_CONTRACTNAME;
+module.exports.errorMessages = errorMessages;

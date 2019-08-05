@@ -18,11 +18,11 @@
  */
 
 /**
- * @file InvalidCredentialsException.js
+ * @file FilestorageContractException.js
  * @date 2019
  */
 
-module.exports = class InvalidCredentialsException extends Error {
+module.exports = class FilestorageContractException extends Error {
     constructor(message) {
         super(message);
         this.name = this.constructor.name;

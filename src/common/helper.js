@@ -21,7 +21,9 @@
  * @file helper.js
  * @date 2019
  */
+const constants = require('./constants');
 const InvalidCredentialsException = require('../exceptions/InvalidCredentialsException');
+const FilestorageContractException = require('../exceptions/FilestorageContractException');
 const PRIVATE_KEY_REGEX = /^(0x)?[0-9a-f]{64}$/i;
 
 const Helper = {
@@ -51,19 +53,17 @@ const Helper = {
 
     validatePrivateKey(privateKey) {
         if (!PRIVATE_KEY_REGEX.test(privateKey)) {
-            throw new InvalidCredentialsException('Incorrect privateKey');
+            throw new InvalidCredentialsException(constants.errorMessages.INVALID_PRIVATEKEY);
         }
     },
 
     async signAndSendTransaction(web3, account, privateKey, transactionData, gas) {
         let encoded = transactionData.encodeABI();
-
-        let contractAddress = transactionData['_parent']['_address'];
-
-        let accountFromPrivateKey = web3.eth.accounts.privateKeyToAccount(privateKey)['address'];
+        let contractAddress = transactionData._parent._address;
+        let accountFromPrivateKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
 
         if (account !== accountFromPrivateKey && account !== this.rmBytesSymbol(accountFromPrivateKey)) {
-            throw new InvalidCredentialsException('Keypair mismatch');
+            throw new InvalidCredentialsException(constants.errorMessages.INVALID_KEYPAIR);
         }
         let nonce = await web3.eth.getTransactionCount(account);
         let tx = {
@@ -73,8 +73,8 @@ const Helper = {
             to: contractAddress,
             nonce: nonce
         };
-        let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
 
+        let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
@@ -89,17 +89,26 @@ const Helper = {
 
     async sendTransactionToContract(web3, account, privateKey, transactionData, gas) {
         let result;
-
-        if (typeof privateKey === 'string' && privateKey.length > 0) {
-            if (!this.ensureStartsWith0x(privateKey)) {
-                privateKey = '0x' + privateKey;
+        try {
+            if (typeof privateKey === 'string' && privateKey.length > 0) {
+                if (!this.ensureStartsWith0x(privateKey)) {
+                    privateKey = '0x' + privateKey;
+                }
+                Helper.validatePrivateKey(privateKey);
+                result = await Helper.signAndSendTransaction(web3, account, privateKey, transactionData, gas);
+            } else {
+                result = await Helper.sendTransaction(web3, account, transactionData, gas);
             }
-            Helper.validatePrivateKey(privateKey);
-            result = await Helper.signAndSendTransaction(web3, account, privateKey, transactionData, gas);
-        } else {
-            result = await Helper.sendTransaction(web3, account, transactionData, gas);
+            return result;
+        } catch (error) {
+            if (error.message.includes(constants.errorMessages.INVALID_TRANSACTION)){
+                let errorMessage = error.message.substr(constants.errorMessages.INVALID_TRANSACTION.length);
+                let revertReason = JSON.parse(errorMessage).revertReason;
+                throw new FilestorageContractException(revertReason);
+            } else {
+                throw error;
+            }
         }
-        return result;
     }
 };
 
