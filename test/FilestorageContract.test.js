@@ -104,7 +104,7 @@ describe('FilestorageContract', function () {
 
             it('should upload 1Mb chunk', async function () {
                 let chunkData = helper.addBytesSymbol(randomstring.generate({
-                    length: constants.CHUNK_LENGTH,
+                    length: 2 * constants.CHUNK_LENGTH,
                     charset: 'hex'
                 }));
                 await filestorageContract.uploadChunk(address, fileName, 0, chunkData, privateKey);
@@ -115,7 +115,7 @@ describe('FilestorageContract', function () {
             it('should upload chunk less than 1Mb', async function () {
                 let chunkData = helper.addBytesSymbol(
                     randomstring.generate({
-                        length: smallChunkLength,
+                        length: 2 * smallChunkLength,
                         charset: 'hex'
                     })
                 );
@@ -144,7 +144,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.startUpload(address, fileName, 2 * (constants.CHUNK_LENGTH), privateKey);
                 for (let i = 0; i < 2; ++i) {
                     let chunkData = helper.addBytesSymbol(randomstring.generate({
-                        length: constants.CHUNK_LENGTH,
+                        length: 2 * constants.CHUNK_LENGTH,
                         charset: 'hex'
                     }));
                     await filestorageContract.uploadChunk(
@@ -176,7 +176,7 @@ describe('FilestorageContract', function () {
             it('should delete finished file', async function () {
                 for (let i = 0; i < 2; ++i) {
                     let chunkData = helper.addBytesSymbol(randomstring.generate({
-                        length: constants.CHUNK_LENGTH,
+                        length: 2 * constants.CHUNK_LENGTH,
                         charset: 'hex'
                     }));
                     await filestorageContract.uploadChunk(
@@ -196,7 +196,7 @@ describe('FilestorageContract', function () {
 
             it('should delete unfinished file', async function () {
                 let chunkData = helper.addBytesSymbol(randomstring.generate({
-                    length: constants.CHUNK_LENGTH,
+                    length: 2 * constants.CHUNK_LENGTH,
                     charset: 'hex'
                 }));
                 await filestorageContract.uploadChunk(address, fileName, constants.CHUNK_LENGTH, chunkData, privateKey);

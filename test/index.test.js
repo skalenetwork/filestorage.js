@@ -33,7 +33,6 @@ require('dotenv').config();
 
 let randomstring = require('randomstring');
 let fs = require('fs');
-
 describe('Test FilestorageClient', function () {
     let filestorage;
     let address;
@@ -41,7 +40,7 @@ describe('Test FilestorageClient', function () {
     let foreignAddress;
     let foreignPrivateKey;
     let bigFilePath;
-    const transactionErrorMessage = 'Transaction has been reverted by the EVM:';
+
     const callErrorMessage = 'Returned error: EVM revert instruction without description message';
     const keypairErrorMessage = 'Keypair mismatch';
     const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
@@ -154,7 +153,7 @@ describe('Test FilestorageClient', function () {
             });
 
             it('Uploading file with name > 256 chars', async function () {
-                let fileName = randomstring.generate(258);
+                let fileName = randomstring.generate(257);
                 await filestorage.uploadFile(address, fileName, data, privateKey)
                     .should
                     .eventually
@@ -167,14 +166,6 @@ describe('Test FilestorageClient', function () {
                     .should
                     .eventually
                     .rejectedWith(errorMessages.FILE_ALREADY_EXISTS);
-            });
-
-            it('Uploading file with filename contained "/"', async function () {
-                let fileName = '/hack';
-                await filestorage.uploadFile(address, fileName, data, privateKey)
-                    .should
-                    .eventually
-                    .rejectedWith(errorMessages.INCORRECT_FILENAME);
             });
         });
     });
