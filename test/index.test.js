@@ -26,11 +26,13 @@ const expect = require('chai').expect;
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
-let randomstring = require('randomstring');
-let fs = require('fs');
+const errorMessages = require('./utils/constants');
 const path = require('path');
 const Web3 = require('web3');
 require('dotenv').config();
+
+let randomstring = require('randomstring');
+let fs = require('fs');
 
 describe('Test FilestorageClient', function () {
     let filestorage;
@@ -137,62 +139,42 @@ describe('Test FilestorageClient', function () {
             });
 
             it('Uploading file with foreign privateKey', async function () {
-                try {
-                    await filestorage.uploadFile(address, fileName, data, foreignPrivateKey);
-                    assert.fail('File was unexpectfully uploaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, keypairErrorMessage);
-                }
+                await filestorage.uploadFile(address, fileName, data, foreignPrivateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(keypairErrorMessage);
             });
 
             it('Uploading file with size > 100mb', async function () {
-                try {
-                    let fileData = fs.readFileSync(bigFilePath);
-                    await filestorage.uploadFile(address, fileName, fileData, privateKey);
-                    assert.fail('File was unexpectfully uploaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, transactionErrorMessage);
-                }
+                let fileData = fs.readFileSync(bigFilePath);
+                await filestorage.uploadFile(address, fileName, fileData, privateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(errorMessages.INCORRECT_FILESIZE);
             });
 
             it('Uploading file with name > 256 chars', async function () {
-                let fileName = randomstring.generate(256);
-                try {
-                    await filestorage.uploadFile(address, fileName, data, privateKey);
-                    assert.fail('File was unexpectfully uploaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, transactionErrorMessage);
-                }
+                let fileName = randomstring.generate(258);
+                await filestorage.uploadFile(address, fileName, data, privateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(errorMessages.INCORRECT_FILENAME);
             });
 
             it('Uploading file with existing name', async function () {
                 await filestorage.uploadFile(address, fileName, data, privateKey);
-                try {
-                    await filestorage.uploadFile(address, fileName, data, privateKey);
-                    assert.fail('File was unexpectfully uploaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, transactionErrorMessage);
-                }
+                await filestorage.uploadFile(address, fileName, data, privateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(errorMessages.FILE_ALREADY_EXISTS);
             });
 
             it('Uploading file with filename contained "/"', async function () {
                 let fileName = '/hack';
-                try {
-                    await filestorage.uploadFile(address, fileName, data, privateKey);
-                    assert.fail('File was unexpectfully uploaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, transactionErrorMessage);
-                }
+                await filestorage.uploadFile(address, fileName, data, privateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(errorMessages.INCORRECT_FILENAME);
             });
         });
     });
@@ -234,28 +216,18 @@ describe('Test FilestorageClient', function () {
         describe('Negative tests', function () {
             it('Download unexisted file', async function () {
                 let storagePath = randomstring.generate();
-                try {
-                    await filestorage.downloadToBuffer(storagePath);
-
-                    assert.fail('File was unexpectfully downloaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, callErrorMessage);
-                }
+                await filestorage.downloadToBuffer(storagePath)
+                    .should
+                    .eventually
+                    .rejectedWith(callErrorMessage);
             });
 
             it('Download using downloadToFile', async function () {
                 let storagePath = randomstring.generate();
-                try {
-                    await filestorage.downloadToFile(storagePath);
-
-                    assert.fail('File was unexpectfully downloaded');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, invalidDownloadErrorMessage);
-                }
+                await filestorage.downloadToFile(storagePath)
+                    .should
+                    .eventually
+                    .rejectedWith(invalidDownloadErrorMessage);
             });
             // TODO: Download unfinished file
         });
@@ -297,28 +269,20 @@ describe('Test FilestorageClient', function () {
         describe('Negative tests', function () {
             it('should delete unexisting own file', async function () {
                 let fileName = 'delete_' + randomstring.generate();
-                try {
-                    await filestorage.deleteFile(address, fileName, privateKey);
-                    assert.fail('File was unexpectfully deleted');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, transactionErrorMessage);
-                }
+                await filestorage.deleteFile(address, fileName, privateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(errorMessages.FILE_NOT_EXISTS);
             });
 
             it('should delete foreign file', async function () {
                 let fileName = 'delete_' + randomstring.generate();
                 let data = Buffer.from(randomstring.generate());
                 await filestorage.uploadFile(foreignAddress, fileName, data, foreignPrivateKey);
-                try {
-                    await filestorage.deleteFile(address, fileName, privateKey);
-                    assert.fail('File was unexpectfully deleted');
-                } catch (error) {
-                    assert.throws(() => {
-                        throw new Error(error.message);
-                    }, transactionErrorMessage);
-                }
+                await filestorage.deleteFile(address, fileName, privateKey)
+                    .should
+                    .eventually
+                    .rejectedWith(errorMessages.FILE_NOT_EXISTS);
             });
         });
     });

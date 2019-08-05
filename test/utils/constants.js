@@ -11,3 +11,5 @@ const filestorageRequireMessages = {
     INCORRECT_CHUNK_LENGTH: 'Incorrect chunk length',
     CHUNK_ALREADY_UPLOADED: 'Chunk is already uploaded',
 };
+
+module.exports = filestorageRequireMessages;
