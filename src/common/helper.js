@@ -58,9 +58,7 @@ const Helper = {
 
     async signAndSendTransaction(web3, account, privateKey, transactionData, gas) {
         let encoded = transactionData.encodeABI();
-
         let contractAddress = transactionData['_parent']['_address'];
-
         let accountFromPrivateKey = web3.eth.accounts.privateKeyToAccount(privateKey)['address'];
 
         if (account !== accountFromPrivateKey && account !== this.rmBytesSymbol(accountFromPrivateKey)) {
@@ -74,8 +72,8 @@ const Helper = {
             to: contractAddress,
             nonce: nonce
         };
-        let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
 
+        let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
@@ -108,7 +106,7 @@ const Helper = {
                 let revertReason = JSON.parse(errorMessage).revertReason;
                 throw new FilestorageContractException(revertReason);
             } else {
-                throw new Error(error);
+                throw error;
             }
         }
     }

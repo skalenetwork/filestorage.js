@@ -21,9 +21,11 @@
  * @file InvalidCredentialsException.js
  * @date 2019
  */
-module.exports = function InvalidCredentialsException(message) {
-    this.message = message;
-    this.toString = function () {
-        return this.message;
-    };
+
+module.exports = class InvalidCredentialsException extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+        Error.captureStackTrace(this, this.constructor);
+    }
 };
