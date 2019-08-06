@@ -101,10 +101,13 @@ const Helper = {
             }
             return result;
         } catch (error) {
-            if (error.message.includes(constants.errorMessages.INVALID_TRANSACTION)){
-                let errorMessage = error.message.substr(constants.errorMessages.INVALID_TRANSACTION.length);
+            if (error.message.includes(constants.errorMessages.REVERTED_TRANSACTION)){
+                let errorMessage = error.message.substr(constants.errorMessages.REVERTED_TRANSACTION.length);
                 let revertReason = JSON.parse(errorMessage).revertReason;
-                throw new FilestorageContractException(revertReason);
+                if (revertReason)
+                    throw new FilestorageContractException(revertReason);
+                else
+                    throw new FilestorageContractException(constants.errorMessages.FAILED_TRANSACTION);
             } else {
                 throw error;
             }
