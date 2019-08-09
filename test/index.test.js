@@ -210,7 +210,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.downloadToBuffer(storagePath)
                     .should
                     .eventually
-                    .rejectedWith(callErrorMessage);
+                    .rejectedWith(errorMessages.INVALID_PATH);
             });
 
             it('Download using downloadToFile', async function () {
@@ -263,7 +263,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.deleteFile(address, fileName, privateKey)
                     .should
                     .eventually
-                    .rejectedWith(errorMessages.FILE_NOT_EXISTS);
+                    .rejectedWith(errorMessages.INVALID_PATH);
             });
 
             it('should delete foreign file', async function () {
@@ -273,7 +273,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.deleteFile(address, fileName, privateKey)
                     .should
                     .eventually
-                    .rejectedWith(errorMessages.FILE_NOT_EXISTS);
+                    .rejectedWith(errorMessages.INVALID_PATH);
             });
         });
     });
