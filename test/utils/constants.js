@@ -11,6 +11,8 @@ const filestorageRequireMessages = {
     INCORRECT_CHUNK_POSITION: 'Incorrect position of chunk',
     INCORRECT_CHUNK_LENGTH: 'Incorrect chunk length',
     CHUNK_ALREADY_UPLOADED: 'Chunk is already uploaded',
+    INVALID_KEYPAIR: 'Keypair mismatch',
+    ONLY_BROWSER_METHOD: 'Method downloadToFile can only be used with a browser'
 };
 
 module.exports = filestorageRequireMessages;

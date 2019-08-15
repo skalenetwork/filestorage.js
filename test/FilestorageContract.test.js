@@ -86,7 +86,7 @@ describe('FilestorageContract', function () {
 
     describe('Test uploadChunk', function () {
         async function checkChunk(fileName, chunkNumber) {
-            let fileList = await filestorageContract.getFileInfoList(address);
+            let fileList = await filestorageContract.listDirectory(address + '/');
             let fileInfo = fileList.find(obj => {
                 return obj.name === fileName;
             });
@@ -348,7 +348,9 @@ describe('FilestorageContract', function () {
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
                 let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(directoryName) > -1);
+                assert.isArray(contents.find(obj => {
+                    return obj.name === directoryName;
+                }));
             });
         });
     });
@@ -371,6 +373,49 @@ describe('FilestorageContract', function () {
                 let contents = await filestorageContract.listDirectory(directoryPath);
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
+            });
+
+            it('should return content info in specific format', async function () {
+                let dirName = randomstring.generate();
+                let fileName = randomstring.generate();
+                let unfinishedFileName = randomstring.generate();
+                let data = helper.addBytesSymbol(randomstring.generate({
+                    length: 2 * constants.CHUNK_LENGTH,
+                    charset: 'hex'
+                }));
+                let unfinishedFilePath = path.join(dirName, unfinishedFileName);
+                let dirPath = path.join(helper.rmBytesSymbol(address), dirName);
+                let filePath = path.join(dirName, fileName);
+                await filestorageContract.createDirectory(address, dirName, privateKey);
+                await filestorageContract.startUpload(address, unfinishedFilePath, constants.CHUNK_LENGTH, privateKey);
+                await filestorageContract.startUpload(address, filePath, constants.CHUNK_LENGTH, privateKey);
+                await filestorageContract.uploadChunk(address, filePath, 0, data, privateKey);
+                await filestorageContract.finishUpload(address, filePath, privateKey);
+                let content = await filestorageContract.listDirectory(dirPath);
+                let unfinishedInfo = content.find(obj => {
+                    return obj.name === unfinishedFileName;
+                });
+                let finishedInfo = content.find(obj => {
+                    return obj.name === fileName;
+                });
+                assert.isArray(finishedInfo);
+                assert.isTrue(finishedInfo.name === fileName &&
+                    unfinishedInfo.name === unfinishedFileName, 'Incorrect fileName');
+                assert.isTrue(Number(finishedInfo.size) === constants.CHUNK_LENGTH &&
+                    Number(unfinishedInfo.size) === constants.CHUNK_LENGTH, 'Incorrect fileSize');
+                assert.isTrue(Number(finishedInfo.status) === 2, 'Finished file: incorrect status');
+                assert.isTrue(finishedInfo.isChunkUploaded.length === 1, 'Finished file: incorrect chunk length');
+                assert.isTrue(finishedInfo.isChunkUploaded[0] === true, 'Finished file: incorrect chunks');
+                assert.isArray(unfinishedInfo);
+                assert.isTrue(Number(unfinishedInfo.status) === 1, 'Unfinished file: incorrect status');
+                assert.isTrue(unfinishedInfo.isChunkUploaded.length === 1, 'Unfinished file: incorrect chunk length');
+                assert.isTrue(unfinishedInfo.isChunkUploaded[0] === false, 'Unfinished file: incorrect chunks');
+            });
+
+            it('should return empty array wheteher user has no files', async function () {
+                let files = await filestorageContract.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
+                assert.isArray(files, 'should return array');
+                assert.isEmpty(files, 'should contain files');
             });
         });
     });

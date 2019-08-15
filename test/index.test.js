@@ -40,10 +40,6 @@ describe('Test FilestorageClient', function () {
     let foreignAddress;
     let foreignPrivateKey;
     let bigFilePath;
-
-    const callErrorMessage = 'Returned error: EVM revert instruction without description message';
-    const keypairErrorMessage = 'Keypair mismatch';
-    const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
     before(function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
@@ -77,6 +73,7 @@ describe('Test FilestorageClient', function () {
         });
     });
 
+    // TODO: test big files uploading
     describe('Test uploading', function () {
 
         let fileName;
@@ -141,7 +138,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.uploadFile(address, fileName, data, foreignPrivateKey)
                     .should
                     .eventually
-                    .rejectedWith(keypairErrorMessage);
+                    .rejectedWith(errorMessages.INVALID_KEYPAIR);
             });
 
             it('Uploading file with size > 100mb', async function () {
@@ -210,7 +207,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.downloadToBuffer(storagePath)
                     .should
                     .eventually
-                    .rejectedWith(errorMessages.INVALID_PATH);
+                    .rejectedWith(errorMessages.INVALID_STORAGEPATH);
             });
 
             it('Download using downloadToFile', async function () {
@@ -218,7 +215,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.downloadToFile(storagePath)
                     .should
                     .eventually
-                    .rejectedWith(invalidDownloadErrorMessage);
+                    .rejectedWith(errorMessages.ONLY_BROWSER_METHOD);
             });
             // TODO: Download unfinished file
         });
