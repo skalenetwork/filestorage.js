@@ -205,7 +205,7 @@ class FilestorageClient {
                 Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
             let fileInfoObject = {
                 size: Number(contentInfo['size']),
-                status: contentInfo['status'],
+                status: Number(contentInfo['status']),
                 uploadingProgress: uploadingProgress
             };
             return Object.assign(contentInfoObject, fileInfoObject);

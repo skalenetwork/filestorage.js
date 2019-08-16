@@ -327,22 +327,6 @@ describe('FilestorageContract', function () {
         // TODO: Negative tests
     });
 
-    describe('Test getFileInfoList', function () {
-        describe('Positive tests', function () {
-            it('should return fileInfo\'s list whether user has files', async function () {
-                let files = await filestorageContract.getFileInfoList(address);
-                assert.isArray(files, 'should return array');
-                assert.isNotEmpty(files, 'should contain files');
-            });
-
-            it('should return empty array wheteher user has no files', async function () {
-                let files = await filestorageContract.getFileInfoList(emptyAddress);
-                assert.isArray(files, 'should return array');
-                assert.isEmpty(files, 'should contain files');
-            });
-        });
-    });
-
     describe('Test createDirectory', function () {
         describe('Positive tests', function () {
             it('should create new directory', async function () {

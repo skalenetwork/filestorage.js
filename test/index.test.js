@@ -24,7 +24,9 @@
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
-const errorMessages = require('./utils/constants');
+const errorMessages = require('./utils/constants').errorMessages;
+const fileStatus = require('./utils/constants').fileStatus;
+const constants = require('../src/common/constants');
 const path = require('path');
 const Web3 = require('web3');
 const randomstring = require('randomstring');
@@ -43,6 +45,7 @@ describe('Test FilestorageClient', function () {
     let privateKey;
     let foreignAddress;
     let foreignPrivateKey;
+    let emptyAddress;
     let bigFilePath;
     before(function () {
         // eslint-disable-next-line
@@ -51,6 +54,7 @@ describe('Test FilestorageClient', function () {
         privateKey = process.env.PRIVATEKEY;
         foreignAddress = process.env.FOREIGN_ADDRESS;
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
+        emptyAddress = process.env.EMPTY_ADDRESS;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
     });
 
@@ -318,6 +322,11 @@ describe('Test FilestorageClient', function () {
         describe('Positive tests', function () {
             let fileName;
             let directoryName;
+            function isValidStoragePath(storagePath) {
+                let re = new RegExp('([0-9]|[a-f]|[A-F]){40}\\/.+');
+                return re.test(storagePath);
+            }
+
             before(async function () {
                 directoryName = randomstring.generate();
                 fileName = randomstring.generate();
@@ -342,6 +351,51 @@ describe('Test FilestorageClient', function () {
                 assert.isArray(contents);
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(fileName) > -1);
+            });
+
+            it('should return file info in specific format', async function () {
+                let fileName = randomstring.generate();
+                let data = Buffer.from(randomstring.generate({
+                    length: 2 * constants.CHUNK_LENGTH,
+                    charset: 'hex'
+                }), 'hex');
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+                let content = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                let fileInfo = content.find(obj => {
+                    return obj.name === fileName;
+                });
+                assert.isObject(fileInfo);
+                assert.lengthOf(Object.keys(fileInfo), 6, 'Incorrect length of fileInfo');
+                assert.isTrue(fileInfo.name === fileName, 'Incorrect fileName');
+                assert.isTrue(isValidStoragePath(fileInfo.storagePath), 'Invalid storagePath');
+                assert.isTrue(fileInfo.storagePath === path.posix.join(helper.rmBytesSymbol(address), fileName),
+                    'Invalid storagePath');
+                assert.isTrue(fileInfo.isFile, 'Incorrect isFile');
+                assert.isTrue(fileInfo.size === constants.CHUNK_LENGTH, 'Incorrect fileSize');
+                assert.isTrue(fileInfo.status === fileStatus.STATUS_COMPLETED, 'Finished file: incorrect status');
+                assert.isTrue(fileInfo.uploadingProgress === 100, 'Finished file: incorrect chunks');
+            });
+
+            it('should return dir info in specific format', async function () {
+                let dirName = randomstring.generate();
+                let dirPath = path.join(helper.rmBytesSymbol(address), dirName);
+                await filestorage.createDirectory(address, dirName, privateKey);
+                let content = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                let dirInfo = content.find(obj => {
+                    return obj.name === dirName;
+                });
+                assert.isObject(dirInfo);
+                assert.lengthOf(Object.keys(dirInfo), 3, 'Incorrect length of dirInfo');
+                assert.equal(dirInfo.name, dirName, 'Incorrect dirName');
+                assert.isTrue(isValidStoragePath(dirInfo.storagePath), 'Invalid storagePath of dir');
+                assert.equal(dirInfo.storagePath, dirPath, 'Incorrect dir storagePath');
+                assert.isFalse(dirInfo.isFile, 'Incorrect isFile');
+            });
+
+            it('should return empty array wheteher user has no files', async function () {
+                let files = await filestorage.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
+                assert.isArray(files, 'should return array');
+                assert.isEmpty(files, 'should contain files');
             });
         });
     });
