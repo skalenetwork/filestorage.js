@@ -180,6 +180,7 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Directory was deleted');
     }
 
+    // TODO: Update annotations
     /**
      * List information about content of the directory
      *

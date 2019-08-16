@@ -21,8 +21,6 @@
  * @file index.test.js
  * @date 2019
  */
-const assert = require('chai').assert;
-const expect = require('chai').expect;
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
@@ -30,6 +28,12 @@ const errorMessages = require('./utils/constants');
 const path = require('path');
 const Web3 = require('web3');
 require('dotenv').config();
+
+const chai = require('chai');
+const assert = chai.assert;
+const expect = chai.expect;
+chai.should();
+chai.use(require('chai-as-promised'));
 
 let randomstring = require('randomstring');
 let fs = require('fs');

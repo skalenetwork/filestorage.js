@@ -21,7 +21,6 @@
  * @file FilestorageContract.test.js
  * @date 2019
  */
-const assert = require('chai').assert;
 const randomstring = require('randomstring');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
@@ -29,6 +28,11 @@ const constants = require('../src/common/constants');
 const Web3 = require('web3');
 const path = require('path');
 require('dotenv').config();
+
+const chai = require('chai');
+const assert = chai.assert;
+chai.should();
+chai.use(require('chai-as-promised'));
 
 const STATUS_UNEXISTENT = 0;
 const STATUS_UPLOADING = 1;

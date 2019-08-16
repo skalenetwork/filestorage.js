@@ -21,14 +21,14 @@
  * @file helper.test.js
  * @date 2019
  */
-const chai = require('chai');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
 const FilestorageContract = require('../src/FilestorageContract');
 const Web3 = require('web3');
-const assert = chai.assert;
 require('dotenv').config();
 
+const chai = require('chai');
+const assert = chai.assert;
 chai.should();
 chai.use(require('chai-as-promised'));
 
