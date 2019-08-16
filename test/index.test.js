@@ -85,11 +85,13 @@ describe('Test FilestorageClient', function () {
     describe('Test uploading', function () {
 
         let fileName;
+        let dirPath;
         let data;
         describe('Positive tests', function () {
             beforeEach(function () {
                 fileName = 'test_' + randomstring.generate();
                 data = Buffer.from(fileName);
+                dirPath = helper.rmBytesSymbol(address) + '/';
             });
 
             it('Uploading file with private key', async function () {
@@ -120,13 +122,14 @@ describe('Test FilestorageClient', function () {
             it('Uploading file in directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.posix.join(directoryName, fileName);
-                let filePath = await filestorage.uploadFile(address, fileName, data, privateKey);
-                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let relativePath = path.posix.join(directoryName, fileName);
+                dirPath = path.posix.join(dirPath, directoryName);
+                let filePath = await filestorage.uploadFile(address, relativePath, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + relativePath, 'Invalid storagePath');
             });
 
             afterEach('Checking file\'s existance', async function () {
-                let fileList = await filestorage.getFileInfoListByAddress(address);
+                let fileList = await filestorage.listDirectory(dirPath);
                 let isFind = fileList.find(obj => {
                     return obj.name === fileName;
                 });
@@ -239,7 +242,7 @@ describe('Test FilestorageClient', function () {
             });
 
             afterEach(async function () {
-                let fileList = await filestorage.getFileInfoListByAddress(address);
+                let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 let isFind = fileList.find(obj => {
                     return obj.name === fileName;
                 });
@@ -283,29 +286,6 @@ describe('Test FilestorageClient', function () {
         });
     });
 
-    describe('Test getFileInfoListByAddress', function () {
-        function isValidStoragePath(storagePath) {
-            let re = new RegExp('([0-9]|[a-f]|[A-F]){40}\\/.+');
-            return re.test(storagePath);
-        }
-
-        describe('Positive tests', function () {
-            it('should return fileInfo list', async function () {
-                let fileInfoArray = await filestorage.getFileInfoListByAddress(address);
-                assert.isNotEmpty(fileInfoArray, 'Array is empty');
-                assert.isArray(fileInfoArray, 'Object is not array');
-                let fileInfoObject = fileInfoArray[fileInfoArray.length - 1];
-                assert.isString(fileInfoObject['name'], 'fileInfo.name is not String');
-                assert.isNumber(fileInfoObject['size'], 'fileInfo.size is not Number');
-                assert.isString(fileInfoObject['storagePath'], 'fileInfo.storagePath is not String');
-                assert.isTrue(isValidStoragePath(fileInfoObject['storagePath']), 'fileInfo.storagePath is not valid');
-                assert.isNumber(fileInfoObject['uploadingProgress'], 'fileInfo.uploadedChunks is not Number');
-                assert.isTrue(fileInfoObject['uploadingProgress'] >= 0);
-                assert.isTrue(fileInfoObject['uploadingProgress'] <= 100);
-            });
-        });
-    });
-
     describe('Test createDirectory', function () {
         describe('Positive tests', function () {
             it('should create directory', async function () {
@@ -313,7 +293,9 @@ describe('Test FilestorageClient', function () {
                 await filestorage.createDirectory(address, directoryName, privateKey);
                 let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(directoryName) > -1);
+                assert.isObject(contents.find(obj => {
+                    return obj.name === directoryName;
+                }));
             });
         });
     });
@@ -338,19 +320,25 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list root directory', async function () {
-                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
-                assert.isArray(contents);
-                assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(directoryName) > -1, 'Directory is absent');
-                assert.isTrue(contents.indexOf(fileName) > -1, 'File is absent');
+                let contentList = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isArray(contentList);
+                assert.isNotEmpty(contentList);
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === directoryName;
+                }), 'Directory is absent');
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === fileName;
+                }), 'File is absent');
             });
 
             it('should list nested directory', async function () {
                 let directoryPath = path.posix.join(helper.rmBytesSymbol(address), directoryName);
-                let contents = await filestorage.listDirectory(directoryPath);
-                assert.isArray(contents);
-                assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(fileName) > -1);
+                let contentList = await filestorage.listDirectory(directoryPath);
+                assert.isArray(contentList);
+                assert.isNotEmpty(contentList);
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === fileName;
+                }));
             });
 
             it('should return file info in specific format', async function () {
