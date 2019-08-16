@@ -25,6 +25,7 @@ const randomstring = require('randomstring');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
+const fileStatus = require('./utils/constants').fileStatus;
 const Web3 = require('web3');
 const path = require('path');
 require('dotenv').config();
@@ -34,9 +35,6 @@ const assert = chai.assert;
 chai.should();
 chai.use(require('chai-as-promised'));
 
-const STATUS_UNEXISTENT = 0;
-const STATUS_UPLOADING = 1;
-const STATUS_COMPLETED = 2;
 describe('FilestorageContract', function () {
     let filestorageContract;
     let address;
@@ -140,7 +138,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.finishUpload(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_COMPLETED, 'Uploading is not finished');
+                assert.equal(status, fileStatus.STATUS_COMPLETED, 'Uploading is not finished');
             });
 
             it('should finish uploading in several-chunk file', async function () {
@@ -162,7 +160,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.finishUpload(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_COMPLETED, 'Uploading is not finished');
+                assert.equal(status, fileStatus.STATUS_COMPLETED, 'Uploading is not finished');
             });
         });
 
@@ -195,7 +193,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
             });
 
             it('should delete unfinished file', async function () {
@@ -207,14 +205,14 @@ describe('FilestorageContract', function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
             });
 
             it('should delete file without uploading chunks', async function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
             });
         });
 
@@ -292,17 +290,17 @@ describe('FilestorageContract', function () {
 
             it('should return 0 when file is not existed', async function () {
                 let status = await filestorageContract.getFileStatus(emptyFileStoragePath);
-                assert.equal(status, STATUS_UNEXISTENT);
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT);
             });
 
             it('should return 1 when file is loading', async function () {
                 let status = await filestorageContract.getFileStatus(loadingFileStoragePath);
-                assert.equal(status, STATUS_UPLOADING);
+                assert.equal(status, fileStatus.STATUS_UPLOADING);
             });
 
             it('should return 2 when file is completed', async function () {
                 let status = await filestorageContract.getFileStatus(completedFileStoragePath);
-                assert.equal(status, STATUS_COMPLETED);
+                assert.equal(status, fileStatus.STATUS_COMPLETED);
             });
         });
 

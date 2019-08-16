@@ -1,4 +1,4 @@
-const filestorageRequireMessages = {
+const errorMessages = {
     FILE_NOT_FOUND: 'File not found',
     FILE_NOT_EXISTS: 'File not exists',
     INVALID_PATH: 'Invalid path',
@@ -15,4 +15,11 @@ const filestorageRequireMessages = {
     ONLY_BROWSER_METHOD: 'Method downloadToFile can only be used with a browser'
 };
 
-module.exports = filestorageRequireMessages;
+const fileStatus = {
+    STATUS_UNEXISTENT: 0,
+    STATUS_UPLOADING: 1,
+    STATUS_COMPLETED: 2
+};
+
+module.exports.errorMessages = errorMessages;
+module.exports.fileStatus = fileStatus;

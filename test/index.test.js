@@ -27,6 +27,8 @@ const helper = require('../src/common/helper');
 const errorMessages = require('./utils/constants');
 const path = require('path');
 const Web3 = require('web3');
+const randomstring = require('randomstring');
+const fs = require('fs');
 require('dotenv').config();
 
 const chai = require('chai');
@@ -35,8 +37,6 @@ const expect = chai.expect;
 chai.should();
 chai.use(require('chai-as-promised'));
 
-let randomstring = require('randomstring');
-let fs = require('fs');
 describe('Test FilestorageClient', function () {
     let filestorage;
     let address;
@@ -153,8 +153,8 @@ describe('Test FilestorageClient', function () {
                     .rejectedWith(errorMessages.INCORRECT_FILESIZE);
             });
 
-            it('Uploading file with name > 256 chars', async function () {
-                let fileName = randomstring.generate(257);
+            it('Uploading file with name > 255 chars', async function () {
+                let fileName = randomstring.generate(256);
                 await filestorage.uploadFile(address, fileName, data, privateKey)
                     .should
                     .eventually
