@@ -189,7 +189,27 @@ class FilestorageClient {
      * @returns {Array.<string>} - List of content.
      */
     async listDirectory(storagePath) {
-        return await this.contract.listDirectory(storagePath);
+        let rawContent = await this.contract.listDirectory(storagePath);
+        let content = rawContent.map(contentInfo => {
+            let contentStoragePath = path.posix.join(storagePath, contentInfo['name']);
+            let contentInfoObject = {
+                name: contentInfo['name'],
+                storagePath: contentStoragePath,
+                isFile: contentInfo['isFile']
+            };
+            if (!contentInfoObject.isFile) {return contentInfoObject;}
+            let chunkStatusList = contentInfo['isChunkUploaded'];
+            let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
+            let uploadingProgress = (chunkStatusList.length === 0) ? 100 :
+                Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
+            let fileInfoObject = {
+                size: Number(contentInfo['size']),
+                status: contentInfo['status'],
+                uploadingProgress: uploadingProgress
+            };
+            return Object.assign(contentInfoObject, fileInfoObject);
+        });
+        return content;
     }
 
     async _downloadFile(storagePath, stream) {
