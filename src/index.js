@@ -135,10 +135,12 @@ class FilestorageClient {
      * @param {string} address - Account address
      * @param {string} directoryPath - Path of the directory to be created
      * @param {string} [privateKey] - Account private key
+     * @returns {string} Storage path
      */
     async createDirectory(address, directoryPath, privateKey) {
         await this.contract.createDirectory(address, directoryPath, privateKey);
         if (this.enableLogs) console.log('Directory was created');
+        return path.posix.join(Helper.rmBytesSymbol(address), directoryPath);
     }
 
     /**
