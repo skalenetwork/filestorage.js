@@ -88,7 +88,7 @@ describe('FilestorageContract', function () {
 
     describe('Test uploadChunk', function () {
         async function checkChunk(fileName, chunkNumber) {
-            let fileList = await filestorageContract.listDirectory(address + '/');
+            let fileList = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
             let fileInfo = fileList.find(obj => {
                 return obj.name === fileName;
             });

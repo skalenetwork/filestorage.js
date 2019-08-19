@@ -366,7 +366,7 @@ describe('Test FilestorageClient', function () {
 
             it('should return dir info in specific format', async function () {
                 let dirName = randomstring.generate();
-                let dirPath = path.join(helper.rmBytesSymbol(address), dirName);
+                let dirPath = path.posix.join(helper.rmBytesSymbol(address), dirName);
                 await filestorage.createDirectory(address, dirName, privateKey);
                 let content = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 let dirInfo = content.find(obj => {
