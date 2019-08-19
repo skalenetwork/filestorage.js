@@ -47,13 +47,13 @@ class FilestorageContract {
      * @function startUpload
      *
      * @param {string} address - Account address
-     * @param {string} name - Name of uploaded file
+     * @param {string} filePath - Path of uploaded file in account directory
      * @param {number} size - Size of uploaded file
      * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async startUpload(address, name, size, privateKey = '') {
-        let txData = this.contract.methods.startUpload(name, size);
+    async startUpload(address, filePath, size, privateKey = '') {
+        let txData = this.contract.methods.startUpload(filePath, size);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -63,14 +63,14 @@ class FilestorageContract {
      * @function uploadChunk
      *
      * @param {string} address - Account address
-     * @param {string} name - Name of the file in which chunk will be written
+     * @param {string} filePath - Path of the file in which chunk will be written
      * @param {number} position - Position in the file from which chunk will be written
      * @param {string} data - Chunk data in hex format, started with 0x
      * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async uploadChunk(address, name, position, data, privateKey = '') {
-        let txData = this.contract.methods.uploadChunk(name, position, data);
+    async uploadChunk(address, filePath, position, data, privateKey = '') {
+        let txData = this.contract.methods.uploadChunk(filePath, position, data);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.WRITING_GAS);
     }
 
@@ -80,12 +80,12 @@ class FilestorageContract {
      * @function deleteFile
      *
      * @param {string} address - Account address
-     * @param {string} name - Name of the file to be deleted
+     * @param {string} filePath - Path to the file to be deleted
      * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async deleteFile(address, name, privateKey = '') {
-        let txData = this.contract.methods.deleteFile(name);
+    async deleteFile(address, filePath, privateKey = '') {
+        let txData = this.contract.methods.deleteFile(filePath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -96,12 +96,12 @@ class FilestorageContract {
      * @function finishUpload
      *
      * @param {string} address - Account address
-     * @param {string} name - Name of uploaded file
+     * @param {string} filePath - Path of uploaded file in account directory
      * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async finishUpload(address, name, privateKey = '') {
-        let txData = this.contract.methods.finishUpload(name);
+    async finishUpload(address, filePath, privateKey = '') {
+        let txData = this.contract.methods.finishUpload(filePath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 

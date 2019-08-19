@@ -53,14 +53,14 @@ class FilestorageClient {
      * @function uploadFile
      *
      * @param {string} address - Account address
-     * @param {string} fileName - Name of uploaded file
+     * @param {string} filePath - Path of uploaded file in account directory
      * @param {Buffer} fileBuffer - Uploaded file data
      * @param {string} [privateKey] - Account private key
      * @returns {string} Storage path
      */
-    async uploadFile(address, fileName, fileBuffer, privateKey) {
+    async uploadFile(address, filePath, fileBuffer, privateKey) {
         let fileSize = fileBuffer.length;
-        await this.contract.startUpload(address, fileName, fileSize, privateKey);
+        await this.contract.startUpload(address, filePath, fileSize, privateKey);
         if (this.enableLogs) console.log('File was created!');
 
         let ptrPosition = 0;
@@ -69,7 +69,7 @@ class FilestorageClient {
             let rawChunk = fileBuffer.slice(ptrPosition, ptrPosition +
                 Math.min(fileSize - ptrPosition, constants.CHUNK_LENGTH));
             let chunk = Helper.bufferToHex(rawChunk);
-            await this.contract.uploadChunk(address, fileName, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
+            await this.contract.uploadChunk(address, filePath, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
             ptrPosition += chunk.length / 2;
             if (this.enableLogs) {
                 console.log('Chunk ' + i + ' was loaded ' + ptrPosition);
@@ -78,9 +78,9 @@ class FilestorageClient {
         }
 
         if (this.enableLogs) console.log('Checking file validity...');
-        await this.contract.finishUpload(address, fileName, privateKey);
+        await this.contract.finishUpload(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was uploaded!');
-        return path.posix.join(Helper.rmBytesSymbol(address), fileName);
+        return path.posix.join(Helper.rmBytesSymbol(address), filePath);
     }
 
     /**
@@ -119,11 +119,11 @@ class FilestorageClient {
      * @function deleteFile
      *
      * @param {string} address - Account address
-     * @param {string} fileName - Name of the file to be deleted
+     * @param {string} filePath - Path to the file to be deleted
      * @param {string} [privateKey] - Account private key
      */
-    async deleteFile(address, fileName, privateKey) {
-        await this.contract.deleteFile(address, fileName, privateKey);
+    async deleteFile(address, filePath, privateKey) {
+        await this.contract.deleteFile(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was deleted');
     }
 
