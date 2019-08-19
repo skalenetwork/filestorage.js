@@ -26,6 +26,7 @@ const InvalidCredentialsException = require('../exceptions/InvalidCredentialsExc
 const FilestorageContractException = require('../exceptions/FilestorageContractException');
 const PRIVATE_KEY_REGEX = /^(0x)?[0-9a-f]{64}$/i;
 
+// TODO: remove 0 gasPrice
 const Helper = {
 
     ensureStartsWith0x(str) {
@@ -70,6 +71,7 @@ const Helper = {
             from: account,
             data: encoded,
             gas: gas,
+            gasPrice: 0,
             to: contractAddress,
             nonce: nonce
         };
@@ -83,6 +85,7 @@ const Helper = {
         return await transactionData.send({
             from: account,
             gas: gas,
+            gasPrice: 0,
             nonce: nonce
         });
     },
