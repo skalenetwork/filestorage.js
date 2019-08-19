@@ -150,20 +150,6 @@ class FilestorageContract {
     }
 
     /**
-     * Javascript wrapper for solidity function getFileInfoList. Get information about files in Filestorage of the
-     * specific account
-     *
-     * @function getFileInfoList
-     *
-     * @param {string} address - Account address
-     * @returns {{name:string, size:number, storagePath:string, isChunkUploaded:boolean[]}} - File description
-     */
-    async getFileInfoList(address) {
-        let result = await this.contract.methods.getFileInfoList(address).call();
-        return result;
-    }
-
-    /**
      * Javascript wrapper for solidity function createDir. Create directory in Filestorage
      *
      * @function createDirectory

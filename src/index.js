@@ -128,31 +128,6 @@ class FilestorageClient {
     }
 
     /**
-     * Get information about files in Filestorage of the specific account
-     *
-     * @function getFileInfoListByAddress
-     *
-     * @param {string} address - Account address
-     * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description
-     */
-    async getFileInfoListByAddress(address) {
-        let rawFiles = await this.contract.getFileInfoList(address);
-        let files = rawFiles.map(file => {
-            let storagePath = path.posix.join(Helper.rmBytesSymbol(address), file['name']);
-            let chunkStatusList = file['isChunkUploaded'];
-            let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
-            let uploadingProgress = Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
-            return {
-                name: file['name'],
-                size: parseInt(file['size'], 10),
-                storagePath: storagePath,
-                uploadingProgress: uploadingProgress
-            };
-        });
-        return files;
-    }
-
-    /**
      * Create directory in Filestorage
      *
      * @function createDirectory
