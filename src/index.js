@@ -38,8 +38,8 @@ class FilestorageClient {
      *
      * @class
      *
-     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes.
-     * @param {boolean} [enableLogs=false] - Enable/disable console logs.
+     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
+     * @param {boolean} [enableLogs=false] - Enable/disable console logs
      */
     constructor(web3Provider, enableLogs = false) {
         this.web3 = new Web3(web3Provider);
@@ -52,11 +52,11 @@ class FilestorageClient {
      *
      * @function uploadFile
      *
-     * @param {string} address - Account address.
-     * @param {string} fileName - Name of uploaded file.
-     * @param {Buffer} fileBuffer - Uploaded file data.
-     * @param {string} [privateKey] - Account private key.
-     * @returns {string} Storage path.
+     * @param {string} address - Account address
+     * @param {string} fileName - Name of uploaded file
+     * @param {Buffer} fileBuffer - Uploaded file data
+     * @param {string} [privateKey] - Account private key
+     * @returns {string} Storage path
      */
     async uploadFile(address, fileName, fileBuffer, privateKey) {
         let fileSize = fileBuffer.length;
@@ -88,7 +88,7 @@ class FilestorageClient {
      *
      * @function downloadToFile
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
+     * @param {string} storagePath - Path of the file in Filestorage
      */
     async downloadToFile(storagePath) {
         if (!streamSaver) {
@@ -106,8 +106,8 @@ class FilestorageClient {
      *
      * @function downloadToBuffer
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
-     * @returns {Buffer} - File data in bytes.
+     * @param {string} storagePath - Path of the file in Filestorage
+     * @returns {Buffer} - File data in bytes
      */
     async downloadToBuffer(storagePath) {
         return await this._downloadFile(storagePath);
@@ -118,9 +118,9 @@ class FilestorageClient {
      *
      * @function deleteFile
      *
-     * @param {string} address - Account address.
-     * @param {string} fileName - Name of the file to be deleted.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} fileName - Name of the file to be deleted
+     * @param {string} [privateKey] - Account private key
      */
     async deleteFile(address, fileName, privateKey) {
         await this.contract.deleteFile(address, fileName, privateKey);
@@ -132,8 +132,8 @@ class FilestorageClient {
      *
      * @function getFileInfoListByAddress
      *
-     * @param {string} address - Account address.
-     * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description.
+     * @param {string} address - Account address
+     * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description
      */
     async getFileInfoListByAddress(address) {
         let rawFiles = await this.contract.getFileInfoList(address);
@@ -157,9 +157,9 @@ class FilestorageClient {
      *
      * @function createDirectory
      *
-     * @param {string} address - Account address.
-     * @param {string} directoryPath - Path of the directory to be created.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be created
+     * @param {string} [privateKey] - Account private key
      */
     async createDirectory(address, directoryPath, privateKey) {
         await this.contract.createDirectory(address, directoryPath, privateKey);
@@ -171,9 +171,9 @@ class FilestorageClient {
      *
      * @function deleteDirectory
      *
-     * @param {string} address - Account address.
-     * @param {string} directoryPath - Path of the directory to be deleted.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be deleted
+     * @param {string} [privateKey] - Account private key
      */
     async deleteDirectory(address, directoryPath, privateKey) {
         await this.contract.deleteDirectory(address, directoryPath, privateKey);
@@ -186,8 +186,8 @@ class FilestorageClient {
      *
      * @function listDirectory
      *
-     * @param {string} storagePath - Path of the directory in Filestorage.
-     * @returns {Array.<string>} - List of content.
+     * @param {string} storagePath - Path of the directory in Filestorage
+     * @returns {Array.<string>} - List of content
      */
     async listDirectory(storagePath) {
         let rawContent = await this.contract.listDirectory(storagePath);
