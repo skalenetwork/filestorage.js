@@ -199,7 +199,8 @@ class FilestorageContract {
      * @function listDirectory
      *
      * @param {string} storagePath - Path of the directory in Filestorage
-     * @returns {Array.<string>} - List of content
+     * @returns {Array.<{name:string, isFile:boolean, status:number, status:string, isChunkUploaded:boolean[]}>} -
+     * List of content
      */
     async listDirectory(storagePath) {
         let result = await this.contract.methods.listDir(storagePath).call();

@@ -180,14 +180,15 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Directory was deleted');
     }
 
-    // TODO: Update annotations
     /**
      * List information about content of the directory
      *
      * @function listDirectory
      *
      * @param {string} storagePath - Path of the directory in Filestorage
-     * @returns {Array.<string>} - List of content
+     * @returns {Array.<{name:string, storagePath:string, isFile:boolean, size:number, status:number,
+     * uploadingProgress:number}|{name:string, storagePath:string, isFile:boolean}>} - List of content:
+     * files or directories
      */
     async listDirectory(storagePath) {
         let rawContent = await this.contract.listDirectory(storagePath);
