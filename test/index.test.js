@@ -405,7 +405,7 @@ describe('Test FilestorageClient', function () {
                     .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
                 await filestorage.listDirectory(' ')
                     .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
-                await filestorage.listDirectory(address)
+                await filestorage.listDirectory(helper.addBytesSymbol(address))
                     .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
             });
         });
