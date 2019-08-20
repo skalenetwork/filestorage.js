@@ -369,9 +369,9 @@ describe('FilestorageContract', function () {
                     length: 2 * constants.CHUNK_LENGTH,
                     charset: 'hex'
                 }));
-                let unfinishedFilePath = path.join(dirName, unfinishedFileName);
-                let dirPath = path.join(helper.rmBytesSymbol(address), dirName);
-                let filePath = path.join(dirName, fileName);
+                let unfinishedFilePath = path.posix.join(dirName, unfinishedFileName);
+                let dirPath = path.posix.join(helper.rmBytesSymbol(address), dirName);
+                let filePath = path.posix.join(dirName, fileName);
                 await filestorageContract.createDirectory(address, dirName, privateKey);
                 await filestorageContract.startUpload(address, unfinishedFilePath, constants.CHUNK_LENGTH, privateKey);
                 await filestorageContract.startUpload(address, filePath, constants.CHUNK_LENGTH, privateKey);
