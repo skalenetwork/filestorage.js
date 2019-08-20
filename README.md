@@ -62,13 +62,13 @@ let filestorage = new Filestorage(web3Provider);
  Upload file using internal signing:
 
 ```javascript
-filestorage.uploadFile(address, fileName, fileBuffer, privateKey);
+filestorage.uploadFile(address, filePath, fileBuffer, privateKey);
 ```
 
  Upload file using external signing (Metamask, etc.):
 
 ```javascript
-filestorage.uploadFile(address, fileName, fileBuffer);
+filestorage.uploadFile(address, filePath, fileBuffer);
 ```
 
 ##### Parameters
@@ -76,7 +76,7 @@ filestorage.uploadFile(address, fileName, fileBuffer);
 | Parameter           | Description                                                       |
 | ------------------- | ----------------------------------------------------------------- |
 | `String` address    | Account address                                                   |
-| `String` fileName   | Name of uploaded file                                             |
+| `String` filePath   | Path of uploaded file in account directory                        |
 | `Buffer` fileBuffer | Uploaded file data                                                |
 | `String` privateKey | _(optional)_ Account private key, to sign transactions internally |
 
@@ -85,8 +85,6 @@ filestorage.uploadFile(address, fileName, fileBuffer);
 |   Type   | Description                                 |
 | :------: | ------------------------------------------- |
 | `String` | [Path of file in Filestorage](#storagePath) |
-
-# 
 
 #### Download file
 
@@ -127,49 +125,106 @@ filestorage.downloadToBuffer(storagePath);
 Delete file using internal signing:
 
 ```javascript
-filestorage.deleteFile(yourAddress, fileName, privateKey);
+filestorage.deleteFile(address, filePath, privateKey);
 ```
 
 Delete file using external signing (Metamask etc):
 
 ```javascript
-filestorage.deleteFile(yourAddress, fileName);
+filestorage.deleteFile(address, filePath);
 ```
 
 ##### Parameters
 
-| Parameter           | Description                               |
-| ------------------- | ----------------------------------------- |
-| `String` address    | Account address                           |
-| `String` fileName   | Name of the file to be deleted            |
-| `String` privateKey | Account private key, to sign transactions |
+| Parameter           | Description                                            |
+| ------------------- | ------------------------------------------------------ |
+| `String` address    | Account address                                        |
+| `String` filePath   | Path of the file in account directory to be deleted    |
+| `String` privateKey | _(optional)_ Account private key, to sign transactions |
 
-#### Get file info
+#### Create directory
 
-Get information about files in Filestorage for specific account:
+Creates directory on the specific path. To create directory using internal signing:
 
 ```javascript
-filestorage.getFileInfoListByAddress(address);
+filestorage.createDirectory(address, directoryPath, privateKey);
+```
+Create directory using external signing (Metamask etc):
+
+```javascript
+filestorage.createDirectory(address, directoryPath);
 ```
 
 ##### Parameters
 
-| Parameter        | Description     |
-| ---------------- | --------------- |
-| `String` address | Account address |
+| Parameter                | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| `String` address         | Account address                                        |
+| `String` directoryPath   | Path of the directory to be created                    |
+| `String` privateKey      | _(optional)_ Account private key, to sign transactions |
 
 ##### Returns
 
-`Array` of file description objects.
+| Parameter            | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `String` storagePath | [Path of directory in Filestorage](#storagePath) |
 
-Each description `Object` contains:
+#### Delete directory
+
+Deletes directory on the specific path. To delete directory using internal signing:
+
+```javascript
+filestorage.deleteDirectory(address, directoryPath, privateKey);
+```
+Create directory using external signing (Metamask etc):
+
+```javascript
+filestorage.deleteDirectory(address, directoryPath);
+```
+
+##### Parameters
+
+| Parameter                | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| `String` address         | Account address                                        |
+| `String` directoryPath   | Path of the directory to be deleted                    |
+| `String` privateKey      | _(optional)_ Account private key, to sign transactions |
+
+#### List directory
+
+Lists content of the specific directory
+
+```javascript
+filestorage.listDirectory(storagePath); 
+```
+
+##### Parameters
+
+| Parameter            | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `String` storagePath | [Path of directory in Filestorage](#storagePath) |
+
+##### Returns
+`Array` of content. Each content could be file or directory.
+
+Content `Object` for file contains:
 
 | Field                      | Description                                 |
 | -------------------------- | ------------------------------------------- |
 | `String` name              | File name                                   |
-| `number` size              | File size, in bytes                         |
 | `String` storagePath       | [Path of file in Filestorage](#storagePath) |
+| `String` isFile            | Whether content is file                     |
+| `number` size              | File size, in bytes                         |
+| `number` status            | File uploading status                       |
 | `number` uploadingProgress | Upload progress, in percents                |
+
+Content `Object` for directory contains:
+
+| Field                      | Description                                      |
+| -------------------------- | ------------------------------------------------ |
+| `String` name              | Directory name                                   |
+| `String` storagePath       | [Path of directory in Filestorage](#storagePath) |
+| `String` isFile            | Whether content is file                          |
 
 ## Development
 
@@ -244,14 +299,16 @@ npm run lint
 
 #### Storage path <a name="storagePath"></a>
 
-Storage path is a label used to point to file in Filestorage. It contains 2 parts through slash:
+Storage path is a label used to point to file or directory in Filestorage. It contains 2 parts through slash:
 1. File owner address (without 0x)
-2. File name
+2. File/directory path in owner's root directory
 
 Example:
 
 ```bash
+77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/directoryA/random_text.txt
 77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt
+0x77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt #Invalid storagePath
 ```
 
 ## Contributing

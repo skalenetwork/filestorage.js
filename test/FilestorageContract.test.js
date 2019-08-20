@@ -21,18 +21,20 @@
  * @file FilestorageContract.test.js
  * @date 2019
  */
-const assert = require('chai').assert;
 const randomstring = require('randomstring');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
+const fileStatus = require('./utils/constants').fileStatus;
 const Web3 = require('web3');
 const path = require('path');
 require('dotenv').config();
 
-const STATUS_UNEXISTENT = 0;
-const STATUS_UPLOADING = 1;
-const STATUS_COMPLETED = 2;
+const chai = require('chai');
+const assert = chai.assert;
+chai.should();
+chai.use(require('chai-as-promised'));
+
 describe('FilestorageContract', function () {
     let filestorageContract;
     let address;
@@ -86,7 +88,7 @@ describe('FilestorageContract', function () {
 
     describe('Test uploadChunk', function () {
         async function checkChunk(fileName, chunkNumber) {
-            let fileList = await filestorageContract.getFileInfoList(address);
+            let fileList = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
             let fileInfo = fileList.find(obj => {
                 return obj.name === fileName;
             });
@@ -136,7 +138,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.finishUpload(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_COMPLETED, 'Uploading is not finished');
+                assert.equal(status, fileStatus.STATUS_COMPLETED, 'Uploading is not finished');
             });
 
             it('should finish uploading in several-chunk file', async function () {
@@ -158,7 +160,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.finishUpload(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_COMPLETED, 'Uploading is not finished');
+                assert.equal(status, fileStatus.STATUS_COMPLETED, 'Uploading is not finished');
             });
         });
 
@@ -191,7 +193,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
             });
 
             it('should delete unfinished file', async function () {
@@ -203,14 +205,14 @@ describe('FilestorageContract', function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
             });
 
             it('should delete file without uploading chunks', async function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
             });
         });
 
@@ -288,17 +290,17 @@ describe('FilestorageContract', function () {
 
             it('should return 0 when file is not existed', async function () {
                 let status = await filestorageContract.getFileStatus(emptyFileStoragePath);
-                assert.equal(status, STATUS_UNEXISTENT);
+                assert.equal(status, fileStatus.STATUS_UNEXISTENT);
             });
 
             it('should return 1 when file is loading', async function () {
                 let status = await filestorageContract.getFileStatus(loadingFileStoragePath);
-                assert.equal(status, STATUS_UPLOADING);
+                assert.equal(status, fileStatus.STATUS_UPLOADING);
             });
 
             it('should return 2 when file is completed', async function () {
                 let status = await filestorageContract.getFileStatus(completedFileStoragePath);
-                assert.equal(status, STATUS_COMPLETED);
+                assert.equal(status, fileStatus.STATUS_COMPLETED);
             });
         });
 
@@ -325,22 +327,6 @@ describe('FilestorageContract', function () {
         // TODO: Negative tests
     });
 
-    describe('Test getFileInfoList', function () {
-        describe('Positive tests', function () {
-            it('should return fileInfo\'s list whether user has files', async function () {
-                let files = await filestorageContract.getFileInfoList(address);
-                assert.isArray(files, 'should return array');
-                assert.isNotEmpty(files, 'should contain files');
-            });
-
-            it('should return empty array wheteher user has no files', async function () {
-                let files = await filestorageContract.getFileInfoList(emptyAddress);
-                assert.isArray(files, 'should return array');
-                assert.isEmpty(files, 'should contain files');
-            });
-        });
-    });
-
     describe('Test createDirectory', function () {
         describe('Positive tests', function () {
             it('should create new directory', async function () {
@@ -348,7 +334,9 @@ describe('FilestorageContract', function () {
                 await filestorageContract.createDirectory(address, directoryName, privateKey);
                 let contents = await filestorageContract.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(directoryName) > -1);
+                assert.isArray(contents.find(obj => {
+                    return obj.name === directoryName;
+                }));
             });
         });
     });
@@ -371,6 +359,49 @@ describe('FilestorageContract', function () {
                 let contents = await filestorageContract.listDirectory(directoryPath);
                 assert.isNotEmpty(contents);
                 assert.isArray(contents);
+            });
+
+            it('should return content info in specific format', async function () {
+                let dirName = randomstring.generate();
+                let fileName = randomstring.generate();
+                let unfinishedFileName = randomstring.generate();
+                let data = helper.addBytesSymbol(randomstring.generate({
+                    length: 2 * constants.CHUNK_LENGTH,
+                    charset: 'hex'
+                }));
+                let unfinishedFilePath = path.posix.join(dirName, unfinishedFileName);
+                let dirPath = path.posix.join(helper.rmBytesSymbol(address), dirName);
+                let filePath = path.posix.join(dirName, fileName);
+                await filestorageContract.createDirectory(address, dirName, privateKey);
+                await filestorageContract.startUpload(address, unfinishedFilePath, constants.CHUNK_LENGTH, privateKey);
+                await filestorageContract.startUpload(address, filePath, constants.CHUNK_LENGTH, privateKey);
+                await filestorageContract.uploadChunk(address, filePath, 0, data, privateKey);
+                await filestorageContract.finishUpload(address, filePath, privateKey);
+                let content = await filestorageContract.listDirectory(dirPath);
+                let unfinishedInfo = content.find(obj => {
+                    return obj.name === unfinishedFileName;
+                });
+                let finishedInfo = content.find(obj => {
+                    return obj.name === fileName;
+                });
+                assert.isArray(finishedInfo);
+                assert.isTrue(finishedInfo.name === fileName &&
+                    unfinishedInfo.name === unfinishedFileName, 'Incorrect fileName');
+                assert.isTrue(Number(finishedInfo.size) === constants.CHUNK_LENGTH &&
+                    Number(unfinishedInfo.size) === constants.CHUNK_LENGTH, 'Incorrect fileSize');
+                assert.isTrue(Number(finishedInfo.status) === 2, 'Finished file: incorrect status');
+                assert.isTrue(finishedInfo.isChunkUploaded.length === 1, 'Finished file: incorrect chunk length');
+                assert.isTrue(finishedInfo.isChunkUploaded[0] === true, 'Finished file: incorrect chunks');
+                assert.isArray(unfinishedInfo);
+                assert.isTrue(Number(unfinishedInfo.status) === 1, 'Unfinished file: incorrect status');
+                assert.isTrue(unfinishedInfo.isChunkUploaded.length === 1, 'Unfinished file: incorrect chunk length');
+                assert.isTrue(unfinishedInfo.isChunkUploaded[0] === false, 'Unfinished file: incorrect chunks');
+            });
+
+            it('should return empty array wheteher user has no files', async function () {
+                let files = await filestorageContract.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
+                assert.isArray(files, 'should return array');
+                assert.isEmpty(files, 'should contain files');
             });
         });
     });

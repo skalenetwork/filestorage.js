@@ -21,29 +21,32 @@
  * @file index.test.js
  * @date 2019
  */
-const assert = require('chai').assert;
-const expect = require('chai').expect;
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
-const errorMessages = require('./utils/constants');
+const errorMessages = require('./utils/constants').errorMessages;
+const fileStatus = require('./utils/constants').fileStatus;
+const constants = require('../src/common/constants');
 const path = require('path');
 const Web3 = require('web3');
+const randomstring = require('randomstring');
+const fs = require('fs');
 require('dotenv').config();
 
-let randomstring = require('randomstring');
-let fs = require('fs');
+const chai = require('chai');
+const assert = chai.assert;
+const expect = chai.expect;
+chai.should();
+chai.use(require('chai-as-promised'));
+
 describe('Test FilestorageClient', function () {
     let filestorage;
     let address;
     let privateKey;
     let foreignAddress;
     let foreignPrivateKey;
+    let emptyAddress;
     let bigFilePath;
-
-    const callErrorMessage = 'Returned error: EVM revert instruction without description message';
-    const keypairErrorMessage = 'Keypair mismatch';
-    const invalidDownloadErrorMessage = 'Method downloadToFile can only be used with a browser';
     before(function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
@@ -51,6 +54,7 @@ describe('Test FilestorageClient', function () {
         privateKey = process.env.PRIVATEKEY;
         foreignAddress = process.env.FOREIGN_ADDRESS;
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
+        emptyAddress = process.env.EMPTY_ADDRESS;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
     });
 
@@ -77,14 +81,17 @@ describe('Test FilestorageClient', function () {
         });
     });
 
+    // TODO: test big files uploading
     describe('Test uploading', function () {
 
         let fileName;
+        let dirPath;
         let data;
         describe('Positive tests', function () {
             beforeEach(function () {
                 fileName = 'test_' + randomstring.generate();
                 data = Buffer.from(fileName);
+                dirPath = helper.rmBytesSymbol(address) + '/';
             });
 
             it('Uploading file with private key', async function () {
@@ -115,13 +122,14 @@ describe('Test FilestorageClient', function () {
             it('Uploading file in directory', async function () {
                 let directoryName = randomstring.generate();
                 await filestorage.createDirectory(address, directoryName, privateKey);
-                fileName = path.posix.join(directoryName, fileName);
-                let filePath = await filestorage.uploadFile(address, fileName, data, privateKey);
-                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + fileName, 'Invalid storagePath');
+                let relativePath = path.posix.join(directoryName, fileName);
+                dirPath = path.posix.join(dirPath, directoryName);
+                let filePath = await filestorage.uploadFile(address, relativePath, data, privateKey);
+                assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + relativePath, 'Invalid storagePath');
             });
 
             afterEach('Checking file\'s existance', async function () {
-                let fileList = await filestorage.getFileInfoListByAddress(address);
+                let fileList = await filestorage.listDirectory(dirPath);
                 let isFind = fileList.find(obj => {
                     return obj.name === fileName;
                 });
@@ -141,7 +149,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.uploadFile(address, fileName, data, foreignPrivateKey)
                     .should
                     .eventually
-                    .rejectedWith(keypairErrorMessage);
+                    .rejectedWith(errorMessages.INVALID_KEYPAIR);
             });
 
             it('Uploading file with size > 100mb', async function () {
@@ -152,8 +160,8 @@ describe('Test FilestorageClient', function () {
                     .rejectedWith(errorMessages.INCORRECT_FILESIZE);
             });
 
-            it('Uploading file with name > 256 chars', async function () {
-                let fileName = randomstring.generate(257);
+            it('Uploading file with name > 255 chars', async function () {
+                let fileName = randomstring.generate(256);
                 await filestorage.uploadFile(address, fileName, data, privateKey)
                     .should
                     .eventually
@@ -210,7 +218,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.downloadToBuffer(storagePath)
                     .should
                     .eventually
-                    .rejectedWith(callErrorMessage);
+                    .rejectedWith(errorMessages.INVALID_STORAGEPATH);
             });
 
             it('Download using downloadToFile', async function () {
@@ -218,7 +226,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.downloadToFile(storagePath)
                     .should
                     .eventually
-                    .rejectedWith(invalidDownloadErrorMessage);
+                    .rejectedWith(errorMessages.ONLY_BROWSER_METHOD);
             });
             // TODO: Download unfinished file
         });
@@ -234,7 +242,7 @@ describe('Test FilestorageClient', function () {
             });
 
             afterEach(async function () {
-                let fileList = await filestorage.getFileInfoListByAddress(address);
+                let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 let isFind = fileList.find(obj => {
                     return obj.name === fileName;
                 });
@@ -263,7 +271,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.deleteFile(address, fileName, privateKey)
                     .should
                     .eventually
-                    .rejectedWith(errorMessages.FILE_NOT_EXISTS);
+                    .rejectedWith(errorMessages.INVALID_PATH);
             });
 
             it('should delete foreign file', async function () {
@@ -273,30 +281,7 @@ describe('Test FilestorageClient', function () {
                 await filestorage.deleteFile(address, fileName, privateKey)
                     .should
                     .eventually
-                    .rejectedWith(errorMessages.FILE_NOT_EXISTS);
-            });
-        });
-    });
-
-    describe('Test getFileInfoListByAddress', function () {
-        function isValidStoragePath(storagePath) {
-            let re = new RegExp('([0-9]|[a-f]|[A-F]){40}\\/.+');
-            return re.test(storagePath);
-        }
-
-        describe('Positive tests', function () {
-            it('should return fileInfo list', async function () {
-                let fileInfoArray = await filestorage.getFileInfoListByAddress(address);
-                assert.isNotEmpty(fileInfoArray, 'Array is empty');
-                assert.isArray(fileInfoArray, 'Object is not array');
-                let fileInfoObject = fileInfoArray[fileInfoArray.length - 1];
-                assert.isString(fileInfoObject['name'], 'fileInfo.name is not String');
-                assert.isNumber(fileInfoObject['size'], 'fileInfo.size is not Number');
-                assert.isString(fileInfoObject['storagePath'], 'fileInfo.storagePath is not String');
-                assert.isTrue(isValidStoragePath(fileInfoObject['storagePath']), 'fileInfo.storagePath is not valid');
-                assert.isNumber(fileInfoObject['uploadingProgress'], 'fileInfo.uploadedChunks is not Number');
-                assert.isTrue(fileInfoObject['uploadingProgress'] >= 0);
-                assert.isTrue(fileInfoObject['uploadingProgress'] <= 100);
+                    .rejectedWith(errorMessages.INVALID_PATH);
             });
         });
     });
@@ -308,7 +293,9 @@ describe('Test FilestorageClient', function () {
                 await filestorage.createDirectory(address, directoryName, privateKey);
                 let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(directoryName) > -1);
+                assert.isObject(contents.find(obj => {
+                    return obj.name === directoryName;
+                }));
             });
         });
     });
@@ -317,6 +304,11 @@ describe('Test FilestorageClient', function () {
         describe('Positive tests', function () {
             let fileName;
             let directoryName;
+            function isValidStoragePath(storagePath) {
+                let re = new RegExp('([0-9]|[a-f]|[A-F]){40}\\/.+');
+                return re.test(storagePath);
+            }
+
             before(async function () {
                 directoryName = randomstring.generate();
                 fileName = randomstring.generate();
@@ -328,19 +320,93 @@ describe('Test FilestorageClient', function () {
             });
 
             it('should list root directory', async function () {
-                let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
-                assert.isArray(contents);
-                assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(directoryName) > -1, 'Directory is absent');
-                assert.isTrue(contents.indexOf(fileName) > -1, 'File is absent');
+                let contentList = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                assert.isArray(contentList);
+                assert.isNotEmpty(contentList);
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === directoryName;
+                }), 'Directory is absent');
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === fileName;
+                }), 'File is absent');
+            });
+
+            it('should list root directory without /', async function () {
+                let contentList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
+                assert.isArray(contentList);
+                assert.isNotEmpty(contentList);
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === directoryName;
+                }), 'Directory is absent');
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === fileName;
+                }), 'File is absent');
             });
 
             it('should list nested directory', async function () {
                 let directoryPath = path.posix.join(helper.rmBytesSymbol(address), directoryName);
-                let contents = await filestorage.listDirectory(directoryPath);
-                assert.isArray(contents);
-                assert.isNotEmpty(contents);
-                assert.isTrue(contents.indexOf(fileName) > -1);
+                let contentList = await filestorage.listDirectory(directoryPath);
+                assert.isArray(contentList);
+                assert.isNotEmpty(contentList);
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === fileName;
+                }));
+            });
+
+            it('should return file info in specific format', async function () {
+                let fileName = randomstring.generate();
+                let data = Buffer.from(randomstring.generate({
+                    length: 2 * constants.CHUNK_LENGTH,
+                    charset: 'hex'
+                }), 'hex');
+                await filestorage.uploadFile(address, fileName, data, privateKey);
+                let content = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                let fileInfo = content.find(obj => {
+                    return obj.name === fileName;
+                });
+                assert.isObject(fileInfo);
+                assert.lengthOf(Object.keys(fileInfo), 6, 'Incorrect length of fileInfo');
+                assert.isTrue(fileInfo.name === fileName, 'Incorrect fileName');
+                assert.isTrue(isValidStoragePath(fileInfo.storagePath), 'Invalid storagePath');
+                assert.isTrue(fileInfo.storagePath === path.posix.join(helper.rmBytesSymbol(address), fileName),
+                    'Invalid storagePath');
+                assert.isTrue(fileInfo.isFile, 'Incorrect isFile');
+                assert.isTrue(fileInfo.size === constants.CHUNK_LENGTH, 'Incorrect fileSize');
+                assert.isTrue(fileInfo.status === fileStatus.STATUS_COMPLETED, 'Finished file: incorrect status');
+                assert.isTrue(fileInfo.uploadingProgress === 100, 'Finished file: incorrect chunks');
+            });
+
+            it('should return dir info in specific format', async function () {
+                let dirName = randomstring.generate();
+                let dirPath = path.posix.join(helper.rmBytesSymbol(address), dirName);
+                await filestorage.createDirectory(address, dirName, privateKey);
+                let content = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
+                let dirInfo = content.find(obj => {
+                    return obj.name === dirName;
+                });
+                assert.isObject(dirInfo);
+                assert.lengthOf(Object.keys(dirInfo), 3, 'Incorrect length of dirInfo');
+                assert.equal(dirInfo.name, dirName, 'Incorrect dirName');
+                assert.isTrue(isValidStoragePath(dirInfo.storagePath), 'Invalid storagePath of dir');
+                assert.equal(dirInfo.storagePath, dirPath, 'Incorrect dir storagePath');
+                assert.isFalse(dirInfo.isFile, 'Incorrect isFile');
+            });
+
+            it('should return empty array wheteher user has no files', async function () {
+                let files = await filestorage.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
+                assert.isArray(files, 'should return array');
+                assert.isEmpty(files, 'should contain files');
+            });
+
+            it('should fail listing unexisted dir', async function () {
+                await filestorage.listDirectory(path.posix.join(helper.rmBytesSymbol(emptyAddress), 'void'))
+                    .should.eventually.rejectedWith(errorMessages.INVALID_PATH);
+                await filestorage.listDirectory('')
+                    .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
+                await filestorage.listDirectory(' ')
+                    .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
+                await filestorage.listDirectory(helper.addBytesSymbol(address))
+                    .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
             });
         });
     });

@@ -2,29 +2,56 @@
   "FileStorage.sol:FileStorage": {
     "abi": [
       {
-        "constant": true,
+        "constant": false,
         "inputs": [
           {
-            "name": "storagePath",
+            "name": "directoryPath",
             "type": "string"
           }
         ],
-        "name": "getFileStatus",
-        "outputs": [
-          {
-            "name": "",
-            "type": "int256"
-          }
-        ],
+        "name": "createDir",
+        "outputs": [],
         "payable": false,
-        "stateMutability": "view",
+        "stateMutability": "nonpayable",
         "type": "function"
       },
       {
         "constant": false,
         "inputs": [
           {
-            "name": "fileName",
+            "name": "directoryPath",
+            "type": "string"
+          }
+        ],
+        "name": "deleteDir",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "filePath",
+            "type": "string"
+          },
+          {
+            "name": "fileSize",
+            "type": "uint256"
+          }
+        ],
+        "name": "startUpload",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "filePath",
             "type": "string"
           },
           {
@@ -43,22 +70,31 @@
         "type": "function"
       },
       {
-        "constant": true,
+        "constant": false,
         "inputs": [
           {
-            "name": "storagePath",
+            "name": "filePath",
             "type": "string"
           }
         ],
-        "name": "listDir",
-        "outputs": [
+        "name": "finishUpload",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
           {
-            "name": "",
-            "type": "string[]"
+            "name": "filePath",
+            "type": "string"
           }
         ],
+        "name": "deleteFile",
+        "outputs": [],
         "payable": false,
-        "stateMutability": "view",
+        "stateMutability": "nonpayable",
         "type": "function"
       },
       {
@@ -89,42 +125,14 @@
         "type": "function"
       },
       {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "fileName",
-            "type": "string"
-          }
-        ],
-        "name": "finishUpload",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "path",
-            "type": "string"
-          }
-        ],
-        "name": "createDir",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
         "constant": true,
         "inputs": [
           {
-            "name": "userAddress",
-            "type": "address"
+            "name": "storagePath",
+            "type": "string"
           }
         ],
-        "name": "getFileInfoList",
+        "name": "listDir",
         "outputs": [
           {
             "components": [
@@ -133,8 +141,16 @@
                 "type": "string"
               },
               {
+                "name": "isFile",
+                "type": "bool"
+              },
+              {
                 "name": "size",
                 "type": "uint256"
+              },
+              {
+                "name": "status",
+                "type": "int256"
               },
               {
                 "name": "isChunkUploaded",
@@ -150,68 +166,22 @@
         "type": "function"
       },
       {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "fileName",
-            "type": "string"
-          },
-          {
-            "name": "fileSize",
-            "type": "uint256"
-          }
-        ],
-        "name": "startUpload",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "fileName",
-            "type": "string"
-          }
-        ],
-        "name": "deleteFile",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
         "constant": true,
         "inputs": [
           {
-            "name": "path",
+            "name": "storagePath",
             "type": "string"
           }
         ],
-        "name": "parseDirPath",
+        "name": "getFileStatus",
         "outputs": [
           {
-            "name": "decreasePart",
-            "type": "string[]"
+            "name": "",
+            "type": "int256"
           }
         ],
         "payable": false,
-        "stateMutability": "pure",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "path",
-            "type": "string"
-          }
-        ],
-        "name": "deleteDir",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
       },
       {

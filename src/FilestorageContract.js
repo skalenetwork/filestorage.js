@@ -34,7 +34,7 @@ class FilestorageContract {
      *
      * @class
      *
-     * @param {Object} web3 - Web3 instance.
+     * @param {Object} web3 - Web3 instance
      */
     constructor(web3) {
         this.web3 = web3;
@@ -46,14 +46,14 @@ class FilestorageContract {
      *
      * @function startUpload
      *
-     * @param {string} address - Account address.
-     * @param {string} name - Name of uploaded file.
-     * @param {number} size - Size of uploaded file.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path of uploaded file in account directory
+     * @param {number} size - Size of uploaded file
+     * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async startUpload(address, name, size, privateKey = '') {
-        let txData = this.contract.methods.startUpload(name, size);
+    async startUpload(address, filePath, size, privateKey = '') {
+        let txData = this.contract.methods.startUpload(filePath, size);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -62,15 +62,15 @@ class FilestorageContract {
      *
      * @function uploadChunk
      *
-     * @param {string} address - Account address.
-     * @param {string} name - Name of the file in which chunk will be written.
-     * @param {number} position - Position in the file from which chunk will be written.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path of the file in which chunk will be written
+     * @param {number} position - Position in the file from which chunk will be written
      * @param {string} data - Chunk data in hex format, started with 0x
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async uploadChunk(address, name, position, data, privateKey = '') {
-        let txData = this.contract.methods.uploadChunk(name, position, data);
+    async uploadChunk(address, filePath, position, data, privateKey = '') {
+        let txData = this.contract.methods.uploadChunk(filePath, position, data);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.WRITING_GAS);
     }
 
@@ -79,13 +79,13 @@ class FilestorageContract {
      *
      * @function deleteFile
      *
-     * @param {string} address - Account address.
-     * @param {string} name - Name of the file to be deleted.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path to the file to be deleted
+     * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async deleteFile(address, name, privateKey = '') {
-        let txData = this.contract.methods.deleteFile(name);
+    async deleteFile(address, filePath, privateKey = '') {
+        let txData = this.contract.methods.deleteFile(filePath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -95,13 +95,13 @@ class FilestorageContract {
      *
      * @function finishUpload
      *
-     * @param {string} address - Account address.
-     * @param {string} name - Name of uploaded file.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path of uploaded file in account directory
+     * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
-    async finishUpload(address, name, privateKey = '') {
-        let txData = this.contract.methods.finishUpload(name);
+    async finishUpload(address, filePath, privateKey = '') {
+        let txData = this.contract.methods.finishUpload(filePath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -110,10 +110,10 @@ class FilestorageContract {
      *
      * @function readChunk
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
-     * @param {number} position - Position in the file from which chunk will be read.
-     * @param {number} length - Size of read data in bytes.
-     * @returns {Array.<string>} Chunk data splitted into 32 byte hex strings.
+     * @param {string} storagePath - Path of the file in Filestorage
+     * @param {number} position - Position in the file from which chunk will be read
+     * @param {number} length - Size of read data in bytes
+     * @returns {Array.<string>} Chunk data splitted into 32 byte hex strings
      */
     async readChunk(storagePath, position, length) {
         let result = await this.contract.methods.readChunk(storagePath, position, length).call();
@@ -128,7 +128,7 @@ class FilestorageContract {
      *
      * @function getFileStatus
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
+     * @param {string} storagePath - Path of the file in Filestorage
      * @returns {number} File status
      */
     async getFileStatus(storagePath) {
@@ -141,7 +141,7 @@ class FilestorageContract {
      *
      * @function getFileSize
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
+     * @param {string} storagePath - Path of the file in Filestorage
      * @returns {string} Size of the file in bytes
      */
     async getFileSize(storagePath) {
@@ -150,27 +150,13 @@ class FilestorageContract {
     }
 
     /**
-     * Javascript wrapper for solidity function getFileInfoList. Get information about files in Filestorage of the
-     * specific account
-     *
-     * @function getFileInfoList
-     *
-     * @param {string} address - Account address.
-     * @returns {{name:string, size:number, storagePath:string, isChunkUploaded:boolean[]}} - File description.
-     */
-    async getFileInfoList(address) {
-        let result = await this.contract.methods.getFileInfoList(address).call();
-        return result;
-    }
-
-    /**
      * Javascript wrapper for solidity function createDir. Create directory in Filestorage
      *
      * @function createDirectory
      *
-     * @param {string} address - Account address.
-     * @param {string} directoryPath - Path of the directory to be created.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be created
+     * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
     async createDirectory(address, directoryPath, privateKey = '') {
@@ -183,9 +169,9 @@ class FilestorageContract {
      *
      * @function deleteDirectory
      *
-     * @param {string} address - Account address.
-     * @param {string} directoryPath - Path of the directory to be created.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be created
+     * @param {string} [privateKey] - Account private key
      * @returns {Object} Transaction information
      */
     async deleteDirectory(address, directoryPath, privateKey = '') {
@@ -198,8 +184,9 @@ class FilestorageContract {
      *
      * @function listDirectory
      *
-     * @param {string} storagePath - Path of the directory in Filestorage.
-     * @returns {Array.<string>} - List of content.
+     * @param {string} storagePath - Path of the directory in Filestorage
+     * @returns {Array.<{name:string, isFile:boolean, status:number, status:string, isChunkUploaded:boolean[]}>} -
+     * List of content
      */
     async listDirectory(storagePath) {
         let result = await this.contract.methods.listDir(storagePath).call();

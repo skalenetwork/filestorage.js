@@ -28,7 +28,8 @@ const STANDARD_GAS = 1000000;
 const WRITING_GAS = 160000000;
 
 const errorMessages = {
-    INVALID_TRANSACTION: 'Transaction has been reverted by the EVM:',
+    FAILED_TRANSACTION: 'Transaction has been failed',
+    REVERTED_TRANSACTION: 'Transaction has been reverted by the EVM:',
     INVALID_KEYPAIR: 'Keypair mismatch',
     INVALID_PRIVATEKEY: 'Incorrect privateKey'
 };

@@ -38,8 +38,8 @@ class FilestorageClient {
      *
      * @class
      *
-     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes.
-     * @param {boolean} [enableLogs=false] - Enable/disable console logs.
+     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
+     * @param {boolean} [enableLogs=false] - Enable/disable console logs
      */
     constructor(web3Provider, enableLogs = false) {
         this.web3 = new Web3(web3Provider);
@@ -52,15 +52,15 @@ class FilestorageClient {
      *
      * @function uploadFile
      *
-     * @param {string} address - Account address.
-     * @param {string} fileName - Name of uploaded file.
-     * @param {Buffer} fileBuffer - Uploaded file data.
-     * @param {string} [privateKey] - Account private key.
-     * @returns {string} Storage path.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path of uploaded file in account directory
+     * @param {Buffer} fileBuffer - Uploaded file data
+     * @param {string} [privateKey] - Account private key
+     * @returns {string} Storage path
      */
-    async uploadFile(address, fileName, fileBuffer, privateKey) {
+    async uploadFile(address, filePath, fileBuffer, privateKey) {
         let fileSize = fileBuffer.length;
-        await this.contract.startUpload(address, fileName, fileSize, privateKey);
+        await this.contract.startUpload(address, filePath, fileSize, privateKey);
         if (this.enableLogs) console.log('File was created!');
 
         let ptrPosition = 0;
@@ -69,7 +69,7 @@ class FilestorageClient {
             let rawChunk = fileBuffer.slice(ptrPosition, ptrPosition +
                 Math.min(fileSize - ptrPosition, constants.CHUNK_LENGTH));
             let chunk = Helper.bufferToHex(rawChunk);
-            await this.contract.uploadChunk(address, fileName, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
+            await this.contract.uploadChunk(address, filePath, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
             ptrPosition += chunk.length / 2;
             if (this.enableLogs) {
                 console.log('Chunk ' + i + ' was loaded ' + ptrPosition);
@@ -78,9 +78,9 @@ class FilestorageClient {
         }
 
         if (this.enableLogs) console.log('Checking file validity...');
-        await this.contract.finishUpload(address, fileName, privateKey);
+        await this.contract.finishUpload(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was uploaded!');
-        return path.posix.join(Helper.rmBytesSymbol(address), fileName);
+        return path.posix.join(Helper.rmBytesSymbol(address), filePath);
     }
 
     /**
@@ -88,7 +88,7 @@ class FilestorageClient {
      *
      * @function downloadToFile
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
+     * @param {string} storagePath - Path of the file in Filestorage
      */
     async downloadToFile(storagePath) {
         if (!streamSaver) {
@@ -106,8 +106,8 @@ class FilestorageClient {
      *
      * @function downloadToBuffer
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
-     * @returns {Buffer} - File data in bytes.
+     * @param {string} storagePath - Path of the file in Filestorage
+     * @returns {Buffer} - File data in bytes
      */
     async downloadToBuffer(storagePath) {
         return await this._downloadFile(storagePath);
@@ -118,38 +118,13 @@ class FilestorageClient {
      *
      * @function deleteFile
      *
-     * @param {string} address - Account address.
-     * @param {string} fileName - Name of the file to be deleted.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path to the file to be deleted
+     * @param {string} [privateKey] - Account private key
      */
-    async deleteFile(address, fileName, privateKey) {
-        await this.contract.deleteFile(address, fileName, privateKey);
+    async deleteFile(address, filePath, privateKey) {
+        await this.contract.deleteFile(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was deleted');
-    }
-
-    /**
-     * Get information about files in Filestorage of the specific account
-     *
-     * @function getFileInfoListByAddress
-     *
-     * @param {string} address - Account address.
-     * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description.
-     */
-    async getFileInfoListByAddress(address) {
-        let rawFiles = await this.contract.getFileInfoList(address);
-        let files = rawFiles.map(file => {
-            let storagePath = path.posix.join(Helper.rmBytesSymbol(address), file['name']);
-            let chunkStatusList = file['isChunkUploaded'];
-            let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
-            let uploadingProgress = Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
-            return {
-                name: file['name'],
-                size: parseInt(file['size'], 10),
-                storagePath: storagePath,
-                uploadingProgress: uploadingProgress
-            };
-        });
-        return files;
     }
 
     /**
@@ -157,13 +132,15 @@ class FilestorageClient {
      *
      * @function createDirectory
      *
-     * @param {string} address - Account address.
-     * @param {string} directoryPath - Path of the directory to be created.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be created
+     * @param {string} [privateKey] - Account private key
+     * @returns {string} Storage path
      */
     async createDirectory(address, directoryPath, privateKey) {
         await this.contract.createDirectory(address, directoryPath, privateKey);
         if (this.enableLogs) console.log('Directory was created');
+        return path.posix.join(Helper.rmBytesSymbol(address), directoryPath);
     }
 
     /**
@@ -171,9 +148,9 @@ class FilestorageClient {
      *
      * @function deleteDirectory
      *
-     * @param {string} address - Account address.
-     * @param {string} directoryPath - Path of the directory to be deleted.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be deleted
+     * @param {string} [privateKey] - Account private key
      */
     async deleteDirectory(address, directoryPath, privateKey) {
         await this.contract.deleteDirectory(address, directoryPath, privateKey);
@@ -185,11 +162,34 @@ class FilestorageClient {
      *
      * @function listDirectory
      *
-     * @param {string} storagePath - Path of the directory in Filestorage.
-     * @returns {Array.<string>} - List of content.
+     * @param {string} storagePath - Path of the directory in Filestorage
+     * @returns {Array.<{name:string, storagePath:string, isFile:boolean, size:number, status:number,
+     * uploadingProgress:number}|{name:string, storagePath:string, isFile:boolean}>} - List of content:
+     * files or directories
      */
     async listDirectory(storagePath) {
-        return await this.contract.listDirectory(storagePath);
+        if (storagePath.slice(-1) !== '/') storagePath += '/';
+        let rawContent = await this.contract.listDirectory(storagePath);
+        let content = rawContent.map(contentInfo => {
+            let contentStoragePath = path.posix.join(storagePath, contentInfo['name']);
+            let contentInfoObject = {
+                name: contentInfo['name'],
+                storagePath: contentStoragePath,
+                isFile: contentInfo['isFile']
+            };
+            if (!contentInfoObject.isFile) {return contentInfoObject;}
+            let chunkStatusList = contentInfo['isChunkUploaded'];
+            let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
+            let uploadingProgress = (chunkStatusList.length === 0) ? 100 :
+                Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
+            let fileInfoObject = {
+                size: Number(contentInfo['size']),
+                status: Number(contentInfo['status']),
+                uploadingProgress: uploadingProgress
+            };
+            return Object.assign(contentInfoObject, fileInfoObject);
+        });
+        return content;
     }
 
     async _downloadFile(storagePath, stream) {
