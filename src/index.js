@@ -168,6 +168,7 @@ class FilestorageClient {
      * files or directories
      */
     async listDirectory(storagePath) {
+        if (storagePath.slice(-1) !== '/') storagePath += '/';
         let rawContent = await this.contract.listDirectory(storagePath);
         let content = rawContent.map(contentInfo => {
             let contentStoragePath = path.posix.join(storagePath, contentInfo['name']);

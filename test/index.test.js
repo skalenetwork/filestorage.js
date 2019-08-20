@@ -331,6 +331,18 @@ describe('Test FilestorageClient', function () {
                 }), 'File is absent');
             });
 
+            it('should list root directory without /', async function () {
+                let contentList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
+                assert.isArray(contentList);
+                assert.isNotEmpty(contentList);
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === directoryName;
+                }), 'Directory is absent');
+                assert.isObject(contentList.find(obj => {
+                    return obj.name === fileName;
+                }), 'File is absent');
+            });
+
             it('should list nested directory', async function () {
                 let directoryPath = path.posix.join(helper.rmBytesSymbol(address), directoryName);
                 let contentList = await filestorage.listDirectory(directoryPath);
@@ -384,6 +396,17 @@ describe('Test FilestorageClient', function () {
                 let files = await filestorage.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
                 assert.isArray(files, 'should return array');
                 assert.isEmpty(files, 'should contain files');
+            });
+
+            it('should fail listing unexisted dir', async function () {
+                await filestorage.listDirectory(path.posix.join(helper.rmBytesSymbol(emptyAddress), 'void'))
+                    .should.eventually.rejectedWith(errorMessages.INVALID_PATH);
+                await filestorage.listDirectory('')
+                    .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
+                await filestorage.listDirectory(' ')
+                    .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
+                await filestorage.listDirectory(address)
+                    .should.eventually.rejectedWith(errorMessages.INVALID_STORAGEPATH);
             });
         });
     });

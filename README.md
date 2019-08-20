@@ -141,13 +141,11 @@ filestorage.deleteFile(address, filePath);
 
 ##### Parameters
 
-| Parameter           | Description                                           |
-| ------------------- | ----------------------------------------------------- |
-| `String` address    | Account address                                       |
-| `String` filePath   | Path of the file in account directory to be deleted   |
-| `String` privateKey | _(optional)_ Account private key, to sign transactions|
-
-#
+| Parameter           | Description                                            |
+| ------------------- | ------------------------------------------------------ |
+| `String` address    | Account address                                        |
+| `String` filePath   | Path of the file in account directory to be deleted    |
+| `String` privateKey | _(optional)_ Account private key, to sign transactions |
 
 #### Create directory
 
@@ -176,8 +174,6 @@ filestorage.createDirectory(address, directoryPath);
 | -------------------- | ------------------------------------------------ |
 | `String` storagePath | [Path of directory in Filestorage](#storagePath) |
 
-#
-
 #### Delete directory
 
 Deletes directory on the specific path. To delete directory using internal signing:
@@ -198,8 +194,6 @@ filestorage.deleteDirectory(address, directoryPath);
 | `String` address         | Account address                                        |
 | `String` directoryPath   | Path of the directory to be deleted                    |
 | `String` privateKey      | _(optional)_ Account private key, to sign transactions |
-
-#
 
 #### List directory
 
