@@ -56,7 +56,6 @@ const Web3 = require('web3');
 const web3Provider = new Web3.providers.HttpProvider('----SKALE ENDPOINT----');
 let filestorage = new Filestorage(web3Provider);
 ```
-#
 
 #### Upload file
 
@@ -86,8 +85,6 @@ filestorage.uploadFile(address, filePath, fileBuffer);
 |   Type   | Description                                 |
 | :------: | ------------------------------------------- |
 | `String` | [Path of file in Filestorage](#storagePath) |
-
-# 
 
 #### Download file
 
@@ -122,8 +119,6 @@ filestorage.downloadToBuffer(storagePath);
 |   Type   | Description  |
 | :------: | ------------ |
 | `Buffer` | File content |
-
-#
 
 #### Delete file
 
