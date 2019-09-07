@@ -71,7 +71,6 @@ const Helper = {
             from: account,
             data: encoded,
             gas: gas,
-            gasPrice: 0,
             to: contractAddress,
             nonce: nonce
         };
@@ -85,7 +84,6 @@ const Helper = {
         return await transactionData.send({
             from: account,
             gas: gas,
-            gasPrice: 0,
             nonce: nonce
         });
     },
