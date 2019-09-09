@@ -6,7 +6,7 @@
     "ethereum",
     "blockchain"
   ],
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "SKALE Filestorage client tools",
   "license": "LGPL-3.0",
   "main": "dist/filestorage.min.js",
