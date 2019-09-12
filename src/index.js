@@ -22,7 +22,6 @@
  * @date 2019
  */
 const Web3 = require('web3');
-const path = require('path');
 const constants = require('./common/constants');
 const Helper = require('./common/helper');
 const FilestorageContract = require('./FilestorageContract');
@@ -80,7 +79,7 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Checking file validity...');
         await this.contract.finishUpload(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was uploaded!');
-        return path.join(Helper.rmBytesSymbol(address), filePath);
+        return Helper.rmBytesSymbol(address).concat('/', filePath);
     }
 
     /**
@@ -94,8 +93,8 @@ class FilestorageClient {
         if (!streamSaver) {
             throw new Error('Method downloadToFile can only be used with a browser');
         }
-
-        const fileName = path.basename(storagePath);
+        let re = /^(?:\/?|)(?:[\s\S]*?)((?:\.{1,2}|[^\/]+?|)(?:\.[^.\/]*|))(?:[\/]*)$/;
+        const fileName = re.exec(storagePath)[1];
         let wstream = streamSaver.createWriteStream(fileName).getWriter();
         await this._downloadFile(storagePath, wstream);
         wstream.close();
@@ -140,7 +139,7 @@ class FilestorageClient {
     async createDirectory(address, directoryPath, privateKey) {
         await this.contract.createDirectory(address, directoryPath, privateKey);
         if (this.enableLogs) console.log('Directory was created');
-        return path.join(Helper.rmBytesSymbol(address), directoryPath);
+        return Helper.rmBytesSymbol(address).concat('/', directoryPath);
     }
 
     /**
@@ -171,7 +170,7 @@ class FilestorageClient {
         if (storagePath.slice(-1) !== '/') storagePath += '/';
         let rawContent = await this.contract.listDirectory(storagePath);
         let content = rawContent.map(contentInfo => {
-            let contentStoragePath = path.join(storagePath, contentInfo['name']);
+            let contentStoragePath = storagePath.concat(contentInfo['name']);
             let contentInfoObject = {
                 name: contentInfo['name'],
                 storagePath: contentStoragePath,
