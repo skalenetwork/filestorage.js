@@ -26,6 +26,7 @@ const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
 const fileStatus = require('./utils/constants').fileStatus;
+const getFunds = require('./utils/getFunds');
 const Web3 = require('web3');
 const path = require('path');
 require('dotenv').config();
@@ -41,13 +42,14 @@ describe('FilestorageContract', function () {
     let privateKey;
     let emptyAddress;
     const smallChunkLength = 2 ** 10;
-    before(function () {
+    before(async function () {
         const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
         let web3 = new Web3(web3Provider);
         filestorageContract = new FilestorageContract(web3);
         address = process.env.ADDRESS;
         privateKey = process.env.PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
+        await getFunds(address);
     });
 
     describe('Test contructor', function () {

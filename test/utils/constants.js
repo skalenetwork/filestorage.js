@@ -21,5 +21,8 @@ const fileStatus = {
     STATUS_COMPLETED: 2
 };
 
+const TEST_ACCOUNT_BALANCE = '1';
+
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
+module.exports.TEST_ACCOUNT_BALANCE = TEST_ACCOUNT_BALANCE;
