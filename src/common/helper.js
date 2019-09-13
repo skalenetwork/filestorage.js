@@ -26,7 +26,6 @@ const InvalidCredentialsException = require('../exceptions/InvalidCredentialsExc
 const FilestorageContractException = require('../exceptions/FilestorageContractException');
 const PRIVATE_KEY_REGEX = /^(0x)?[0-9a-f]{64}$/i;
 
-// TODO: remove 0 gasPrice
 const Helper = {
 
     ensureStartsWith0x(str) {
@@ -46,6 +45,11 @@ const Helper = {
 
     bufferToHex(buffer) {
         return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+    },
+
+    getBasename(string) {
+        let re = /^(?:\/?|)(?:[\s\S]*?)((?:\.{1,2}|[^\/]+?|)(?:\.[^.\/]*|))(?:[\/]*)$/;
+        return re.exec(string)[1];
     },
 
     concatBytes32Array(data, outputLength) {

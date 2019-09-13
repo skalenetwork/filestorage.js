@@ -51,6 +51,38 @@ describe('Helper', function () {
         });
     });
 
+    describe('getBasename', function () {
+        it('should return posix basename', function () {
+            let testString = 'aa/bb/cc/dd/ee';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'ee');
+        });
+
+        it('should return string itself if / are absent', function () {
+            let testString = 'test';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'test');
+        });
+
+        it('should return string before last /', function () {
+            let testString = 'test/';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'test');
+        });
+
+        it('should return string before last /', function () {
+            let testString = '/test';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'test');
+        });
+
+        it('should return empty string', function () {
+            let testString = '';
+            let result = helper.getBasename(testString);
+            assert.equal(result, '');
+        });
+    });
+
     describe('validatePrivateKey', function () {
         const privateKeyLength = 64;
         const fullPrivateKeyLength = 66;

@@ -93,8 +93,7 @@ class FilestorageClient {
         if (!streamSaver) {
             throw new Error('Method downloadToFile can only be used with a browser');
         }
-        let re = /^(?:\/?|)(?:[\s\S]*?)((?:\.{1,2}|[^\/]+?|)(?:\.[^.\/]*|))(?:[\/]*)$/;
-        const fileName = re.exec(storagePath)[1];
+        const fileName = Helper.getBasename(storagePath);
         let wstream = streamSaver.createWriteStream(fileName).getWriter();
         await this._downloadFile(storagePath, wstream);
         wstream.close();
