@@ -25,6 +25,7 @@ const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
 const FilestorageContract = require('../src/FilestorageContract');
 const Web3 = require('web3');
+const getFunds = require('./utils/getFunds');
 require('dotenv').config();
 
 const chai = require('chai');
@@ -47,6 +48,45 @@ describe('Helper', function () {
             let buffer = Buffer.from('');
             let hex = helper.bufferToHex(buffer);
             assert.isString(hex, 'Value is not string');
+        });
+    });
+
+    describe('ensureStartsWith0x', function () {
+        it('should return false if length < 2', function () {
+            let result = helper.ensureStartsWith0x('A');
+            assert.isFalse(result);
+        });
+    });
+
+    describe('getBasename', function () {
+        it('should return posix basename', function () {
+            let testString = 'aa/bb/cc/dd/ee';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'ee');
+        });
+
+        it('should return string itself if / are absent', function () {
+            let testString = 'test';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'test');
+        });
+
+        it('should return string before last /', function () {
+            let testString = 'test/';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'test');
+        });
+
+        it('should return string before last /', function () {
+            let testString = '/test';
+            let result = helper.getBasename(testString);
+            assert.equal(result, 'test');
+        });
+
+        it('should return empty string', function () {
+            let testString = '';
+            let result = helper.getBasename(testString);
+            assert.equal(result, '');
         });
     });
 
@@ -114,12 +154,13 @@ describe('Helper', function () {
         let web3;
         let contract;
         let txData;
-        before(function () {
+        before(async function () {
             address = process.env.ADDRESS;
             privateKey = process.env.PRIVATEKEY;
             web3 = new Web3(process.env.SKALE_ENDPOINT);
             contract = new FilestorageContract(web3).contract;
             txData = contract.methods.startUpload(randomstring.generate(), 0);
+            await getFunds(address);
         });
 
         it('should send transaction with privateKey', async function () {

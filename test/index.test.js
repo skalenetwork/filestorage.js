@@ -26,6 +26,7 @@ const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const errorMessages = require('./utils/constants').errorMessages;
 const fileStatus = require('./utils/constants').fileStatus;
+const getFunds = require('./utils/getFunds');
 const constants = require('../src/common/constants');
 const path = require('path');
 const Web3 = require('web3');
@@ -47,7 +48,7 @@ describe('Test FilestorageClient', function () {
     let foreignPrivateKey;
     let emptyAddress;
     let bigFilePath;
-    before(function () {
+    before(async function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
         address = process.env.ADDRESS;
@@ -56,6 +57,8 @@ describe('Test FilestorageClient', function () {
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
+        await getFunds(address);
+        await getFunds(foreignAddress);
     });
 
     describe('Test contructor', function () {
