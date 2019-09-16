@@ -248,7 +248,9 @@ To run tests locally you need environment variables defining test file path
 and three keypairs (address, foreign, empty):
 
 -   `TEST_FILE_PATH`: path to generated file. Default `./test.txt`
--   `ENTRYPOINT`: SKALE endpoint
+-   `SKALE_ENDPOINT`: SKALE endpoint
+-   `SCHAIN_OWNER`: SKALE chain owner address
+-   `SCHAIN_OWNER_PK`: SKALE chain owner privatekey
 -   `ADDRESS`: test account address
 -   `PRIVATEKEY`: test account privatekey
 -   `FOREIGN_ADDRESS`: second test account address
