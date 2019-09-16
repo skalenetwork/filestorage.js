@@ -51,6 +51,13 @@ describe('Helper', function () {
         });
     });
 
+    describe('ensureStartsWith0x', function () {
+        it('should return false if length < 2', function () {
+            let result = helper.ensureStartsWith0x('A');
+            assert.isFalse(result);
+        });
+    });
+
     describe('getBasename', function () {
         it('should return posix basename', function () {
             let testString = 'aa/bb/cc/dd/ee';
