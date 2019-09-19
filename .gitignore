@@ -3,6 +3,7 @@
 
 # Test files
 test/test.txt
+test/integration/testFiles
 
 # Dependency directories
 node_modules/
