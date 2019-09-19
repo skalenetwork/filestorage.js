@@ -14,7 +14,7 @@ then
         dd if=/dev/urandom of=./testFiles/small/small$( printf %00d "$n" ).txt bs=1024 count=1024
     done
 
-    for n in {1..1}; do
+    for n in {1..14}; do
         dd if=/dev/urandom of=./testFiles/large/large$( printf %00d "$n" ).txt bs=1047552 count=94
     done
 fi
