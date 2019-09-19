@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="../dist/filestorage.min.js"></script>
+    <script type="text/javascript">
+        function download() {
+            let f = new filestorage(document.getElementById("SCHAIN_ENDPOINT").value, true);
+            f.downloadToFile(document.getElementById("storagePath").value);
+        }
+    </script>
 </head>
 <body>
-<div> Hello World </div>
+    <input id="SCHAIN_ENDPOINT"/>
+    <input id="storagePath"/>
+    <button onclick="download()"></button>
 </body>
 </html>
