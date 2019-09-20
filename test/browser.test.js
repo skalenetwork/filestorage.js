@@ -25,7 +25,7 @@ describe('Browser integration', async function () {
 
         let chromeCapabilities = webdriver.Capabilities.chrome();
         let chromeOptions = {
-            'args': ['--test-type', '--start-maximized'],
+            'args': ['--test-type', '--start-maximized', '--no-sandbox'],
             'prefs': {'download.default_directory': downloadDir}
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
