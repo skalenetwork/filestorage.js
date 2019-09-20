@@ -4,12 +4,11 @@ let fs = require('fs');
 let path = require('path');
 require('dotenv').config();
 
-const chromeOption = require('selenium-webdriver/chrome');
+// eslint-disable-next-line
 let chrome = require('chromedriver');
 
 const chai = require('chai');
 const assert = chai.assert;
-const expect = chai.expect;
 chai.should();
 chai.use(require('chai-as-promised'));
 
@@ -17,10 +16,9 @@ describe('Browser integration', async function () {
     let htmlPage;
     let driver;
     let downloadDir;
-
     before(async function () {
         downloadDir = path.join(__dirname, 'downloadedFiles');
-        htmlPage = path.join("file:///", __dirname, "test.html");
+        htmlPage = path.join('file:///', __dirname, 'test.html');
         if (!fs.existsSync(downloadDir)) {
             fs.mkdirSync(downloadDir);
         }
@@ -28,7 +26,7 @@ describe('Browser integration', async function () {
         let chromeCapabilities = webdriver.Capabilities.chrome();
         let chromeOptions = {
             'args': ['--test-type', '--start-maximized'],
-            'prefs': {"download.default_directory": downloadDir}
+            'prefs': {'download.default_directory': downloadDir}
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
         driver = new webdriver.Builder()
@@ -43,9 +41,10 @@ describe('Browser integration', async function () {
         let data = Buffer.from(fileName);
         let storagePath;
         let filestorage;
-
+        let pathToFile;
         before(async function () {
-            filestorage = new Filestorage(endpoint, true);
+            pathToFile = path.join(downloadDir, fileName);
+            filestorage = new Filestorage(endpoint);
             storagePath = await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
             driver.get(htmlPage);
         });
@@ -56,16 +55,18 @@ describe('Browser integration', async function () {
             await driver.findElement(webdriver.By.id('downloadFile')).click();
             await driver.wait(webdriver.until.titleIs('Downloaded'), 100000);
             await driver.sleep(2000);
+            assert.isTrue(fs.existsSync(pathToFile), 'File is not downloaded');
+            assert.isTrue(Buffer.compare(fs.readFileSync(pathToFile), data) === 0, 'File content is differ');
         });
 
         after(async function () {
             await driver.quit();
             await filestorage.deleteFile(address, fileName, process.env.PRIVATEKEY);
-            fs.unlinkSync(path.join(downloadDir, fileName));
+            fs.unlinkSync(pathToFile);
         });
     });
 
-    after(async function() {
+    after(async function () {
         fs.rmdirSync(downloadDir);
-    })
+    });
 });
