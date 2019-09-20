@@ -5,15 +5,17 @@
     <title>Title</title>
     <script src="../dist/filestorage.min.js"></script>
     <script type="text/javascript">
-        function download() {
+        async function download() {
             let f = new filestorage(document.getElementById("SCHAIN_ENDPOINT").value, true);
-            f.downloadToFile(document.getElementById("storagePath").value);
+            await f.downloadToFile(document.getElementById("storagePath").value);
+            document.title = 'Downloaded';
         }
     </script>
 </head>
 <body>
     <input id="SCHAIN_ENDPOINT"/>
     <input id="storagePath"/>
-    <button onclick="download()"></button>
+    <button id="downloadFile" onclick="download()"></button>
+    <input type="checkbox" id="isDownloaded"/>
 </body>
 </html>
