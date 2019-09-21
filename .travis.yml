@@ -60,7 +60,7 @@ matrix:
     os: windows
     install:
     - npm install
-    - choco install chromedriver -y;
+    - choco install chromium --version 77.0.3865.0-snapshots --pre
     before_script:
     - npm run generate-win
     env:
