@@ -1,4 +1,5 @@
 let webdriver = require('selenium-webdriver');
+let Options = require('selenium-webdriver/chrome').Options;
 let Filestorage = require('../src/index');
 let fs = require('fs');
 let path = require('path');
@@ -12,7 +13,12 @@ const assert = chai.assert;
 chai.should();
 chai.use(require('chai-as-promised'));
 
-describe('Browser integration', async function () {
+const encodeExt = file => {
+    const stream = fs.readFileSync(path.resolve(file));
+    return Buffer.from(stream).toString('base64');
+};
+
+describe('Chrome integration', async function () {
     let htmlPage;
     let driver;
     let downloadDir;
@@ -29,6 +35,8 @@ describe('Browser integration', async function () {
         chromeCapabilities.set('chromeOptions', chromeOptions);
         driver = new webdriver.Builder()
             .withCapabilities(chromeCapabilities)
+            .setChromeOptions(new Options()
+                .addExtensions(encodeExt(path.join(__dirname, "metamask.crx"))))
             .build();
         await driver.setDownloadPath(downloadDir);
     });
