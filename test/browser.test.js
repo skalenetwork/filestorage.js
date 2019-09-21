@@ -22,16 +22,15 @@ describe('Browser integration', async function () {
         if (!fs.existsSync(downloadDir)) {
             fs.mkdirSync(downloadDir);
         }
-
         let chromeCapabilities = webdriver.Capabilities.chrome();
         let chromeOptions = {
-            'args': ['--test-type', '--start-maximized', '--no-sandbox'],
-            'prefs': {'download.default_directory': downloadDir}
+            'args': ['--test-type', '--start-maximized', '--no-sandbox']
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
         driver = new webdriver.Builder()
             .withCapabilities(chromeCapabilities)
             .build();
+        await driver.setDownloadPath(downloadDir);
     });
 
     describe('downloadToFile', async function () {
