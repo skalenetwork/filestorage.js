@@ -3,7 +3,9 @@ let Options = require('selenium-webdriver/chrome').Options;
 let Filestorage = require('../src/index');
 let fs = require('fs');
 let path = require('path');
+let constants = require('./utils/constants');
 let helper = require('../src/common/helper');
+let server = require('./utils/testServer');
 require('dotenv').config();
 
 // eslint-disable-next-line
@@ -27,6 +29,7 @@ describe('Chrome integration', async function () {
     let address = process.env.ADDRESS;
 
     before(async function () {
+        server.run();
         downloadDir = path.join(__dirname, 'testFiles');
         htmlPage = 'http://localhost:4000';
         if (!fs.existsSync(downloadDir)) {
@@ -127,7 +130,7 @@ describe('Chrome integration', async function () {
         }
 
         before(async function () {
-            let id = 'ikhmppmeodmilchppjpiigoaonkpdocc';
+            let id = constants.METAMASK_ID;
             await initMetamask(driver, id, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
             await addEndpoint(driver, process.env.SKALE_ENDPOINT);
             await addAccount(driver, process.env.PRIVATEKEY);
@@ -193,5 +196,6 @@ describe('Chrome integration', async function () {
 
     after(async function () {
         fs.rmdirSync(downloadDir);
+        server.stop();
     });
 });

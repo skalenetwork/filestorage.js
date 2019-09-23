@@ -22,7 +22,13 @@ const fileStatus = {
 };
 
 const TEST_ACCOUNT_BALANCE = '1';
+const TEST_SERVER_PORT = 4000;
+const TEST_SERVER_ADDRESS = 'http://localhost:'+TEST_SERVER_PORT.toString(10);
+const METAMASK_ID = 'ikhmppmeodmilchppjpiigoaonkpdocc';
 
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
 module.exports.TEST_ACCOUNT_BALANCE = TEST_ACCOUNT_BALANCE;
+module.exports.TEST_SERVER_PORT = TEST_SERVER_PORT;
+module.exports.TEST_SERVER_ADDRESS = TEST_SERVER_ADDRESS;
+module.exports.METAMASK_ID = METAMASK_ID;
