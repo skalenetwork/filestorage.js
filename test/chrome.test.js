@@ -123,7 +123,7 @@ describe('Chrome integration', async function () {
         });
 
         it('should delete with metamask', async function () {
-            let fileName = 'testFile1';
+            let fileName = 'testFile';
             let data = Buffer.from(fileName);
             let filestorage = new Filestorage(endpoint);
             await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
@@ -131,6 +131,13 @@ describe('Chrome integration', async function () {
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(fileName);
             await driver.findElement(webdriver.By.id('deleteFile')).click();
+            await driver.sleep(3000);
+            let currentWindow = await driver.getWindowHandle();
+            let windows = await driver.getAllWindowHandles();
+            await driver.switchTo().window(windows[windows.length - 1]);
+            await driver.sleep(3000);
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Confirm')]")).click();
+            await driver.switchTo().window(currentWindow);
             await driver.wait(webdriver.until.titleIs('Deleted'), 100000);
         });
 

@@ -6,7 +6,6 @@
     <script src="filestorage"></script>
     <script type="text/javascript">
         async function downloadFile() {
-            console.log(window.web3);
             let f = new filestorage(document.getElementById("SCHAIN_ENDPOINT").value, true);
             await f.downloadToFile(document.getElementById("storagePath").value);
             document.title = 'Downloaded';
