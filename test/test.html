@@ -5,19 +5,20 @@
     <title>Title</title>
     <script src="filestorage"></script>
     <script type="text/javascript">
-        async function download() {
+        async function downloadFile() {
             console.log(window.web3);
             let f = new filestorage(document.getElementById("SCHAIN_ENDPOINT").value, true);
             await f.downloadToFile(document.getElementById("storagePath").value);
             document.title = 'Downloaded';
         }
 
-        async function upload() {
+        async function deleteFile() {
             let f = new filestorage(window.web3.currentProvider, true);
             await f.deleteFile(
                 document.getElementById("account").value,
                 document.getElementById("storagePath").value
             );
+            document.title = 'Deleted';
         }
     </script>
 </head>
@@ -25,7 +26,7 @@
     <input id="SCHAIN_ENDPOINT"/>
     <input id="account"/>
     <input id="storagePath"/>
-    <button id="downloadFile" onclick="download()"></button>
-    <button id="uploadFile" onclick="upload()"></button>
+    <button id="downloadFile" onclick="downloadFile()"></button>
+    <button id="deleteFile" onclick="deleteFile()"></button>
 </body>
 </html>
