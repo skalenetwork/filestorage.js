@@ -27,25 +27,20 @@ describe('Chrome integration', async function () {
     let downloadDir;
     let endpoint = process.env.SKALE_ENDPOINT;
     let address = process.env.ADDRESS;
+    let chromeCapabilities;
 
     before(async function () {
         server.run();
         downloadDir = path.join(__dirname, 'testFiles');
-        htmlPage = 'http://localhost:4000';
+        htmlPage = constants.TEST_SERVER_ADDRESS;
         if (!fs.existsSync(downloadDir)) {
             fs.mkdirSync(downloadDir);
         }
-        let chromeCapabilities = webdriver.Capabilities.chrome();
+        chromeCapabilities = webdriver.Capabilities.chrome();
         let chromeOptions = {
             'args': ['--test-type', '--start-maximized', '--no-sandbox']
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
-        driver = new webdriver.Builder()
-            .withCapabilities(chromeCapabilities)
-            .setChromeOptions(new Options()
-                .addExtensions(encodeExt(path.join(__dirname, "metamask.crx"))))
-            .build();
-        await driver.setDownloadPath(downloadDir);
     });
 
     describe('downloadToFile', async function () {
@@ -54,7 +49,13 @@ describe('Chrome integration', async function () {
         let storagePath;
         let filestorage;
         let pathToFile;
+        let driver;
+
         before(async function () {
+            driver = new webdriver.Builder()
+                .withCapabilities(chromeCapabilities)
+                .build();
+            await driver.setDownloadPath(downloadDir);
             pathToFile = path.join(downloadDir, fileName);
             filestorage = new Filestorage(endpoint);
             storagePath = await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
@@ -66,13 +67,13 @@ describe('Chrome integration', async function () {
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(storagePath);
             await driver.findElement(webdriver.By.id('downloadFile')).click();
             await driver.wait(webdriver.until.titleIs('Downloaded'), 100000);
-            await driver.sleep(2000);
+            await driver.sleep(4000);
             assert.isTrue(fs.existsSync(pathToFile), 'File is not downloaded');
             assert.isTrue(Buffer.compare(fs.readFileSync(pathToFile), data) === 0, 'File content is differ');
         });
 
         after(async function () {
-            await driver.quit();
+            driver.quit();
             await filestorage.deleteFile(address, fileName, process.env.PRIVATEKEY);
             fs.unlinkSync(pathToFile);
         });
@@ -80,6 +81,7 @@ describe('Chrome integration', async function () {
 
     describe('metamask', async function () {
         let fileName;
+        let driver;
 
         async function initMetamask(driver, metamaskId, password, seedPhrase) {
             await driver.get("chrome-extension://" + metamaskId + "/home.html");
@@ -130,6 +132,11 @@ describe('Chrome integration', async function () {
         }
 
         before(async function () {
+            driver = new webdriver.Builder()
+                .withCapabilities(chromeCapabilities)
+                .setChromeOptions(new Options()
+                    .addExtensions(encodeExt(path.join(__dirname, "metamask.crx"))))
+                .build();
             let id = constants.METAMASK_ID;
             await initMetamask(driver, id, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
             await addEndpoint(driver, process.env.SKALE_ENDPOINT);
@@ -189,9 +196,9 @@ describe('Chrome integration', async function () {
             }
         });
 
-        after(async function () {
+        after(async function(){
             await driver.quit();
-        });
+        })
     });
 
     after(async function () {
