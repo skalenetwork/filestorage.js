@@ -73,6 +73,65 @@ describe('Chrome integration', async function () {
         });
     });
 
+    describe('metamask', async function () {
+        async function initMetamask(driver, metamaskId, password, seedPhrase) {
+            await driver.get("chrome-extension://" + metamaskId + "/home.html");
+            await driver.sleep(2000);
+            await driver.findElement(webdriver.By.xpath("//*[contains(text(), 'Continue')]")).click();
+            await driver.sleep(2000);
+            await driver.findElement(webdriver.By.xpath("//*[contains(text(), 'Import with seed phrase')]")).click();
+            await driver.findElement(webdriver.By.id('password')).sendKeys(password);
+            await driver.findElement(webdriver.By.id('confirm-password')).sendKeys(password);
+            await driver.findElement(webdriver.By.xpath(
+                "//textarea[@placeholder='Separate each word with a single space']"
+            )).sendKeys(seedPhrase);
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]")).click();
+            await driver.sleep(3000);
+            await driver.executeScript("document.querySelector('div.first-time-flow__markdown').scrollTop =" +
+                "document.querySelector('div.first-time-flow__markdown').scrollHeight");
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
+            await driver.sleep(1000);
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
+            await driver.sleep(1000);
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
+            await driver.sleep(1000);
+
+        }
+
+        async function addEndpoint(driver, endpoint) {
+            await driver.findElement(webdriver.By.xpath("//div[@class='app-header__network-component-wrapper']")).click();
+            await driver.findElement(webdriver.By.xpath("//li[contains(., 'Custom RPC')]")).click();
+            await driver.findElement(webdriver.By.id('new-rpc')).sendKeys(endpoint);
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Save')]")).click();
+            await driver.sleep(2000);
+        }
+
+        async function addAccount(driver, privateKey) {
+            await driver.findElement(webdriver.By.xpath("//div[@class='identicon']")).click();
+            await driver.findElement(webdriver.By.xpath("//div[contains(text(), 'Import Account')]")).click();
+            await driver.findElement(webdriver.By.id('private-key-box')).sendKeys(privateKey);
+            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]")).click();
+            await driver.sleep(2000);
+        }
+
+        before(async function () {
+            let id = 'ikhmppmeodmilchppjpiigoaonkpdocc';
+            await initMetamask(driver, id, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
+            await addEndpoint(driver, process.env.SKALE_ENDPOINT);
+            await addAccount(driver, process.env.PRIVATEKEY);
+            await driver.sleep(1000);
+            driver.get(htmlPage);
+        });
+
+        it('should download file from fs to local', async function () {
+            await driver.sleep(1000);
+        });
+
+        after(async function () {
+            await driver.quit();
+        });
+    });
+
     after(async function () {
         fs.rmdirSync(downloadDir);
     });
