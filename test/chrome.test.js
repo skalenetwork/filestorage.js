@@ -22,9 +22,12 @@ describe('Chrome integration', async function () {
     let htmlPage;
     let driver;
     let downloadDir;
+    let endpoint = process.env.SKALE_ENDPOINT;
+    let address = process.env.ADDRESS;
+
     before(async function () {
         downloadDir = path.join(__dirname, 'downloadedFiles');
-        htmlPage = path.join('file:///', __dirname, 'test.html');
+        htmlPage = 'http://localhost:4000';
         if (!fs.existsSync(downloadDir)) {
             fs.mkdirSync(downloadDir);
         }
@@ -43,8 +46,6 @@ describe('Chrome integration', async function () {
 
     describe('downloadToFile', async function () {
         let fileName = 'testFile';
-        let endpoint = process.env.SKALE_ENDPOINT;
-        let address = process.env.ADDRESS;
         let data = Buffer.from(fileName);
         let storagePath;
         let filestorage;
@@ -95,7 +96,6 @@ describe('Chrome integration', async function () {
             await driver.sleep(1000);
             await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
             await driver.sleep(1000);
-
         }
 
         async function addEndpoint(driver, endpoint) {
@@ -120,11 +120,15 @@ describe('Chrome integration', async function () {
             await addEndpoint(driver, process.env.SKALE_ENDPOINT);
             await addAccount(driver, process.env.PRIVATEKEY);
             await driver.sleep(1000);
-            driver.get(htmlPage);
         });
 
-        it('should download file from fs to local', async function () {
-            await driver.sleep(1000);
+        it('should delete with metamask', async function () {
+            let fileName = 'testFile';
+            let data = Buffer.from(fileName);
+            let filestorage = new Filestorage(endpoint);
+            let storagePath = await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
+            driver.get(htmlPage);
+            await driver.sleep(30000);
         });
 
         after(async function () {
