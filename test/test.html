@@ -19,6 +19,17 @@
             );
             document.title = 'Deleted';
         }
+
+        async function uploadFile(){
+            let f = new filestorage(window.web3.currentProvider, true);
+            var buffer = new Uint8Array([0, 1, 2]);
+            await f.uploadFile(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value,
+                buffer
+            );
+            document.title = 'Uploaded';
+        }
     </script>
 </head>
 <body>
@@ -27,5 +38,6 @@
     <input id="storagePath"/>
     <button id="downloadFile" onclick="downloadFile()"></button>
     <button id="deleteFile" onclick="deleteFile()"></button>
+    <button id="uploadFile" onclick="uploadFile()"></button>
 </body>
 </html>
