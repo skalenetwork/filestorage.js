@@ -100,12 +100,13 @@ describe('Chrome integration', async function () {
             await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='first-time-flow__markdown']")), 10000);
             await driver.executeScript("document.querySelector('div.first-time-flow__markdown').scrollTop =" +
                 "document.querySelector('div.first-time-flow__markdown').scrollHeight");
-            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
-            await driver.sleep(1000);
-            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
-            await driver.sleep(1000);
-            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
-            await driver.sleep(1000);
+            element = driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]"));
+            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
+            await element.click();
+            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
+            await element.click();
+            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
+            await element.click();
         }
 
         async function addEndpoint(driver, endpoint) {
@@ -179,11 +180,11 @@ describe('Chrome integration', async function () {
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(fileName);
             await driver.findElement(webdriver.By.id('uploadFile')).click();
-            await driver.sleep(2000);
+            await driver.sleep(10000);
             await confirmTransaction(driver);
-            await driver.sleep(4000);
+            await driver.sleep(10000);
             await confirmTransaction(driver);
-            await driver.sleep(4000);
+            await driver.sleep(10000);
             await confirmTransaction(driver);
             await driver.wait(webdriver.until.titleIs('Uploaded'), 100000);
             let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
