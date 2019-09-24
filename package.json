@@ -28,7 +28,7 @@
     "build-major": "VER=major ./build.sh",
     "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
     "generate-win": "IF NOT EXIST .\\test\\test.txt fsutil file createnew .\\test\\test.txt 104857600",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 120000",
+    "test": "nyc --reporter=lcov mocha test/chrome.test.js --exit --timeout 120000",
     "coverage": "codecov",
     "lint": "eslint --cache --fix src/*.js test/*.js",
     "prepush": "npm run lint && npm test"
