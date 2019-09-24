@@ -85,9 +85,9 @@ describe('Chrome integration', async function () {
 
         async function initMetamask(driver, metamaskId, password, seedPhrase) {
             await driver.get("chrome-extension://" + metamaskId + "/home.html");
-            await driver.sleep(2000);
+            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//*[contains(text(), 'Continue')]")), 10000);
             await driver.findElement(webdriver.By.xpath("//*[contains(text(), 'Continue')]")).click();
-            await driver.sleep(2000);
+            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//*[contains(text(), 'Import with seed phrase')]")), 10000);
             await driver.findElement(webdriver.By.xpath("//*[contains(text(), 'Import with seed phrase')]")).click();
             await driver.findElement(webdriver.By.id('password')).sendKeys(password);
             await driver.findElement(webdriver.By.id('confirm-password')).sendKeys(password);
@@ -95,7 +95,7 @@ describe('Chrome integration', async function () {
                 "//textarea[@placeholder='Separate each word with a single space']"
             )).sendKeys(seedPhrase);
             await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]")).click();
-            await driver.sleep(3000);
+            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='first-time-flow__markdown']")), 10000);
             await driver.executeScript("document.querySelector('div.first-time-flow__markdown').scrollTop =" +
                 "document.querySelector('div.first-time-flow__markdown').scrollHeight");
             await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]")).click();
@@ -125,8 +125,15 @@ describe('Chrome integration', async function () {
         async function confirmTransaction(driver) {
             let currentWindow = await driver.getWindowHandle();
             let windows = await driver.getAllWindowHandles();
-            await driver.switchTo().window(windows[windows.length - 1]);
-            await driver.sleep(3000);
+            for (let i = 0; i < windows.length; ++i){
+                await driver.switchTo().window(windows[i]);
+                if (await driver.getTitle() === "MetaMask Notification") {
+                    break;
+                } else {
+                    driver.switchTo().window(currentWindow);
+                }
+            }
+            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//button[contains(text(), 'Confirm')]")), 10000);
             await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Confirm')]")).click();
             await driver.switchTo().window(currentWindow);
         }
