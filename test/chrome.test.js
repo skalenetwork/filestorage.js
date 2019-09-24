@@ -95,7 +95,7 @@ describe('Chrome integration', async function () {
                 "//textarea[@placeholder='Separate each word with a single space']"
             )).sendKeys(seedPhrase);
             let element = driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]"));
-            await driver.wait(webdriver.until.elementIsEnabled(element), 50000);
+            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
             await element.click();
             await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='first-time-flow__markdown']")), 10000);
             await driver.executeScript("document.querySelector('div.first-time-flow__markdown').scrollTop =" +
