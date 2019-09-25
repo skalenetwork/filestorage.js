@@ -6,6 +6,7 @@ let path = require('path');
 let constants = require('./utils/constants');
 let helper = require('../src/common/helper');
 let server = require('./utils/testServer');
+let Metamask = require('./utils/MetamaskStub');
 require('dotenv').config();
 
 // eslint-disable-next-line
@@ -83,50 +84,6 @@ describe('Chrome integration', async function () {
         let fileName;
         let driver;
 
-        async function initMetamask(driver, metamaskId, password, seedPhrase) {
-            await driver.get("chrome-extension://" + metamaskId + "/home.html");
-            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//*[contains(text(), 'Continue')]")), 10000);
-            await driver.findElement(webdriver.By.xpath("//*[contains(text(), 'Continue')]")).click();
-            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//*[contains(text(), 'Import with seed phrase')]")), 10000);
-            await driver.findElement(webdriver.By.xpath("//*[contains(text(), 'Import with seed phrase')]")).click();
-            await driver.findElement(webdriver.By.id('password')).sendKeys(password);
-            await driver.findElement(webdriver.By.id('confirm-password')).sendKeys(password);
-            await driver.findElement(webdriver.By.xpath(
-                "//textarea[@placeholder='Separate each word with a single space']"
-            )).sendKeys(seedPhrase);
-            let element = driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]"));
-            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
-            await element.click();
-            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='first-time-flow__markdown']")), 10000);
-            await driver.executeScript("document.querySelector('div.first-time-flow__markdown').scrollTop =" +
-                "document.querySelector('div.first-time-flow__markdown').scrollHeight");
-            element = driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Accept')]"));
-            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
-            await element.click();
-            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
-            await element.click();
-            await driver.wait(webdriver.until.elementIsEnabled(element), 100000);
-            await element.click();
-        }
-
-        async function addEndpoint(driver, metamaskId, endpoint) {
-            await driver.get("chrome-extension://" + metamaskId + "/home.html");
-            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='app-header__network-component-wrapper']")), 10000);
-            await driver.findElement(webdriver.By.xpath("//div[@class='app-header__network-component-wrapper']")).click();
-            await driver.findElement(webdriver.By.xpath("//li[contains(., 'Custom RPC')]")).click();
-            await driver.findElement(webdriver.By.id('new-rpc')).sendKeys(endpoint);
-            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Save')]")).click();
-        }
-
-        async function addAccount(driver, metamaskId, privateKey) {
-            await driver.get("chrome-extension://" + metamaskId + "/home.html");
-            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='identicon']")), 10000);
-            await driver.findElement(webdriver.By.xpath("//div[@class='identicon']")).click();
-            await driver.findElement(webdriver.By.xpath("//div[contains(text(), 'Import Account')]")).click();
-            await driver.findElement(webdriver.By.id('private-key-box')).sendKeys(privateKey);
-            await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]")).click();
-        }
-
         async function confirmTransaction(driver) {
             let currentWindow = await driver.getWindowHandle();
             let windows = await driver.getAllWindowHandles();
@@ -150,9 +107,10 @@ describe('Chrome integration', async function () {
                     .addExtensions(encodeExt(path.join(__dirname, "metamask.crx"))))
                 .build();
             let id = constants.METAMASK_ID;
-            await initMetamask(driver, id, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
-            await addEndpoint(driver, id, process.env.SKALE_ENDPOINT);
-            await addAccount(driver, id, process.env.PRIVATEKEY);
+            let metamask = new Metamask(id);
+            await metamask.initialize(driver, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
+            await metamask.addEndpoint(driver, process.env.SKALE_ENDPOINT);
+            await metamask.addAccount(driver, process.env.PRIVATEKEY);
             await driver.sleep(1000);
         });
 
