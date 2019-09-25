@@ -30,6 +30,24 @@
             );
             document.title = 'Uploaded';
         }
+
+        async function createDirectory() {
+            let f = new filestorage(window.web3.currentProvider, true);
+            await f.createDirectory(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value
+            );
+            document.title = 'Directory created';
+        }
+
+        async function deleteDirectory() {
+            let f = new filestorage(window.web3.currentProvider, true);
+            await f.deleteDirectory(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value
+            );
+            document.title = 'Directory deleted';
+        }
     </script>
 </head>
 <body>
@@ -39,5 +57,7 @@
     <button id="downloadFile" onclick="downloadFile()"></button>
     <button id="deleteFile" onclick="deleteFile()"></button>
     <button id="uploadFile" onclick="uploadFile()"></button>
+    <button id="createDirectory" onclick="createDirectory()"></button>
+    <button id="deleteDirectory" onclick="deleteDirectory()"></button>
 </body>
 </html>
