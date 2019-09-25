@@ -109,20 +109,22 @@ describe('Chrome integration', async function () {
             await element.click();
         }
 
-        async function addEndpoint(driver, endpoint) {
+        async function addEndpoint(driver, metamaskId, endpoint) {
+            await driver.get("chrome-extension://" + metamaskId + "/home.html");
+            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='app-header__network-component-wrapper']")), 10000);
             await driver.findElement(webdriver.By.xpath("//div[@class='app-header__network-component-wrapper']")).click();
             await driver.findElement(webdriver.By.xpath("//li[contains(., 'Custom RPC')]")).click();
             await driver.findElement(webdriver.By.id('new-rpc')).sendKeys(endpoint);
             await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Save')]")).click();
-            await driver.sleep(2000);
         }
 
-        async function addAccount(driver, privateKey) {
+        async function addAccount(driver, metamaskId, privateKey) {
+            await driver.get("chrome-extension://" + metamaskId + "/home.html");
+            await driver.wait(webdriver.until.elementLocated(webdriver.By.xpath("//div[@class='identicon']")), 10000);
             await driver.findElement(webdriver.By.xpath("//div[@class='identicon']")).click();
             await driver.findElement(webdriver.By.xpath("//div[contains(text(), 'Import Account')]")).click();
             await driver.findElement(webdriver.By.id('private-key-box')).sendKeys(privateKey);
             await driver.findElement(webdriver.By.xpath("//button[contains(text(), 'Import')]")).click();
-            await driver.sleep(2000);
         }
 
         async function confirmTransaction(driver) {
@@ -149,8 +151,8 @@ describe('Chrome integration', async function () {
                 .build();
             let id = constants.METAMASK_ID;
             await initMetamask(driver, id, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
-            await addEndpoint(driver, process.env.SKALE_ENDPOINT);
-            await addAccount(driver, process.env.PRIVATEKEY);
+            await addEndpoint(driver, id, process.env.SKALE_ENDPOINT);
+            await addAccount(driver, id, process.env.PRIVATEKEY);
             await driver.sleep(1000);
         });
 
@@ -163,7 +165,7 @@ describe('Chrome integration', async function () {
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(fileName);
             await driver.findElement(webdriver.By.id('deleteFile')).click();
-            await driver.sleep(3000);
+            await driver.sleep(10000);
             confirmTransaction(driver);
             await driver.wait(webdriver.until.titleIs('Deleted'), 100000);
             let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
