@@ -21,17 +21,14 @@ const encodeExt = file => {
     const stream = fs.readFileSync(path.resolve(file));
     return Buffer.from(stream).toString('base64');
 };
-
 describe('Chrome integration', async function () {
     let htmlPage;
-    let driver;
     let downloadDir;
     let endpoint = process.env.SKALE_ENDPOINT;
     let address = process.env.ADDRESS;
     let chromeCapabilities;
     const smallTimeOut = constants.SHORT_TIMEOUT;
     const bigTimeOut = constants.LARGE_TIMEOUT;
-
     before(async function () {
         server.run();
         downloadDir = path.join(__dirname, 'testFiles');
@@ -53,7 +50,6 @@ describe('Chrome integration', async function () {
         let filestorage;
         let pathToFile;
         let driver;
-
         before(async function () {
             driver = new webdriver.Builder()
                 .withCapabilities(chromeCapabilities)
@@ -91,7 +87,7 @@ describe('Chrome integration', async function () {
             driver = new webdriver.Builder()
                 .withCapabilities(chromeCapabilities)
                 .setChromeOptions(new Options()
-                    .addExtensions(encodeExt(path.join(__dirname, "metamask.crx"))))
+                    .addExtensions(encodeExt(path.join(__dirname, 'metamask.crx'))))
                 .build();
             metamask = new Metamask(constants.METAMASK_ID);
             await metamask.initialize(driver, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
@@ -176,26 +172,22 @@ describe('Chrome integration', async function () {
             assert.isUndefined(isFind);
         });
 
-        afterEach(async function(){
+        afterEach(async function () {
             let filestorage = new Filestorage(endpoint);
             let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
             let isFind = fileList.find(obj => {
                 return obj.name === fileName;
             });
-            if (isFind){
-                await filestorage.deleteFile(address, fileName, process.env.PRIVATEKEY);
-            }
+            if (isFind) await filestorage.deleteFile(address, fileName, process.env.PRIVATEKEY);
             isFind = fileList.find(obj => {
                 return obj.name === directoryName;
             });
-            if (isFind){
-                await filestorage.deleteDirectory(address, directoryName, process.env.PRIVATEKEY);
-            }
+            if (isFind) await filestorage.deleteDirectory(address, directoryName, process.env.PRIVATEKEY);
         });
 
-        after(async function(){
+        after(async function () {
             await driver.quit();
-        })
+        });
     });
 
     after(async function () {

@@ -2,14 +2,13 @@ let webdriver = require('selenium-webdriver');
 const By = webdriver.By;
 const until = webdriver.until;
 const largeTimeout = require('./constants').LARGE_TIMEOUT;
-
 module.exports = class MetamaskStub {
-    constructor(metamaskId){
+    constructor(metamaskId) {
         this.metamaskId = metamaskId;
     }
 
     async initialize(driver, password, seedPhrase) {
-        await driver.get("chrome-extension://" + this.metamaskId + "/home.html");
+        await driver.get('chrome-extension://' + this.metamaskId + '/home.html');
         await driver.wait(until.elementLocated(By.xpath("//*[contains(text(), 'Continue')]")), largeTimeout);
         await driver.findElement(By.xpath("//*[contains(text(), 'Continue')]")).click();
         let seedPhraseXpath = "//*[contains(text(), 'Import with seed phrase')]";
@@ -36,7 +35,7 @@ module.exports = class MetamaskStub {
     }
 
     async addEndpoint(driver, endpoint) {
-        await driver.get("chrome-extension://" + this.metamaskId + "/home.html");
+        await driver.get('chrome-extension://' + this.metamaskId + '/home.html');
         let endpointXpath = "//div[@class='app-header__network-component-wrapper']";
         await driver.wait(until.elementLocated(By.xpath(endpointXpath)), largeTimeout);
         await driver.findElement(By.xpath(endpointXpath)).click();
@@ -46,7 +45,7 @@ module.exports = class MetamaskStub {
     }
 
     async addAccount(driver, privateKey) {
-        await driver.get("chrome-extension://" + this.metamaskId + "/home.html");
+        await driver.get('chrome-extension://' + this.metamaskId + '/home.html');
         await driver.wait(until.elementLocated(By.xpath("//div[@class='identicon']")), largeTimeout);
         await driver.findElement(By.xpath("//div[@class='identicon']")).click();
         await driver.findElement(By.xpath("//div[contains(text(), 'Import Account')]")).click();
@@ -57,9 +56,9 @@ module.exports = class MetamaskStub {
     async confirmTransaction(driver) {
         let currentWindow = await driver.getWindowHandle();
         let windows = await driver.getAllWindowHandles();
-        for (let i = 0; i < windows.length; ++i){
+        for (let i = 0; i < windows.length; ++i) {
             await driver.switchTo().window(windows[i]);
-            if (await driver.getTitle() === "MetaMask Notification") {
+            if (await driver.getTitle() === 'MetaMask Notification') {
                 break;
             } else {
                 driver.switchTo().window(currentWindow);

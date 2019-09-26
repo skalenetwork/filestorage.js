@@ -23,11 +23,10 @@ const fileStatus = {
 
 const TEST_ACCOUNT_BALANCE = '1';
 const TEST_SERVER_PORT = 4000;
-const TEST_SERVER_ADDRESS = 'http://localhost:'+TEST_SERVER_PORT.toString(10);
+const TEST_SERVER_ADDRESS = 'http://localhost:' + TEST_SERVER_PORT.toString(10);
 const METAMASK_ID = 'ikhmppmeodmilchppjpiigoaonkpdocc';
 const SHORT_TIMEOUT = 10000;
 const LARGE_TIMEOUT = 100000;
-
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
 module.exports.TEST_ACCOUNT_BALANCE = TEST_ACCOUNT_BALANCE;

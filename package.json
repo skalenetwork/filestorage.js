@@ -30,7 +30,7 @@
     "generate-win": "IF NOT EXIST .\\test\\test.txt fsutil file createnew .\\test\\test.txt 104857600",
     "test": "nyc --reporter=lcov mocha --exit --timeout 120000",
     "coverage": "codecov",
-    "lint": "eslint --cache --fix src/*.js test/*.js",
+    "lint": "eslint --cache --fix src/**/*.js test/**/*.js",
     "prepush": "npm run lint && npm test"
   },
   "devDependencies": {

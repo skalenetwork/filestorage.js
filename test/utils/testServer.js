@@ -3,7 +3,6 @@ const app = express();
 const path = require('path');
 const router = express.Router();
 const port = require('./constants').TEST_SERVER_PORT;
-
 module.exports = {
     run() {
         router.get('/', function (req, res) {
