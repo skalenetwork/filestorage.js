@@ -257,7 +257,12 @@ and three keypairs (address, foreign, empty):
 -   `FOREIGN_PRIVATEKEY`: second test account privatekey
 -   `EMPTY_ADDRESS`: third test account address
 -   `EMPTY_PRIVATEKEY`: third test account privatekey
+-   `SEED_PHRASE`: seed phrase to run metamask tests
+-   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
 
+Requirements to run chrome integration tests:
+- Chrome v77
+   
 Then execute:
 
 ```bash
