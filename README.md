@@ -261,7 +261,7 @@ and three keypairs (address, foreign, empty):
 -   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
 
 Requirements to run chrome integration tests:
-- Chrome v77
+-   Chrome v77
    
 Then execute:
 
