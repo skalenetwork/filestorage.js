@@ -26,6 +26,7 @@ const constants = require('./common/constants');
 const Helper = require('./common/helper');
 const FilestorageContract = require('./FilestorageContract');
 let streamSaver = null;
+/* istanbul ignore next */
 if (typeof window !== 'undefined') {
     streamSaver = require('streamsaver');
 }
@@ -89,6 +90,7 @@ class FilestorageClient {
      *
      * @param {string} storagePath - Path of the file in Filestorage
      */
+    /* istanbul ignore next */
     async downloadToFile(storagePath) {
         if (!streamSaver) {
             throw new Error('Method downloadToFile can only be used with a browser');
@@ -203,7 +205,7 @@ class FilestorageClient {
             let data = Helper.concatBytes32Array(rawData, 2 * currentLength);
             // eslint-disable-next-line
             let buffer = new Buffer.from(data, 'hex');
-
+            /* istanbul ignore next */
             if (stream) stream.write(buffer);
             buffers.push(buffer);
             ptrPosition += currentLength;

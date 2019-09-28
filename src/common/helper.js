@@ -66,7 +66,6 @@ const Helper = {
         let encoded = transactionData.encodeABI();
         let contractAddress = transactionData._parent._address;
         let accountFromPrivateKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-
         if (account !== accountFromPrivateKey && account !== this.rmBytesSymbol(accountFromPrivateKey)) {
             throw new InvalidCredentialsException(constants.errorMessages.INVALID_KEYPAIR);
         }
@@ -78,7 +77,6 @@ const Helper = {
             to: contractAddress,
             nonce: nonce
         };
-
         let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
@@ -106,18 +104,18 @@ const Helper = {
             }
             return result;
         } catch (error) {
-            if (error.message.includes(constants.errorMessages.REVERTED_TRANSACTION)){
+            if (error.message.includes(constants.errorMessages.REVERTED_TRANSACTION)) {
                 let errorMessage = error.message.substr(constants.errorMessages.REVERTED_TRANSACTION.length);
                 let revertReason = JSON.parse(errorMessage).revertReason;
-                if (revertReason)
+                if (revertReason) {
                     throw new FilestorageContractException(revertReason);
-                else
+                } else {
                     throw new FilestorageContractException(constants.errorMessages.FAILED_TRANSACTION);
+                }
             } else {
                 throw error;
             }
         }
     }
 };
-
 module.exports = Helper;

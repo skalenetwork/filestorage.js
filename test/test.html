@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="filestorage"></script>
+    <script type="text/javascript">
+        async function downloadFile() {
+            let f = new filestorage(document.getElementById("SCHAIN_ENDPOINT").value, true);
+            await f.downloadToFile(document.getElementById("storagePath").value);
+            document.title = 'Downloaded';
+        }
+
+        async function deleteFile() {
+            let f = new filestorage(window.web3.currentProvider, true);
+            await f.deleteFile(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value
+            );
+            document.title = 'Deleted';
+        }
+
+        async function uploadFile(){
+            let f = new filestorage(window.web3.currentProvider, true);
+            var buffer = new Uint8Array([0, 1, 2]);
+            await f.uploadFile(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value,
+                buffer
+            );
+            document.title = 'Uploaded';
+        }
+
+        async function createDirectory() {
+            let f = new filestorage(window.web3.currentProvider, true);
+            await f.createDirectory(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value
+            );
+            document.title = 'Directory created';
+        }
+
+        async function deleteDirectory() {
+            let f = new filestorage(window.web3.currentProvider, true);
+            await f.deleteDirectory(
+                document.getElementById("account").value,
+                document.getElementById("storagePath").value
+            );
+            document.title = 'Directory deleted';
+        }
+    </script>
+</head>
+<body>
+    <input id="SCHAIN_ENDPOINT"/>
+    <input id="account"/>
+    <input id="storagePath"/>
+    <button id="downloadFile" onclick="downloadFile()"></button>
+    <button id="deleteFile" onclick="deleteFile()"></button>
+    <button id="uploadFile" onclick="uploadFile()"></button>
+    <button id="createDirectory" onclick="createDirectory()"></button>
+    <button id="deleteDirectory" onclick="deleteDirectory()"></button>
+</body>
+</html>

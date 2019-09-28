@@ -33,7 +33,6 @@ const errorMessages = {
     INVALID_KEYPAIR: 'Keypair mismatch',
     INVALID_PRIVATEKEY: 'Incorrect privateKey'
 };
-
 module.exports.WRITING_GAS = WRITING_GAS;
 module.exports.STANDARD_GAS = STANDARD_GAS;
 module.exports.CHUNK_LENGTH = CHUNK_LENGTH;

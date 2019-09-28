@@ -30,7 +30,7 @@
     "generate-win": "IF NOT EXIST .\\test\\test.txt fsutil file createnew .\\test\\test.txt 104857600",
     "test": "nyc --reporter=lcov mocha --exit --timeout 120000",
     "coverage": "codecov",
-    "lint": "eslint --cache --fix src/*.js test/*.js",
+    "lint": "eslint --cache --fix src/**/*.js test/**/*.js",
     "prepush": "npm run lint && npm test"
   },
   "devDependencies": {
@@ -39,14 +39,16 @@
     "babel-loader": "^7.1.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chromedriver": "77.0.0",
     "codecov": "^3.3.0",
     "dotenv": "^7.0.0",
-    "eslint": "^6.0.1",
+    "eslint": "^6.4.0",
     "eslint-loader": "^2.1.2",
     "eslint-plugin-jsdoc": "^4.8.3",
     "mocha": "^6.1.4",
     "nyc": "^14.1.0",
     "randomstring": "^1.1.5",
+    "selenium-webdriver": "^4.0.0-alpha.5",
     "semver": "^5.6.0",
     "webpack": "4.35.3",
     "webpack-cli": "^3.3.6"
