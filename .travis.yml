@@ -8,6 +8,7 @@ addons:
   chrome: stable
 install:
 - npm install
+- npm link; npm link @skalenetwork/filestorage.js
 script:
 - npm run test
 after_success:
@@ -60,6 +61,7 @@ matrix:
     os: windows
     install:
     - npm install
+    - npm link; npm link @skalenetwork/filestorage.js
     - choco install chromium --version 77.0.3865.0-snapshots --pre
     before_script:
     - npm run generate-win
