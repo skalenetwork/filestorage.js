@@ -9,7 +9,7 @@
   "version": "0.2.7",
   "description": "SKALE Filestorage client tools",
   "license": "LGPL-3.0",
-  "main": "dist/filestorage.min.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/skalenetwork/filestorage.js.git"
