@@ -65,7 +65,7 @@ To use filestorage.js in HTML you should import `filestorage.min.js` from npm pa
 <script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
 ``` 
 
-##### Example
+**Example**:
 
 ```html
 <script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
