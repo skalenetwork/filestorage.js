@@ -43,18 +43,38 @@ new Filestorage(web3Provider, enableLogs);
 Initialize with **SKALE endpoint**:
 
 ```javascript
-const Filestorage = require('@skalenetwork/filestorage.js/src/index');
+const Filestorage = require('@skalenetwork/filestorage.js');
 let filestorage = new Filestorage('----SKALE ENDPOINT----');
 ```
 
 Initialize with external **web3 provider**:
 
 ```javascript
-const Filestorage = require('@skalenetwork/filestorage.js/src/index');
+const Filestorage = require('@skalenetwork/filestorage.js');
 const Web3 = require('web3');
 
 const web3Provider = new Web3.providers.HttpProvider('----SKALE ENDPOINT----');
 let filestorage = new Filestorage(web3Provider);
+```
+
+### Using in HTML
+
+To use filestorage.js in HTML you should import `filestorage.min.js` from npm package:
+
+```html
+<script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
+``` 
+
+**Example**:
+
+```html
+<script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
+<script type="text/javascript">
+    async function downloadFile() {
+        let fs = new filestorage('----SKALE ENDPOINT----', true);
+        await fs.downloadToFile('----STORAGEPATH----');
+    }
+</script>   
 ```
 
 #### Upload file
@@ -248,14 +268,21 @@ To run tests locally you need environment variables defining test file path
 and three keypairs (address, foreign, empty):
 
 -   `TEST_FILE_PATH`: path to generated file. Default `./test.txt`
--   `ENTRYPOINT`: SKALE endpoint
+-   `SKALE_ENDPOINT`: SKALE endpoint
+-   `SCHAIN_OWNER`: SKALE chain owner address
+-   `SCHAIN_OWNER_PK`: SKALE chain owner privatekey
 -   `ADDRESS`: test account address
 -   `PRIVATEKEY`: test account privatekey
 -   `FOREIGN_ADDRESS`: second test account address
 -   `FOREIGN_PRIVATEKEY`: second test account privatekey
 -   `EMPTY_ADDRESS`: third test account address
 -   `EMPTY_PRIVATEKEY`: third test account privatekey
+-   `SEED_PHRASE`: seed phrase to run metamask tests
+-   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
 
+Requirements to run chrome integration tests:
+-   Chrome v77
+   
 Then execute:
 
 ```bash

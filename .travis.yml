@@ -1,6 +1,14 @@
 language: node_js
+sudo: required
+before_install:
+- export DISPLAY=:99.0
+services:
+- xvfb
+addons:
+  chrome: stable
 install:
 - npm install
+- npm link; npm link @skalenetwork/filestorage.js
 script:
 - npm run test
 after_success:
@@ -51,9 +59,15 @@ matrix:
     - secure: jJY+ltm1fQE5OaJcLe/Hq88lYcQBroKjoSsYpnDqx4DqGeHguBlMlLc2tEuACtuEUSCDYTXtgG6KZAjxJ8rf+KNHaR9QhqMUC6DP9w4sg/0+ebQE0iAF1lvyg2dVkW4uGy1ewEdDSCXO99FQVZbmI+YJ4AbtBt5t8dV+RyBarqNON85H/IeTJwr5cJHBDD/aGy/ZJlRxLvd5XZ+vAP2y9ipisfXk6W75JqxFt/VUWbI3pYeTPD4kXciLnqFBpB2esCzxWxJ/VdjTX9418otmcpOxcIyIGg6tFhFj0t+bTWfhtIqANCjaHVL1XSe6CE9HGCx1H94FOl8KowH02HW0B33126AFyYEVVnhf/8gWmTyx/7JLlL/h255C+Kwuz7N2wnTMuLiciNh2ot2Avqw2m6wkoxiSH5i7e2189ncrv3QqOyJkOrrDO8wDlmQcNLCwFReDFQAUc2ZLD61uynrLlou7basZDtfyhA8oXToXVnVqf9u65B8Yw7aTj9oDXhFOoun//LLHqwW26sZ88rKixrG+8c93ty1DGvsSEu/DfFay0NjqRKGqy9Ft2QTspD7TW0BQnE+RGSlSVAbMTqLLm/vfIZ7G639PSzRv9FwWiPUdaQEOCZY2a1QduT/LO/oOiBK1NucGtQOXTSvb52hKhUQV/KWACgNwk1/kf3EpK24=
   - node_js: 8
     os: windows
+    install:
+    - npm install
+    - npm link; npm link @skalenetwork/filestorage.js
+    - choco install chromium --version 77.0.3865.0-snapshots --pre
     before_script:
     - npm run generate-win
     env:
+    - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+    - CHROME_PATH="C:/Program Files (x86)/Chromium/Application/chrome.exe"
     - secure: NNqSK9V6AhgEXBNmHXQd3JRUUfwZhRU11lu38HkEDRQQK+NewT4/ftwR8vwdFjwpUwnj06yFJgGe0Hqwu9t9KOxl9IqedKQufWzmyE0baEy+ytB94uC7WKDTEDtq6Y+rpJoa9yCQWCDRG1wL6dob6gYSmc8X5fU9ucGNZVTNJ4Kr7dWdhvNPEsWv3ok4GfDCpV8eyGEoco9Hwnj5scJ0CFhZvWQgOjG86jLIBkLPWuEYJl/IKcueLfBkJI0y0qJOdv0+5/SHP/G8payqaqKCiVPzDBzHTxVJ3zgbwvOSyb8gaGiZkGhWeZKBwCuObhq3M+4b+yK4Ve+qCdgMIsCFgS360mv/n8xWdp7hVyBus1WgVjdANSjjaZ+iZ7LLGdxA3eWjtPJhPyY+Rb/FNRzveOoKx0gjc1FVew3TLryj2ELe0QzLYXFhbMkaOdtKSiVJjBjrF3v/Vt3zcFP9Rv+RMQrjHHVLAS+nqnKVmOh8p2NVi8m24k6WPutfzOyKviossn46D961X7Yrcj5b6+IXjncbj0otauwt2GSbouZae7GQK2f6OmognRzfnrmcHTxs7p46+8XI8oeuKCKClai6zc6SzsLycpaYOU+Rgnvhr4oiol+NjQRkpiNhcrNXN346bqJa5QiNx/Nkv68d7rBMlUSUXNgxMW56OdXQrX63o8s=
     - secure: RwvhnB33HK8Mo1WhRjoaHlvjxHhgO2Yq1cY6gpFnLi13SEpL73jDT5n7VnEYWyx3/0Dtpe9uT+2n8Xke8Ie2VWF2kC1FhdVnPgROrlxtPgf9/1ZVvBaw301i6zXT7ZGPtovp5tSOuOXbEucCeO//m1NIDImEG+F1MdDfGHd81znytBZ6ry9okmWpqiNG8RdIsooz08ifuTZDs/e+7Q7inoqz7bwrjYISAXDL8HDF4Hd7xCKDZhFcgK3u2VOfsuyv0j6qRE87e6dy+o3EKfjNPZH3BcHWPFkQTebzgB1Iv7hk2cCw4ilDWnV1mfyeSgnipKycMIfZZi2bgCVmLkGajzgDb/nm+xOJrUQner80TsKlMfRS2kMuqKhDTbBNcJRuzYyNnCe6PIqYGRW2nKNcYoqp+zdCgcZvMptQ93TfJ8oNG1v/5irHE8TuaNjAUZudoW6YxGDA3O52x0TIgltsgpOolCDvOaMYt90KA58gdgLww6hvfXfgyj+VUdujgJC5LjA5aFAMiPEqwmaXS7uSXBc0Um67qDzuBbforAPmsVq00LG+wtbn421uC5HT17v23dGVztdFlZpWl027A0ZkU0qn8z0n22u52yK6hM90g2IZ8bGQHiQ/CyQ7tCnIsFe+11RyCy9C2xU+bw97TVIid9/nzDiOSyY4YvLggOk1r+o=
     - secure: GDRPTPwObIXrObFwU6QAPbmWC8e6nHIQMMMAUl5axRfWx3O71hsbjQuO4eFoFUlKR68M1p/iwFwjsKr0A0pmmfs0hk2+VmJE9wIzBr5+eg2+A3mECUWXCR9fB8wHqeuytAOmE4LO8exZEJ5kPe9dACjk0PQp3ybZsC7KvN0CnmuX3/AVa5cdcBVKqXJA1t4pbdlCjZXYuvPmvubXOjl1vEcyFMRhb2TmD2RFN5RcQUgW/K26yRqnTF2H9mzQccePltglJvWah/+eA42F0B6iTaGjCtsuo7GVYGzVOcexUw0bf07uuj9nIzeFLfTdaLw4vgN8gRaklD1bEcxO74V4XxNpI0UU2xRrehX+82Rn9o91J56r+uMG0K5BYsyq8tHi5OflUn0XPJZ6rO7ULp4ShvlVKY6URZpUtmTDKWpvTUhwTueG84Z7PR5mM67o6QJdyEtZD38b/oYXg/oQKc/zQyRhhsSepE1g46P9NuE2wm766kfpBxXmYEo8uq3eD4ZTRetYhBNt0Irh9t1YcdN2rWlrFiAi6kIx6yit71XOM5QvxjAVU3W01T2ky7HmJAsC0zf/wwywjdLI0p39WfoiN1z3Z+pTz3Jn9uEDNiRiwJDxEOcdtJjWTHBBEpNKrmp1IxWyQhqmGghIRlykLJCkxdD+Cs9ThteoxiMS8/yA+fY=
