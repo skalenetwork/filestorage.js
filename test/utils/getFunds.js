@@ -40,7 +40,8 @@ async function getFunds(account) {
             from: rootAccount,
             gas: 21000,
             to: account,
-            value: valueToSend
+            value: valueToSend,
+            chainId: await web3.eth.getChainId()
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, rootPrivateKey);
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
