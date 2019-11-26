@@ -24,10 +24,10 @@
 require('dotenv').config();
 const Web3 = require('web3');
 const testBalance = require('./constants').TEST_ACCOUNT_BALANCE;
-const rootAccount = process.env.SCHAIN_OWNER;
 const rootPrivateKey = process.env.SCHAIN_OWNER_PK;
 const web3 = new Web3(process.env.SKALE_ENDPOINT);
 async function getFunds(account) {
+    let rootAccount = web3.eth.accounts.privateKeyToAccount(rootPrivateKey).address;
     let testBalanceWei = await web3.utils.toWei(testBalance, 'ether');
     let accountBalance = await web3.eth.getBalance(account);
     let rootBalance = await web3.eth.getBalance(rootAccount);
