@@ -18,7 +18,7 @@ env:
 
 jobs:
   include:
-    - stage: test
+    - stage: unit testing
       script:
       - npm run test
       after_success:
@@ -68,7 +68,7 @@ jobs:
       - secure: RwvhnB33HK8Mo1WhRjoaHlvjxHhgO2Yq1cY6gpFnLi13SEpL73jDT5n7VnEYWyx3/0Dtpe9uT+2n8Xke8Ie2VWF2kC1FhdVnPgROrlxtPgf9/1ZVvBaw301i6zXT7ZGPtovp5tSOuOXbEucCeO//m1NIDImEG+F1MdDfGHd81znytBZ6ry9okmWpqiNG8RdIsooz08ifuTZDs/e+7Q7inoqz7bwrjYISAXDL8HDF4Hd7xCKDZhFcgK3u2VOfsuyv0j6qRE87e6dy+o3EKfjNPZH3BcHWPFkQTebzgB1Iv7hk2cCw4ilDWnV1mfyeSgnipKycMIfZZi2bgCVmLkGajzgDb/nm+xOJrUQner80TsKlMfRS2kMuqKhDTbBNcJRuzYyNnCe6PIqYGRW2nKNcYoqp+zdCgcZvMptQ93TfJ8oNG1v/5irHE8TuaNjAUZudoW6YxGDA3O52x0TIgltsgpOolCDvOaMYt90KA58gdgLww6hvfXfgyj+VUdujgJC5LjA5aFAMiPEqwmaXS7uSXBc0Um67qDzuBbforAPmsVq00LG+wtbn421uC5HT17v23dGVztdFlZpWl027A0ZkU0qn8z0n22u52yK6hM90g2IZ8bGQHiQ/CyQ7tCnIsFe+11RyCy9C2xU+bw97TVIid9/nzDiOSyY4YvLggOk1r+o=
       - secure: GDRPTPwObIXrObFwU6QAPbmWC8e6nHIQMMMAUl5axRfWx3O71hsbjQuO4eFoFUlKR68M1p/iwFwjsKr0A0pmmfs0hk2+VmJE9wIzBr5+eg2+A3mECUWXCR9fB8wHqeuytAOmE4LO8exZEJ5kPe9dACjk0PQp3ybZsC7KvN0CnmuX3/AVa5cdcBVKqXJA1t4pbdlCjZXYuvPmvubXOjl1vEcyFMRhb2TmD2RFN5RcQUgW/K26yRqnTF2H9mzQccePltglJvWah/+eA42F0B6iTaGjCtsuo7GVYGzVOcexUw0bf07uuj9nIzeFLfTdaLw4vgN8gRaklD1bEcxO74V4XxNpI0UU2xRrehX+82Rn9o91J56r+uMG0K5BYsyq8tHi5OflUn0XPJZ6rO7ULp4ShvlVKY6URZpUtmTDKWpvTUhwTueG84Z7PR5mM67o6QJdyEtZD38b/oYXg/oQKc/zQyRhhsSepE1g46P9NuE2wm766kfpBxXmYEo8uq3eD4ZTRetYhBNt0Irh9t1YcdN2rWlrFiAi6kIx6yit71XOM5QvxjAVU3W01T2ky7HmJAsC0zf/wwywjdLI0p39WfoiN1z3Z+pTz3Jn9uEDNiRiwJDxEOcdtJjWTHBBEpNKrmp1IxWyQhqmGghIRlykLJCkxdD+Cs9ThteoxiMS8/yA+fY=
       - secure: KZlV52JdYQQCTUalUB47EUBlEEhThR9YmseHdj+jpSpACxHQNRxLnG5m4blhnT5X5Phhz4WqGLDoODlk4Q8CRUmt7rMa/orSn3BKKyZNGIERf/6mDuExR4s9OyblLRGShPfiiOP+UsRwF+S3d/zyCGGsUv56W2NnDm3KBey0C/YG+972AQwJRIsE6hkZUfcWFXFSkURzAp0kkigXYGNKz7jNzojdof5Ee4Ut2Y+2mF7X2kCLcC/CqYE05fZbFdZnt8wo3W+0jTwQS9OF1Edn1LskEputi6S+s7zUNXlt7Qrhl/fnrI6Qe0dNzPDqixf9lD+UumbWAZ2HAoXKogKz3mZWxFjcSBn/dNY6g6GEGDOzMYDlHLcdPz8zt8TTbTd5+EduyohAYZ5jgscaGZxkNRKGTTdyn5BvRmGVVygpyMMJ6o5ohhwWhRormFMUdRpp1SaWkTt94nAobXZUz6XCjmLyZern5it/1u+vqAwNPoJ3PkI/Kp6JS19pt1zis5KtnhEm3VFVVr8n3gDE7cAbBreX4WWE4hGJ9OZyXFYZrAwoWssSOt0O6FZ0YDEQDu3SUbnEQMxXzmtmtYGM6mga9JQhLinMoNKQmTVDAdC/kW0oKjxM2S7K2qnSObA5Qh1dNgKMqXKwKbVdZC17l9bOsGWhvqnZoGZsKd/E5bGlJVg=
-    - stage: browser test
+    - stage: browser testing
       script:
       - npm run test test/browser
       node_js: 10
