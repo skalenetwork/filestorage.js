@@ -85,7 +85,7 @@ jobs:
       - secure: mbih0IRDxVKl/fsCamcCDHHtRV2ZRsQi5fcmlJUbegaEL4OueVnDLQbZn3Gml7AMXGsidrBMVRHLJid2/R4U4cLT7YF39f6PnqcoM+MB2LRE19q+qG2S6OasG6Kc3dz11CkTt17hE5Nz9Lz5WnQn4sUJIVU6SCMBgszLIDu8RGXUWjvTyrKtzptiWQP/oSBYdn6bsUt1RtSHIWX8oa8ip+v9oto4bO7zsFbDuBkJ6HrtgiW7TFpHtpP94RN35L7MMps6N69r2zCoJgUe8IvygrjqDZM35Hav1aywm3U1CT3pVGmVxwsYpCQN7LOxvPMCnaTedfqTiI3OJY0XCThhFd4oQopt2ZTS/pfW7nM5r4/FoKvT16JRYo5rMVQDbmtk/4iEWVefFAcO90D2xrq3OrJsS5OLL5vGjgR3GFTTJU3oz+2bsxmVpnsag/gTQlfr95QOm5nQ8GGBa7W/KMdRtYmOb+LIO/1VK6Z9XvJqN6GmPNZR4qWjLqV38YITD9FJpLzJUnlinXMANzF2kmj210ntl3wns2PNKXrigMXdgp9N2gqJlKRInFCq9QMW+GN3wozL3JRi0NPABJWhMxWDZQlE9yjRnRAUMAH7TwGcm/Xx/QNXm5ZKoUUPyQMhK/4Stiq5FvttRWOViprb77pB0TrMhePOSEnLrMqW93+K6Zc=
     - node_js: 10
       script:
-      - npm run test test/browser
+      - npm run test test\\browser
       os: windows
       install:
       - npm install
