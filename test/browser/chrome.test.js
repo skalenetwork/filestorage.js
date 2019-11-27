@@ -26,12 +26,12 @@ let Options = require('selenium-webdriver/chrome').Options;
 let path = require('path');
 let Web3 = require('web3');
 let fs = require('fs');
-let Filestorage = require('../src/index');
-let constants = require('./utils/constants');
-let helper = require('../src/common/helper');
-let getFunds = require('./utils/getFunds');
-let server = require('./utils/testServer');
-let Metamask = require('./utils/MetamaskStub');
+let Filestorage = require('../../src/index');
+let constants = require('../utils/constants');
+let helper = require('../../src/common/helper');
+let getFunds = require('../utils/getFunds');
+let server = require('../utils/testServer');
+let Metamask = require('../utils/MetamaskStub');
 require('dotenv').config();
 
 // eslint-disable-next-line
