@@ -29,7 +29,7 @@ const port = require('./constants').TEST_SERVER_PORT;
 module.exports = {
     run() {
         router.get('/', function (req, res) {
-            res.sendFile(path.join(__dirname, '../test.html'));
+            res.sendFile(path.join(__dirname, '../browser/test.html'));
         });
 
         router.get('/filestorage', function (req, res) {

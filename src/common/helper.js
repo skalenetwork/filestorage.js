@@ -70,12 +70,14 @@ const Helper = {
             throw new InvalidCredentialsException(constants.errorMessages.INVALID_KEYPAIR);
         }
         let nonce = await web3.eth.getTransactionCount(account);
+        let chainId = await web3.eth.getChainId();
         let tx = {
             from: account,
             data: encoded,
             gas: gas,
             to: contractAddress,
-            nonce: nonce
+            nonce: nonce,
+            chainId: chainId
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
