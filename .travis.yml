@@ -4,8 +4,22 @@ before_install:
 - export DISPLAY=:99.0
 services:
 - xvfb
+- docker
 addons:
   chrome: stable
+before_install:
+- mkdir -p ~/schain_data/data_dir
+- mv test/utils/config.json ~/schain_data/
+- echo "$PASSWORD" | docker login --username $USERNAME --password-stdin
+- docker pull skalelabshub/schain:$SCHAIN_VERSION
+- docker run -d
+  -v ~/schain_data:/schain_data
+  -p 2234:2234
+  -e SSL_CERT_PATH=None
+  -e HTTP_RPC_PORT=2234
+  -e DATA_DIR=/schain_data/data_dir
+  -e CONFIG_FILE=/schain_data/config.json
+  skalelabshub/schain:$SCHAIN_VERSION
 install:
 - npm install
 - npm link; npm link @skalenetwork/filestorage.js
