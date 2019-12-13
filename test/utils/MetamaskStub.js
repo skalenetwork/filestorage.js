@@ -57,13 +57,16 @@ module.exports = class MetamaskStub {
         await element.click();
     }
 
-    async addEndpoint(driver, endpoint) {
+    async addEndpoint(driver, endpoint, chainId) {
         await driver.get('chrome-extension://' + this.metamaskId + '/home.html');
-        let endpointXpath = "//div[@class='app-header__network-component-wrapper']";
-        await driver.wait(until.elementLocated(By.xpath(endpointXpath)), largeTimeout);
-        await driver.findElement(By.xpath(endpointXpath)).click();
+        let xpath = "//div[@class='app-header__network-component-wrapper']";
+        await driver.wait(until.elementLocated(By.xpath(xpath)), largeTimeout);
+        await driver.findElement(By.xpath(xpath)).click();
         await driver.findElement(By.xpath("//li[contains(., 'Custom RPC')]")).click();
         await driver.findElement(By.id('new-rpc')).sendKeys(endpoint);
+        xpath = "//span[@class='settings-tab__advanced-link']";
+        await driver.findElement(By.xpath(xpath)).click();
+        await driver.findElement(By.id('chainid')).sendKeys(chainId);
         await driver.findElement(By.xpath("//button[contains(text(), 'Save')]")).click();
     }
 
