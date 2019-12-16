@@ -160,7 +160,7 @@ class FilestorageContract {
      * @returns {Object} Transaction information
      */
     async createDirectory(address, directoryPath, privateKey = '') {
-        let txData = this.contract.methods.createDir(directoryPath);
+        let txData = this.contract.methods.createDirectory(directoryPath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -175,7 +175,7 @@ class FilestorageContract {
      * @returns {Object} Transaction information
      */
     async deleteDirectory(address, directoryPath, privateKey = '') {
-        let txData = this.contract.methods.deleteDir(directoryPath);
+        let txData = this.contract.methods.deleteDirectory(directoryPath);
         return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
@@ -189,7 +189,7 @@ class FilestorageContract {
      * List of content
      */
     async listDirectory(storagePath) {
-        let result = await this.contract.methods.listDir(storagePath).call();
+        let result = await this.contract.methods.listDirectory(storagePath).call();
         return result;
     }
 }
