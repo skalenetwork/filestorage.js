@@ -4,10 +4,11 @@ before_install:
 - export DISPLAY=:99.0
 services:
 - xvfb
-- docker
 addons:
   chrome: stable
 before_install:
+- curl -fsSL https://get.docker.com -o get-docker.sh
+- sh get-docker.sh
 - mkdir -p ~/schain_data/data_dir
 - mv test/utils/config.json ~/schain_data/
 - echo "$PASSWORD" | docker login --username $USERNAME --password-stdin
