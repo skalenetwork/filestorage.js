@@ -29,7 +29,7 @@
     "coverage": "codecov",
     "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
     "generate-win": "IF NOT EXIST .\\test\\test.txt fsutil file createnew .\\test\\test.txt 104857600",
-    "test-integration": "cd test/integration/;bash generate.sh; cd ../..; node test/integration/tinyFile.js > ./test/tiny.txt & node test/integration/largeFile.js > & node test/integration/smallFile.js",
+    "test-integration": "cd test/integration/;bash generate.sh; cd ../..; node test/integration/tinyFile.js & node test/integration/largeFile.js & node test/integration/smallFile.js",
     "lint": "eslint --cache --fix src/**/*.js test/**/*.js",
     "minify": "WEBPACK_ENV=build npx webpack",
     "prepush": "npm run lint && npm run minify && npm link && npm link @skalenetwork/filestorage.js && npm test",

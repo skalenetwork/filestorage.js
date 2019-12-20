@@ -15,7 +15,7 @@ async function upload(){
         let timeStart = new Date()
         console.log(balanceStart)
         console.log('start: ', timeStart)
-	for (let i = 1 ; i < 3000 ; ++i) {
+	for (let i = 50 ; i < 3000 ; ++i) {
         let directoryPath = __dirname+'/testFiles/small/small'+i+'.txt'
 		var content;
 		var contentPath;
