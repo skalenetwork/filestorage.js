@@ -50,6 +50,8 @@ const TEST_SERVER_ADDRESS = 'http://localhost:' + TEST_SERVER_PORT.toString(10);
 const METAMASK_ID = 'ikhmppmeodmilchppjpiigoaonkpdocc';
 const SHORT_TIMEOUT = 10000;
 const LARGE_TIMEOUT = 100000;
+const RESERVED_SPACE = 10 ** 9;
+
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
 module.exports.TEST_ACCOUNT_BALANCE = TEST_ACCOUNT_BALANCE;
@@ -58,3 +60,4 @@ module.exports.TEST_SERVER_ADDRESS = TEST_SERVER_ADDRESS;
 module.exports.METAMASK_ID = METAMASK_ID;
 module.exports.SHORT_TIMEOUT = SHORT_TIMEOUT;
 module.exports.LARGE_TIMEOUT = LARGE_TIMEOUT;
+module.exports.RESERVED_SPACE = RESERVED_SPACE;

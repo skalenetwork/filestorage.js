@@ -72,7 +72,7 @@ describe('Chrome integration', async function () {
         chromeCapabilities.set('chromeOptions', chromeOptions);
         filestorage = new Filestorage(endpoint);
         await testHelper.getFunds(address);
-        await testHelper.reserveTestSpace(filestorage.contract.contract, address, 10 ** 9);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, address, constants.RESERVED_SPACE);
         fileName = randomstring.generate();
         data = Buffer.from(fileName);
     });

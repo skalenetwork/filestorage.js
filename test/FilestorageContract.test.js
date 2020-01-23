@@ -25,7 +25,7 @@ const randomstring = require('randomstring');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
-const fileStatus = require('./utils/constants').fileStatus;
+const testConstants = require('./utils/constants');
 const testHelper = require('./utils/helper');
 const Web3 = require('web3');
 const path = require('path');
@@ -33,6 +33,7 @@ require('dotenv').config();
 
 const chai = require('chai');
 const assert = chai.assert;
+const fileStatus = testConstants.fileStatus;
 chai.should();
 chai.use(require('chai-as-promised'));
 
@@ -50,7 +51,7 @@ describe('FilestorageContract', function () {
         privateKey = process.env.PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
         await testHelper.getFunds(address);
-        await testHelper.reserveTestSpace(filestorageContract.contract, address, 10 ** 9);
+        await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
     });
 
     describe('Test contructor', function () {
