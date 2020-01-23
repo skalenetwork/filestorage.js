@@ -51,7 +51,6 @@ const METAMASK_ID = 'ikhmppmeodmilchppjpiigoaonkpdocc';
 const SHORT_TIMEOUT = 10000;
 const LARGE_TIMEOUT = 100000;
 const RESERVED_SPACE = 10 ** 9;
-
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
 module.exports.TEST_ACCOUNT_BALANCE = TEST_ACCOUNT_BALANCE;
