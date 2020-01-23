@@ -29,7 +29,7 @@ let fs = require('fs');
 let Filestorage = require('../../src/index');
 let constants = require('../utils/constants');
 let helper = require('../../src/common/helper');
-let getFunds = require('../utils/getFunds');
+let testHelper = require('../utils/helper');
 let server = require('../utils/testServer');
 let Metamask = require('../utils/MetamaskStub');
 require('dotenv').config();
@@ -66,7 +66,7 @@ describe('Chrome integration', async function () {
             'args': ['--test-type', '--start-maximized', '--no-sandbox']
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
-        await getFunds(address);
+        await testHelper.getFunds(address);
     });
 
     describe('downloadToFile', async function () {

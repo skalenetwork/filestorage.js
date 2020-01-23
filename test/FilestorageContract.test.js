@@ -26,7 +26,7 @@ const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
 const fileStatus = require('./utils/constants').fileStatus;
-const getFunds = require('./utils/getFunds');
+const testHelper = require('./utils/helper');
 const Web3 = require('web3');
 const path = require('path');
 require('dotenv').config();
@@ -49,7 +49,8 @@ describe('FilestorageContract', function () {
         address = process.env.ADDRESS;
         privateKey = process.env.PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
-        await getFunds(address);
+        await testHelper.getFunds(address);
+        await testHelper.reserveTestSpace(filestorageContract.contract, address, 10 ** 9);
     });
 
     describe('Test contructor', function () {

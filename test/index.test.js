@@ -26,7 +26,7 @@ const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
 const errorMessages = require('./utils/constants').errorMessages;
 const fileStatus = require('./utils/constants').fileStatus;
-const getFunds = require('./utils/getFunds');
+const testHelper = require('./utils/helper');
 const constants = require('../src/common/constants');
 const path = require('path');
 const Web3 = require('web3');
@@ -57,8 +57,10 @@ describe('Test FilestorageClient', function () {
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
-        await getFunds(address);
-        await getFunds(foreignAddress);
+        await testHelper.getFunds(address);
+        await testHelper.getFunds(foreignAddress);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, address, 10 ** 9);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, 10 ** 9);
     });
 
     describe('Test contructor', function () {

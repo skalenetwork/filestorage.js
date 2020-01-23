@@ -18,12 +18,12 @@
  */
 
 /**
- * @file getFunds.js
- * @date 2019
+ * @file helper.js* @date 2019
  */
 require('dotenv').config();
 const Web3 = require('web3');
 const testBalance = require('./constants').TEST_ACCOUNT_BALANCE;
+const helper = require('../../src/common/helper');
 const rootPrivateKey = process.env.SCHAIN_OWNER_PK;
 const web3 = new Web3(process.env.SKALE_ENDPOINT);
 async function getFunds(account) {
@@ -49,4 +49,11 @@ async function getFunds(account) {
     return true;
 }
 
-module.exports = getFunds;
+async function reserveTestSpace(contract, account, space) {
+    let rootAccount = web3.eth.accounts.privateKeyToAccount(rootPrivateKey).address;
+    let txData = contract.methods.reserveSpace(account, space);
+    return await helper.sendTransactionToContract(web3, rootAccount, rootPrivateKey, txData, 1000000);
+}
+
+module.exports.getFunds = getFunds;
+module.exports.reserveTestSpace = reserveTestSpace;
