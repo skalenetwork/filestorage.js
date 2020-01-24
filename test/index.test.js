@@ -24,9 +24,8 @@
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
-const errorMessages = require('./utils/constants').errorMessages;
-const fileStatus = require('./utils/constants').fileStatus;
-const getFunds = require('./utils/getFunds');
+const testConstants = require('./utils/constants');
+const testHelper = require('./utils/helper');
 const constants = require('../src/common/constants');
 const path = require('path');
 const Web3 = require('web3');
@@ -37,6 +36,8 @@ require('dotenv').config();
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
+const errorMessages = testConstants.errorMessages;
+const fileStatus = testConstants.fileStatus;
 chai.should();
 chai.use(require('chai-as-promised'));
 
@@ -57,8 +58,10 @@ describe('Test FilestorageClient', function () {
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
-        await getFunds(address);
-        await getFunds(foreignAddress);
+        await testHelper.getFunds(address);
+        await testHelper.getFunds(foreignAddress);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, testConstants.RESERVED_SPACE);
     });
 
     describe('Test contructor', function () {

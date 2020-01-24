@@ -29,9 +29,10 @@ let fs = require('fs');
 let Filestorage = require('../../src/index');
 let constants = require('../utils/constants');
 let helper = require('../../src/common/helper');
-let getFunds = require('../utils/getFunds');
+let testHelper = require('../utils/helper');
 let server = require('../utils/testServer');
 let Metamask = require('../utils/MetamaskStub');
+const randomstring = require('randomstring');
 require('dotenv').config();
 
 // eslint-disable-next-line
@@ -49,6 +50,9 @@ const encodeExt = file => {
 describe('Chrome integration', async function () {
     let htmlPage;
     let downloadDir;
+    let filestorage;
+    let fileName;
+    let data;
     let endpoint = process.env.SKALE_ENDPOINT;
     let address = process.env.ADDRESS;
     let chromeCapabilities;
@@ -66,14 +70,15 @@ describe('Chrome integration', async function () {
             'args': ['--test-type', '--start-maximized', '--no-sandbox']
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
-        await getFunds(address);
+        filestorage = new Filestorage(endpoint);
+        await testHelper.getFunds(address);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, address, constants.RESERVED_SPACE);
+        fileName = randomstring.generate();
+        data = Buffer.from(fileName);
     });
 
     describe('downloadToFile', async function () {
-        let fileName = 'testFile';
-        let data = Buffer.from(fileName);
         let storagePath;
-        let filestorage;
         let pathToFile;
         let driver;
         before(async function () {
@@ -82,7 +87,6 @@ describe('Chrome integration', async function () {
                 .build();
             await driver.setDownloadPath(downloadDir);
             pathToFile = path.join(downloadDir, fileName);
-            filestorage = new Filestorage(endpoint);
             storagePath = await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
             driver.get(htmlPage);
         });
@@ -105,7 +109,6 @@ describe('Chrome integration', async function () {
     });
 
     describe('metamask', async function () {
-        let fileName;
         let directoryName;
         let driver;
         let metamask;
@@ -124,9 +127,6 @@ describe('Chrome integration', async function () {
         });
 
         it('should delete with metamask', async function () {
-            fileName = 'testFile';
-            let data = Buffer.from(fileName);
-            let filestorage = new Filestorage(endpoint);
             await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
             driver.get(htmlPage);
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
@@ -143,9 +143,7 @@ describe('Chrome integration', async function () {
         });
 
         it('should upload with metamask', async function () {
-            fileName = 'testFile';
             driver.get(htmlPage);
-            let filestorage = new Filestorage(endpoint);
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(fileName);
             await driver.findElement(webdriver.By.id('uploadFile')).click();
@@ -166,7 +164,6 @@ describe('Chrome integration', async function () {
 
         it('should create directory with metamask', async function () {
             directoryName = 'testDirectory';
-            let filestorage = new Filestorage(endpoint);
             driver.get(htmlPage);
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(directoryName);
@@ -184,7 +181,6 @@ describe('Chrome integration', async function () {
 
         it('should delete directory with metamask', async function () {
             directoryName = 'testDirectory';
-            let filestorage = new Filestorage(endpoint);
             await filestorage.createDirectory(address, directoryName, process.env.PRIVATEKEY);
             driver.get(htmlPage);
             await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
@@ -201,7 +197,6 @@ describe('Chrome integration', async function () {
         });
 
         afterEach(async function () {
-            let filestorage = new Filestorage(endpoint);
             let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
             let isFind = fileList.find(obj => {
                 return obj.name === fileName;

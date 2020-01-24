@@ -25,7 +25,7 @@ const helper = require('../src/common/helper');
 const constants = require('../src/common/constants');
 const FilestorageContract = require('../src/FilestorageContract');
 const Web3 = require('web3');
-const getFunds = require('./utils/getFunds');
+const testHelper = require('./utils/helper');
 require('dotenv').config();
 
 const chai = require('chai');
@@ -160,7 +160,7 @@ describe('Helper', function () {
             web3 = new Web3(process.env.SKALE_ENDPOINT);
             contract = new FilestorageContract(web3).contract;
             txData = contract.methods.startUpload(randomstring.generate(), 0);
-            await getFunds(address);
+            await testHelper.getFunds(address);
         });
 
         it('should send transaction with privateKey', async function () {

@@ -5,6 +5,26 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "address",
+            "name": "userAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reservedSpace",
+            "type": "uint256"
+          }
+        ],
+        "name": "reserveSpace",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
             "internalType": "string",
             "name": "directoryPath",
             "type": "string"
