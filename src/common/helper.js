@@ -104,10 +104,20 @@ const Helper = {
             } else {
                 result = await Helper.sendTransaction(web3, account, transactionData, gas);
             }
-            console.log('OK: ',transactionData['_method']['name'],transactionData['arguments'], '>>>', result);
+            if (transactionData['_method']['name'] !== 'uploadChunk')
+                console.log('OK: ', transactionData['_method']['name'],
+                    transactionData['arguments'], '>>>', result);
+            else
+                console.log('OK: ', transactionData['_method']['name'],
+                    transactionData['arguments'][0], '>>>', result);
             return result;
         } catch (error) {
-            console.log('ERROR: ',transactionData['_method']['name'],transactionData['arguments'], '>>>', error);
+            if (transactionData['_method']['name'] !== 'uploadChunk')
+                console.log('ERROR: ', transactionData['_method']['name'],
+                    transactionData['arguments'], '>>>', error);
+            else
+                console.log('ERROR: ', transactionData['_method']['name'],
+                    transactionData['arguments'][0], '>>>', error);
             if (error.message.includes(constants.errorMessages.REVERTED_TRANSACTION)) {
                 let errorMessage = error.message.substr(constants.errorMessages.REVERTED_TRANSACTION.length);
                 let revertReason = JSON.parse(errorMessage).revertReason;
