@@ -80,6 +80,7 @@ const Helper = {
             chainId: chainId
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+        console.log('DATA >>>',transactionData['_method']['name'],'>>>',signedTx.rawTransaction);
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
@@ -104,20 +105,22 @@ const Helper = {
             } else {
                 result = await Helper.sendTransaction(web3, account, transactionData, gas);
             }
-            if (transactionData['_method']['name'] !== 'uploadChunk')
+            if (transactionData['_method']['name'] !== 'uploadChunk') {
                 console.log('OK: ', transactionData['_method']['name'],
                     transactionData['arguments'], '>>>', result);
-            else
+            } else {
                 console.log('OK: ', transactionData['_method']['name'],
                     transactionData['arguments'][0], '>>>', result);
+            }
             return result;
         } catch (error) {
-            if (transactionData['_method']['name'] !== 'uploadChunk')
+            if (transactionData['_method']['name'] !== 'uploadChunk') {
                 console.log('ERROR: ', transactionData['_method']['name'],
                     transactionData['arguments'], '>>>', error);
-            else
+            } else {
                 console.log('ERROR: ', transactionData['_method']['name'],
                     transactionData['arguments'][0], '>>>', error);
+            }
             if (error.message.includes(constants.errorMessages.REVERTED_TRANSACTION)) {
                 let errorMessage = error.message.substr(constants.errorMessages.REVERTED_TRANSACTION.length);
                 let revertReason = JSON.parse(errorMessage).revertReason;
