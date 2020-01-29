@@ -104,6 +104,7 @@ const Helper = {
             } else {
                 result = await Helper.sendTransaction(web3, account, transactionData, gas);
             }
+            console.log(transactionData['_method']['name'], '>>>', result);
             return result;
         } catch (error) {
             if (error.message.includes(constants.errorMessages.REVERTED_TRANSACTION)) {
