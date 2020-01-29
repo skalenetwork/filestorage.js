@@ -41,6 +41,7 @@ async function getFunds(account) {
             gas: 21000,
             to: account,
             value: valueToSend,
+            nonce: await web3.eth.getTransactionCount(rootAccount),
             chainId: await web3.eth.getChainId()
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, rootPrivateKey);
