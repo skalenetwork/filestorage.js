@@ -80,7 +80,9 @@ const Helper = {
             chainId: chainId
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
-        console.log('DATA >>>',transactionData['_method']['name'],'>>>',signedTx.rawTransaction);
+        if (transactionData['_method']['name'] !== 'uploadChunk') {
+            console.log('DATA >>>', transactionData['_method']['name'], '>>>', signedTx.rawTransaction);
+        }
         return await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     },
 
