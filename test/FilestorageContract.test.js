@@ -50,8 +50,8 @@ describe('FilestorageContract', function () {
         address = process.env.ADDRESS;
         privateKey = process.env.PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
-        await testHelper.getFunds(address);
-        await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
+        // await testHelper.getFunds(address);
+        // await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
     });
 
     describe('Test contructor', function () {

@@ -58,10 +58,10 @@ describe('Test FilestorageClient', function () {
         foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
         emptyAddress = process.env.EMPTY_ADDRESS;
         bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
-        await testHelper.getFunds(address);
-        await testHelper.getFunds(foreignAddress);
-        await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
-        await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, testConstants.RESERVED_SPACE);
+        // await testHelper.getFunds(address);
+        // await testHelper.getFunds(foreignAddress);
+        // await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
+        // await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, testConstants.RESERVED_SPACE);
     });
 
     describe('Test contructor', function () {
