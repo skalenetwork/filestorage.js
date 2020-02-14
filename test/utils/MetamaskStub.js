@@ -4,16 +4,16 @@
  * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -57,13 +57,16 @@ module.exports = class MetamaskStub {
         await element.click();
     }
 
-    async addEndpoint(driver, endpoint) {
+    async addEndpoint(driver, endpoint, chainId) {
         await driver.get('chrome-extension://' + this.metamaskId + '/home.html');
-        let endpointXpath = "//div[@class='app-header__network-component-wrapper']";
-        await driver.wait(until.elementLocated(By.xpath(endpointXpath)), largeTimeout);
-        await driver.findElement(By.xpath(endpointXpath)).click();
+        let xpath = "//div[@class='app-header__network-component-wrapper']";
+        await driver.wait(until.elementLocated(By.xpath(xpath)), largeTimeout);
+        await driver.findElement(By.xpath(xpath)).click();
         await driver.findElement(By.xpath("//li[contains(., 'Custom RPC')]")).click();
         await driver.findElement(By.id('new-rpc')).sendKeys(endpoint);
+        xpath = "//span[@class='settings-tab__advanced-link']";
+        await driver.findElement(By.xpath(xpath)).click();
+        await driver.findElement(By.id('chainid')).sendKeys(chainId);
         await driver.findElement(By.xpath("//button[contains(text(), 'Save')]")).click();
     }
 

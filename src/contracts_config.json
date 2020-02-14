@@ -5,11 +5,12 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "string",
             "name": "directoryPath",
             "type": "string"
           }
         ],
-        "name": "createDir",
+        "name": "createDirectory",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -19,11 +20,12 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "string",
             "name": "directoryPath",
             "type": "string"
           }
         ],
-        "name": "deleteDir",
+        "name": "deleteDirectory",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -33,10 +35,12 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "string",
             "name": "filePath",
             "type": "string"
           },
           {
+            "internalType": "uint256",
             "name": "fileSize",
             "type": "uint256"
           }
@@ -51,14 +55,17 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "string",
             "name": "filePath",
             "type": "string"
           },
           {
+            "internalType": "uint256",
             "name": "position",
             "type": "uint256"
           },
           {
+            "internalType": "bytes",
             "name": "data",
             "type": "bytes"
           }
@@ -73,6 +80,7 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "string",
             "name": "filePath",
             "type": "string"
           }
@@ -87,6 +95,7 @@
         "constant": false,
         "inputs": [
           {
+            "internalType": "string",
             "name": "filePath",
             "type": "string"
           }
@@ -101,14 +110,17 @@
         "constant": true,
         "inputs": [
           {
+            "internalType": "string",
             "name": "storagePath",
             "type": "string"
           },
           {
+            "internalType": "uint256",
             "name": "position",
             "type": "uint256"
           },
           {
+            "internalType": "uint256",
             "name": "length",
             "type": "uint256"
           }
@@ -116,7 +128,8 @@
         "name": "readChunk",
         "outputs": [
           {
-            "name": "out",
+            "internalType": "bytes32[32768]",
+            "name": "chunk",
             "type": "bytes32[32768]"
           }
         ],
@@ -128,35 +141,42 @@
         "constant": true,
         "inputs": [
           {
+            "internalType": "string",
             "name": "storagePath",
             "type": "string"
           }
         ],
-        "name": "listDir",
+        "name": "listDirectory",
         "outputs": [
           {
             "components": [
               {
+                "internalType": "string",
                 "name": "name",
                 "type": "string"
               },
               {
+                "internalType": "bool",
                 "name": "isFile",
                 "type": "bool"
               },
               {
+                "internalType": "uint256",
                 "name": "size",
                 "type": "uint256"
               },
               {
+                "internalType": "enum FileStorage.FileStatus",
                 "name": "status",
-                "type": "int256"
+                "type": "uint8"
               },
               {
+                "internalType": "bool[]",
                 "name": "isChunkUploaded",
                 "type": "bool[]"
               }
             ],
+            "internalType": "struct FileStorage.ContentInfo[]",
             "name": "",
             "type": "tuple[]"
           }
@@ -169,6 +189,7 @@
         "constant": true,
         "inputs": [
           {
+            "internalType": "string",
             "name": "storagePath",
             "type": "string"
           }
@@ -176,8 +197,9 @@
         "name": "getFileStatus",
         "outputs": [
           {
+            "internalType": "enum FileStorage.FileStatus",
             "name": "",
-            "type": "int256"
+            "type": "uint8"
           }
         ],
         "payable": false,
@@ -188,6 +210,7 @@
         "constant": true,
         "inputs": [
           {
+            "internalType": "string",
             "name": "storagePath",
             "type": "string"
           }
@@ -195,7 +218,23 @@
         "name": "getFileSize",
         "outputs": [
           {
+            "internalType": "uint256",
             "name": "fileSize",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "getStorageSpace",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
             "type": "uint256"
           }
         ],

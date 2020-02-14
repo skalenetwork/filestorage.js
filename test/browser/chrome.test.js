@@ -4,16 +4,16 @@
  * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -23,13 +23,15 @@
  */
 let webdriver = require('selenium-webdriver');
 let Options = require('selenium-webdriver/chrome').Options;
-let Filestorage = require('../src/index');
-let fs = require('fs');
 let path = require('path');
-let constants = require('./utils/constants');
-let helper = require('../src/common/helper');
-let server = require('./utils/testServer');
-let Metamask = require('./utils/MetamaskStub');
+let Web3 = require('web3');
+let fs = require('fs');
+let Filestorage = require('../../src/index');
+let constants = require('../utils/constants');
+let helper = require('../../src/common/helper');
+let getFunds = require('../utils/getFunds');
+let server = require('../utils/testServer');
+let Metamask = require('../utils/MetamaskStub');
 require('dotenv').config();
 
 // eslint-disable-next-line
@@ -64,6 +66,7 @@ describe('Chrome integration', async function () {
             'args': ['--test-type', '--start-maximized', '--no-sandbox']
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
+        await getFunds(address);
     });
 
     describe('downloadToFile', async function () {
@@ -113,8 +116,10 @@ describe('Chrome integration', async function () {
                     .addExtensions(encodeExt(path.join(__dirname, 'metamask.crx'))))
                 .build();
             metamask = new Metamask(constants.METAMASK_ID);
+            let web3 = new Web3(endpoint);
+            let chainId = await web3.eth.getChainId();
             await metamask.initialize(driver, process.env.METAMASK_PASSWORD, process.env.SEED_PHRASE);
-            await metamask.addEndpoint(driver, process.env.SKALE_ENDPOINT);
+            await metamask.addEndpoint(driver, endpoint, chainId);
             await metamask.addAccount(driver, process.env.PRIVATEKEY);
         });
 

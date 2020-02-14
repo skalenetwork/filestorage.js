@@ -6,9 +6,9 @@
     "ethereum",
     "blockchain"
   ],
-  "version": "0.2.8",
+  "version": "0.2.10",
   "description": "SKALE Filestorage client tools",
-  "license": "LGPL-3.0",
+  "license": "AGPL-3.0",
   "main": "src/index.js",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
   "dependencies": {
-    "web3": "1.0.0-beta.37",
+    "web3": "1.2.4",
     "streamsaver": "^1.0.1"
   },
   "scripts": {
@@ -40,14 +40,14 @@
     "babel-loader": "^7.1.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "chromedriver": "77.0.0",
+    "chromedriver": "80.0.1",
     "codecov": "^3.3.0",
     "dotenv": "^7.0.0",
     "eslint": "^6.4.0",
     "eslint-loader": "^2.1.2",
     "eslint-plugin-jsdoc": "^4.8.3",
     "mocha": "^6.1.4",
-    "nyc": "^14.1.0",
+    "nyc": "14.1.1",
     "randomstring": "^1.1.5",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "semver": "^5.6.0",
