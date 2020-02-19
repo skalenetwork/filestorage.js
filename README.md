@@ -63,7 +63,7 @@ To use filestorage.js in HTML you should import `filestorage.min.js` from npm pa
 
 ```html
 <script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
-``` 
+```
 
 **Example**:
 
@@ -169,6 +169,7 @@ Creates directory on the specific path. To create directory using internal signi
 ```javascript
 filestorage.createDirectory(address, directoryPath, privateKey);
 ```
+
 Create directory using external signing (Metamask etc):
 
 ```javascript
@@ -177,11 +178,11 @@ filestorage.createDirectory(address, directoryPath);
 
 ##### Parameters
 
-| Parameter                | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `String` address         | Account address                                        |
-| `String` directoryPath   | Path of the directory to be created                    |
-| `String` privateKey      | _(optional)_ Account private key, to sign transactions |
+| Parameter              | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `String` address       | Account address                                        |
+| `String` directoryPath | Path of the directory to be created                    |
+| `String` privateKey    | _(optional)_ Account private key, to sign transactions |
 
 ##### Returns
 
@@ -196,6 +197,7 @@ Deletes directory on the specific path. To delete directory using internal signi
 ```javascript
 filestorage.deleteDirectory(address, directoryPath, privateKey);
 ```
+
 Create directory using external signing (Metamask etc):
 
 ```javascript
@@ -204,11 +206,11 @@ filestorage.deleteDirectory(address, directoryPath);
 
 ##### Parameters
 
-| Parameter                | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `String` address         | Account address                                        |
-| `String` directoryPath   | Path of the directory to be deleted                    |
-| `String` privateKey      | _(optional)_ Account private key, to sign transactions |
+| Parameter              | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `String` address       | Account address                                        |
+| `String` directoryPath | Path of the directory to be deleted                    |
+| `String` privateKey    | _(optional)_ Account private key, to sign transactions |
 
 #### List directory
 
@@ -225,6 +227,7 @@ filestorage.listDirectory(storagePath);
 | `String` storagePath | [Path of directory in Filestorage](#storagePath) |
 
 ##### Returns
+
 `Array` of content. Each content could be file or directory.
 
 Content `Object` for file contains:
@@ -240,11 +243,11 @@ Content `Object` for file contains:
 
 Content `Object` for directory contains:
 
-| Field                      | Description                                      |
-| -------------------------- | ------------------------------------------------ |
-| `String` name              | Directory name                                   |
-| `String` storagePath       | [Path of directory in Filestorage](#storagePath) |
-| `String` isFile            | Whether content is file                          |
+| Field                | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `String` name        | Directory name                                   |
+| `String` storagePath | [Path of directory in Filestorage](#storagePath) |
+| `String` isFile      | Whether content is file                          |
 
 ## Development
 
@@ -281,8 +284,9 @@ and three keypairs (address, foreign, empty):
 -   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
 
 Requirements to run chrome integration tests:
+
 -   Chrome v77
-   
+
 Then execute:
 
 ```bash
@@ -327,8 +331,8 @@ npm run lint
 #### Storage path <a name="storagePath"></a>
 
 Storage path is a label used to point to file or directory in Filestorage. It contains 2 parts through slash:
-1. File owner address (without 0x)
-2. File/directory path in owner's root directory
+1\. File owner address (without 0x)
+2\. File/directory path in owner's root directory
 
 Example:
 
