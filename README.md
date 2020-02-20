@@ -285,7 +285,7 @@ and three keypairs (address, foreign, empty):
 
 Requirements to run chrome integration tests:
 
--   Chrome v77
+-   Chrome v80
 
 Then execute:
 
