@@ -10,9 +10,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node }}
+    - name: Install dependencies
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
-    - run: npm i
-    - run: npm test
+      run: npm i
+    - name: Unit testing
+      run: npm test
+    - name: Package testing
+      run: npm link; npm link @skalenetwork/filestorage.js
+      run: npm run test test/package
