@@ -149,14 +149,13 @@ describe('Helper', function () {
     });
 
     describe('sendTransactionToContract', function () {
+        let privateKey = process.env.PRIVATEKEY;
         let address;
-        let privateKey;
         let web3;
         let contract;
         let txData;
         before(async function () {
-            address = process.env.ADDRESS;
-            privateKey = process.env.PRIVATEKEY;
+            address = await testHelper.getAddress(privateKey);
             web3 = new Web3(process.env.SKALE_ENDPOINT);
             contract = new FilestorageContract(web3).contract;
             txData = contract.methods.startUpload(randomstring.generate(), 0);
