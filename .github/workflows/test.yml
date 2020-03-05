@@ -9,7 +9,7 @@ jobs:
         node: [10, 12]
     env:
       PRIVATEKEY: ${{ secrets.UBUNTU_10_PK }}
-      FOREIGN_PRIVATE_KEY: ${{ secrets.UBUNTU_10_FPK }}
+      FOREIGN_PRIVATEKEY: ${{ secrets.UBUNTU_10_FPK }}
       SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT}}
       SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
     steps:
