@@ -45,16 +45,15 @@ describe('Test FilestorageClient', function () {
     let privateKey = process.env.PRIVATEKEY;
     let foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
     let emptyAddress = testConstants.EMPTY_ADDRESS;
+    let bigFilePath = testConstants.TEST_FILE_PATH;
     let filestorage;
     let address;
     let foreignAddress;
-    let bigFilePath;
     before(async function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
         address = await testHelper.getAddress(privateKey);
         foreignAddress = await testHelper.getAddress(foreignPrivateKey);
-        bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
         await testHelper.getFunds(address);
         await testHelper.getFunds(foreignAddress);
         await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
