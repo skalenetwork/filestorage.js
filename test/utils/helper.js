@@ -56,6 +56,7 @@ async function reserveTestSpace(contract, account, space) {
 }
 
 async function getAddress(privateKey){
+    privateKey = helper.addBytesSymbol(privateKey);
     return await web3.eth.accounts.privateKeyToAccount(privateKey).address;
 }
 module.exports.getFunds = getFunds;
