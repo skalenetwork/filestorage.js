@@ -28,8 +28,8 @@ jobs:
         npm i
     - name: Unit testing
       env:
-        PRIVATEKEY: ${{ secrets.${{ matrix.env.PRIVATEKEY }} }}
-        FOREIGN_PRIVATEKEY: ${{ secrets.${{ matrix.env.FOREIGN_PRIVATEKEY }} }}
+        PRIVATEKEY: ${{ secrets[matrix.PRIVATEKEY] }}
+        FOREIGN_PRIVATEKEY: ${{ secrets[matrix.FOREIGN_PRIVATEKEY] }}
       run: |
         npm test
     - name: Package testing
