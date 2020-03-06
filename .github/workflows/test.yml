@@ -18,11 +18,11 @@ jobs:
           PRIVATEKEY: UBUNTU_12_PK
           FOREIGN_PRIVATEKEY: UBUNTU_12_FPK
         - node: 10
-          os: ubuntu-latest
+          os: macOS
           PRIVATEKEY: MAC_10_PK
           FOREIGN_PRIVATEKEY: MAC_10_FPK
         - node: 12
-          os: ubuntu-latest
+          os: macOS
           PRIVATEKEY: MAC_12_PK
           FOREIGN_PRIVATEKEY: MAC_12_FPK
     env:
