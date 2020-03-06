@@ -62,5 +62,5 @@ jobs:
         npm run test test/package
     - name: Codecov
       run: |
-        npm run codecov
+        npm run coverage
 # TODO: Fix browser build
