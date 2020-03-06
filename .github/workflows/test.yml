@@ -31,7 +31,7 @@ jobs:
           FOREIGN_PRIVATEKEY: WIN_10_FPK
         exclude:
         - node: 12
-          os: windows
+          os: windows-latest
     env:
       SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
       SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
@@ -60,4 +60,7 @@ jobs:
       run: |
         npm link; npm link @skalenetwork/filestorage.js
         npm run test test/package
+    - name: Codecov
+      run: |
+        npm run codecov
 # TODO: Fix browser build
