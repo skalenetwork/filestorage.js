@@ -3,12 +3,14 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node: [10, 12]
+        os: [ubuntu-latest]
         include:
         - node: 10
+          os: ubuntu-latest
           PRIVATEKEY: UBUNTU_10_PK
           FOREIGN_PRIVATEKEY: UBUNTU_10_FPK
         - node: 12
@@ -26,6 +28,12 @@ jobs:
     - name: Install dependencies
       run: |
         npm i
+    - name: Generating test file
+      if: matrix.os != 'windows'
+      run: npm run generate
+    - name: Generating test file on windows
+      if: matrix.os == 'windows'
+      run: npm run generate-win
     - name: Unit testing
       env:
         PRIVATEKEY: ${{ secrets[matrix.PRIVATEKEY] }}
