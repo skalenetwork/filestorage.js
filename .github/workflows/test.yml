@@ -7,15 +7,24 @@ jobs:
     strategy:
       matrix:
         node: [10, 12]
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macOS]
         include:
         - node: 10
           os: ubuntu-latest
           PRIVATEKEY: UBUNTU_10_PK
           FOREIGN_PRIVATEKEY: UBUNTU_10_FPK
         - node: 12
+          os: ubuntu-latest
           PRIVATEKEY: UBUNTU_12_PK
           FOREIGN_PRIVATEKEY: UBUNTU_12_FPK
+        - node: 10
+          os: ubuntu-latest
+          PRIVATEKEY: MAC_10_PK
+          FOREIGN_PRIVATEKEY: MAC_10_FPK
+        - node: 12
+          os: ubuntu-latest
+          PRIVATEKEY: MAC_12_PK
+          FOREIGN_PRIVATEKEY: MAC_12_FPK
     env:
       SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
       SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
@@ -44,3 +53,4 @@ jobs:
       run: |
         npm link; npm link @skalenetwork/filestorage.js
         npm run test test/package
+# TODO: Fix browser build
