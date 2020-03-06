@@ -26,7 +26,7 @@ jobs:
           PRIVATEKEY: MAC_12_PK
           FOREIGN_PRIVATEKEY: MAC_12_FPK
         - node: 10
-          os: windows
+          os: windows-latest
           PRIVATEKEY: WIN_10_PK
           FOREIGN_PRIVATEKEY: WIN_10_FPK
         exclude:
