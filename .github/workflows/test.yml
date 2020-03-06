@@ -7,9 +7,14 @@ jobs:
     strategy:
       matrix:
         node: [10, 12]
+        include:
+        - node: 10
+          PRIVATEKEY: ${{ secrets.UBUNTU_10_PK }}
+          FOREIGN_PRIVATEKEY: ${{ secrets.UBUNTU_10_FPK }}
+        - node: 12
+          PRIVATEKEY: ${{ secrets.UBUNTU_12_PK }}
+          FOREIGN_PRIVATEKEY: ${{ secrets.UBUNTU_12_FPK }}
     env:
-      PRIVATEKEY: ${{ secrets.UBUNTU_10_PK }}
-      FOREIGN_PRIVATEKEY: ${{ secrets.UBUNTU_10_FPK }}
       SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT}}
       SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
     steps:
