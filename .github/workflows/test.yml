@@ -9,14 +9,14 @@ jobs:
         node: [10, 12]
         include:
         - node: 10
-          PRIVATEKEY: ${{ secrets.UBUNTU_10_PK }}
-          FOREIGN_PRIVATEKEY: ${{ secrets.UBUNTU_10_FPK }}
+          PRIVATEKEY: ${{ matrix.secrets.UBUNTU_10_PK }}
+          FOREIGN_PRIVATEKEY: ${{ matrix.secrets.UBUNTU_10_FPK }}
         - node: 12
-          PRIVATEKEY: ${{ secrets.UBUNTU_12_PK }}
-          FOREIGN_PRIVATEKEY: ${{ secrets.UBUNTU_12_FPK }}
+          PRIVATEKEY: ${{ matrix.secrets.UBUNTU_12_PK }}
+          FOREIGN_PRIVATEKEY: ${{ matrix.secrets.UBUNTU_12_FPK }}
     env:
-      SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT}}
-      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
+      SKALE_ENDPOINT: ${{ matrix.secrets.SKALE_ENDPOINT}}
+      SCHAIN_OWNER_PK: ${{ matrix.secrets.SCHAIN_OWNER_PK }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Node ${{ matrix.node }}
