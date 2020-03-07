@@ -2,6 +2,9 @@ name: Test
 on: [push, pull_request]
 
 jobs:
+  env:
+    SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
+    SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -32,9 +35,6 @@ jobs:
         exclude:
         - node: 12
           os: windows-latest
-    env:
-      SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
-      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Node ${{ matrix.node }}
@@ -63,4 +63,19 @@ jobs:
     - name: Codecov
       run: |
         npm run coverage
+  browser test:
+    runs-on: ubuntu-latest
+    env:
+      PRIVATEKEY: ${{ secrets.UBUNTU_12_FPK}}
+    steps:
+    - name: setup-chromedriver
+      uses: nanasess/setup-chromedriver@v1.0.1
+      with:
+        chromedriver-version: '80.0.1'
+    - run: |
+        export DISPLAY=:99
+        chromedriver --url-base=/wd/hub &
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+    - run: |
+        npm run test test/browser
 # TODO: Fix browser build

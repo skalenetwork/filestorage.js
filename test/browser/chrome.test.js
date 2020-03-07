@@ -53,9 +53,9 @@ describe('Chrome integration', async function () {
     let filestorage;
     let fileName;
     let data;
-    let endpoint = process.env.SKALE_ENDPOINT;
-    let address = process.env.ADDRESS;
+    let address;
     let chromeCapabilities;
+    let endpoint = process.env.SKALE_ENDPOINT;
     const smallTimeOut = constants.SHORT_TIMEOUT;
     const bigTimeOut = constants.LARGE_TIMEOUT;
     before(async function () {
@@ -71,6 +71,7 @@ describe('Chrome integration', async function () {
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
         filestorage = new Filestorage(endpoint);
+        address = await testHelper.getAddress(process.env.PRIVATEKEY);
         await testHelper.getFunds(address);
         await testHelper.reserveTestSpace(filestorage.contract.contract, address, constants.RESERVED_SPACE);
         fileName = randomstring.generate();
