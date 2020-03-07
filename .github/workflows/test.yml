@@ -41,7 +41,7 @@ jobs:
       if: matrix.os == 'macOS'
       run: |
         brew install docker-machine docker
-        sudo docker –version
+        sudo docker --version
     - name: Run skaled
       run: |
         docker run -d \
