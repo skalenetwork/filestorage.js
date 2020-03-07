@@ -29,6 +29,10 @@ jobs:
           os: windows-latest
           PRIVATEKEY: WIN_10_PK
           FOREIGN_PRIVATEKEY: WIN_10_FPK
+        - os: macOS
+          run: |
+            brew install docker-machine docker
+            sudo docker –version
         exclude:
         - node: 12
           os: windows-latest
@@ -63,29 +67,4 @@ jobs:
     - name: Codecov
       run: |
         npm run coverage
-  browser-test:
-    needs: test
-    runs-on: ubuntu-latest
-    env:
-      PRIVATEKEY: ${{ secrets.UBUNTU_12_FPK}}
-      SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
-      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node 12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - name: Install dependencies
-      run: |
-        npm i
-    - name: setup-chromedriver
-      uses: nanasess/setup-chromedriver@v1.0.1
-    - run: |
-        export DISPLAY=:99
-        chromedriver --url-base=/wd/hub &
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-    - name: Chrome testing
-      run: |
-        npm run test test/browser
 # TODO: Fix browser build
