@@ -63,7 +63,7 @@ jobs:
     - name: Codecov
       run: |
         npm run coverage
-  browser test:
+  browser-test:
     runs-on: ubuntu-latest
     env:
       PRIVATEKEY: ${{ secrets.UBUNTU_12_FPK}}
