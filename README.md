@@ -267,30 +267,38 @@ First of all, please create random files for testing:
 npm run generate
 ```
 
-To run tests locally you need environment variables defining test file path
-and three keypairs (address, foreign, empty):
+To run tests locally you need environment variables defining two keypairs (account, foreign account):
 
--   `TEST_FILE_PATH`: path to generated file. Default `./test.txt`
 -   `SKALE_ENDPOINT`: SKALE endpoint
--   `SCHAIN_OWNER`: SKALE chain owner address
 -   `SCHAIN_OWNER_PK`: SKALE chain owner privatekey
--   `ADDRESS`: test account address
 -   `PRIVATEKEY`: test account privatekey
--   `FOREIGN_ADDRESS`: second test account address
 -   `FOREIGN_PRIVATEKEY`: second test account privatekey
--   `EMPTY_ADDRESS`: third test account address
--   `EMPTY_PRIVATEKEY`: third test account privatekey
--   `SEED_PHRASE`: seed phrase to run metamask tests
--   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
-
-Requirements to run chrome integration tests:
-
--   Chrome v80
 
 Then execute:
 
 ```bash
 npm test
+```
+
+#### Browser testing
+
+Requirements to run chrome integration tests:
+
+-   Chrome v80
+
+Required environment variables to run browser integration tests locally:
+
+-   `SKALE_ENDPOINT`: SKALE endpoint
+-   `SCHAIN_OWNER_PK`: SKALE chain owner privatekey
+-   `PRIVATEKEY`: test account privatekey
+-   `FOREIGN_PRIVATEKEY`: second test account privatekey
+-   `SEED_PHRASE`: seed phrase to run metamask tests
+-   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
+
+Run tests:
+
+```bash
+npm run test test/browser
 ```
 
 #### Build a dist version

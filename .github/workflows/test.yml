@@ -64,23 +64,4 @@ jobs:
       run: |
         npm run coverage
 
-  browser-test:
-    runs-on: windows-latest
-    env:
-      PRIVATEKEY: ${{ secrets.BROWSER_PK}}
-      SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
-      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
-      SEED_PHRASE: ${{ secrets.SEED_PHRASE }}
-      METAMASK_PASSWORD: ${{ secrets.METAMASK_PASSWORD }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node 12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - name: Install dependencies
-      run: |
-        npm i
-    - name: Chrome testing
-      run: |
-        npm run test test/browser 
+# Fix browser testing
