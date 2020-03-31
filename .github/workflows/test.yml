@@ -35,6 +35,7 @@ jobs:
     env:
       SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
       SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Node ${{ matrix.node }}
