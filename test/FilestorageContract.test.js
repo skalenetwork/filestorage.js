@@ -38,18 +38,17 @@ chai.should();
 chai.use(require('chai-as-promised'));
 
 describe('FilestorageContract', function () {
+    let privateKey = process.env.PRIVATEKEY;
     let filestorageContract;
     let address;
-    let privateKey;
     let emptyAddress;
     const smallChunkLength = 2 ** 10;
     before(async function () {
         const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
         let web3 = new Web3(web3Provider);
         filestorageContract = new FilestorageContract(web3);
-        address = process.env.ADDRESS;
-        privateKey = process.env.PRIVATEKEY;
-        emptyAddress = process.env.EMPTY_ADDRESS;
+        address = await testHelper.getAddress(privateKey);
+        emptyAddress = testConstants.EMPTY_ADDRESS;
         await testHelper.getFunds(address);
         await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
     });

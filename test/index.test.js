@@ -42,22 +42,18 @@ chai.should();
 chai.use(require('chai-as-promised'));
 
 describe('Test FilestorageClient', function () {
+    let privateKey = process.env.PRIVATEKEY;
+    let foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
+    let emptyAddress = testConstants.EMPTY_ADDRESS;
+    let bigFilePath = testConstants.TEST_FILE_PATH;
     let filestorage;
     let address;
-    let privateKey;
     let foreignAddress;
-    let foreignPrivateKey;
-    let emptyAddress;
-    let bigFilePath;
     before(async function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
-        address = process.env.ADDRESS;
-        privateKey = process.env.PRIVATEKEY;
-        foreignAddress = process.env.FOREIGN_ADDRESS;
-        foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
-        emptyAddress = process.env.EMPTY_ADDRESS;
-        bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
+        address = await testHelper.getAddress(privateKey);
+        foreignAddress = await testHelper.getAddress(foreignPrivateKey);
         await testHelper.getFunds(address);
         await testHelper.getFunds(foreignAddress);
         await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
