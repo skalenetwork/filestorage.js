@@ -23,6 +23,7 @@ jobs:
       with:
         repository: skalenetwork/filestorage
         token: ${{ secrets.ACCESS_TOKEN }}
+        ref: develop
     - name: Copy config
       run:
         cp filestorage/test/utils/config.json filestorage.js/test/utils
