@@ -3,42 +3,29 @@ on: [push, pull_request]
 
 jobs:
   test:
-    if: github.event_name == 'push'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node: [10, 12]
         os: [ubuntu-latest, macOS, windows-latest]
-        include:
-        - node: 10
-          os: ubuntu-latest
-          PRIVATEKEY: UBUNTU_10_PK
-          FOREIGN_PRIVATEKEY: UBUNTU_10_FPK
-        - node: 12
-          os: ubuntu-latest
-          PRIVATEKEY: UBUNTU_12_PK
-          FOREIGN_PRIVATEKEY: UBUNTU_12_FPK
-        - node: 10
-          os: macOS
-          PRIVATEKEY: MAC_10_PK
-          FOREIGN_PRIVATEKEY: MAC_10_FPK
-        - node: 12
-          os: macOS
-          PRIVATEKEY: MAC_12_PK
-          FOREIGN_PRIVATEKEY: MAC_12_FPK
-        - node: 10
-          os: windows-latest
-          PRIVATEKEY: WIN_10_PK
-          FOREIGN_PRIVATEKEY: WIN_10_FPK
-        exclude:
-        - node: 12
-          os: windows-latest
     env:
-      SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
-      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
+      ENDPOINT: ${{ secrets.ENDPOINT }}
+      USER: ${{ secrets.USER }}
+      SCHEME: ${{ secrets.SCHEME }}
+      VERSION: ${{ secrets.VERSION }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
+      PRIVATEKEY: ${{ secrets.PRIVATEKEY }}
+      FOREIGN_PRIVATEKEY: ${{ secrets.FOREIGN_PRIVATEKEY }}
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      with:
+        repository: skalenetwork/filestorage
+        token: ${{ secrets.ACCESS_TOKEN }}
+    - name: Copy config
+      run:
+        cp filestorage/test/utils/config.json filestorage.js/test/utils
     - name: Set up Node ${{ matrix.node }}
       uses: actions/setup-node@v1
       with:
@@ -54,10 +41,9 @@ jobs:
       run: npm run generate-win
     - name: Unit testing
       env:
-        PRIVATEKEY: ${{ secrets[matrix.PRIVATEKEY] }}
-        FOREIGN_PRIVATEKEY: ${{ secrets[matrix.FOREIGN_PRIVATEKEY] }}
       run: |
-        npm test
+        PORT=$(bash run_test_container.sh)
+        SKALE_ENDPOINT=$SCHEME$ENDPOINT:$PORT npm test
     - name: Package testing
       run: |
         npm link; npm link @skalenetwork/filestorage.js
@@ -66,67 +52,4 @@ jobs:
       run: |
         npm run coverage
 
-  test_pull_request:
-    if: github.event_name == 'pull_request'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node: [10, 12]
-        os: [ubuntu-latest, macOS, windows-latest]
-        include:
-        - node: 10
-          os: ubuntu-latest
-          PRIVATEKEY: UBUNTU_10_PK_PR
-          FOREIGN_PRIVATEKEY: UBUNTU_10_FPK_PR
-        - node: 12
-          os: ubuntu-latest
-          PRIVATEKEY: UBUNTU_12_PK_PR
-          FOREIGN_PRIVATEKEY: UBUNTU_12_FPK_PR
-        - node: 10
-          os: macOS
-          PRIVATEKEY: MAC_10_PK_PR
-          FOREIGN_PRIVATEKEY: MAC_10_FPK_PR
-        - node: 12
-          os: macOS
-          PRIVATEKEY: MAC_12_PK_PR
-          FOREIGN_PRIVATEKEY: MAC_12_FPK_PR
-        - node: 10
-          os: windows-latest
-          PRIVATEKEY: WIN_10_PK_PR
-          FOREIGN_PRIVATEKEY: WIN_10_FPK_PR
-        exclude:
-        - node: 12
-          os: windows-latest
-    env:
-      SKALE_ENDPOINT: ${{ secrets.SKALE_ENDPOINT }}
-      SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK_PR }}
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node ${{ matrix.node }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node }}
-    - name: Install dependencies
-      run: |
-        npm i
-    - name: Generating test file
-      if: matrix.os != 'windows-latest'
-      run: npm run generate
-    - name: Generating test file on windows
-      if: matrix.os == 'windows-latest'
-      run: npm run generate-win
-    - name: Unit testing
-      env:
-        PRIVATEKEY: ${{ secrets[matrix.PRIVATEKEY] }}
-        FOREIGN_PRIVATEKEY: ${{ secrets[matrix.FOREIGN_PRIVATEKEY] }}
-      run: |
-        npm test
-    - name: Package testing
-      run: |
-        npm link; npm link @skalenetwork/filestorage.js
-        npm run test test/package
-    - name: Codecov
-      run: |
-        npm run coverage
 # Fix browser testing
