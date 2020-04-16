@@ -24,9 +24,10 @@ jobs:
         repository: skalenetwork/filestorage
         token: ${{ secrets.ACCESS_TOKEN }}
         ref: develop
+        path: filestorage
     - name: Copy config
       run:
-        cp filestorage/test/utils/config.json filestorage.js/test/utils
+        cp filestorage/test/utils/config.json test/utils
     - name: Set up Node ${{ matrix.node }}
       uses: actions/setup-node@v1
       with:
