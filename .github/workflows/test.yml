@@ -40,7 +40,6 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: npm run generate-win
     - name: Unit testing
-      env:
       run: |
         PORT=$(bash run_test_container.sh)
         SKALE_ENDPOINT=$SCHEME$ENDPOINT:$PORT npm test
