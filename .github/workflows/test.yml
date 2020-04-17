@@ -48,7 +48,7 @@ jobs:
       run: npm run generate-win
     - name: Unit testing
       run: |
-        PORT=$(bash run_test_container.sh)
+        PORT=$(USER=$USER ENDPOINT=$ENDPOINT bash run_test_container.sh)
         SKALE_ENDPOINT=$SCHEME$ENDPOINT:$PORT npm test
     - name: Package testing
       run: |

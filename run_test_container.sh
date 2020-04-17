@@ -1,10 +1,10 @@
 port=$((1000 + RANDOM % 10000)); 
 
-ssh $USER@$ENDPOINT "mkdir schains/$port"
-ssh $USER@$ENDPOINT "mkdir schains/$port/data_dir"
+ssh -o StrictHostKeyChecking=no $USER@$ENDPOINT "mkdir schains/$port"
+ssh -o StrictHostKeyChecking=no $USER@$ENDPOINT "mkdir schains/$port/data_dir"
 
-scp ./test/utils/config.json $USER@$ENDPOINT:schains/$port/config.json > /dev/null
-ssh $USER@$ENDPOINT "docker run -d -v ~/schains/$port:/schain_data \
+scp -o StrictHostKeyChecking=no ./test/utils/config.json $USER@$ENDPOINT:schains/$port/config.json > /dev/null
+ssh -o StrictHostKeyChecking=no $USER@$ENDPOINT "docker run -d -v ~/schains/$port:/schain_data \
                     -p $port:2234 \
                     -e SSL_CERT_PATH=None \
                     -e HTTP_RPC_PORT=2234 \
