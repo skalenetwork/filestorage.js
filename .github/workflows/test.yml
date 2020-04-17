@@ -50,7 +50,9 @@ jobs:
       run: |
         export PORT=$((1000 + RANDOM % 10000)) 
         bash run_test_container.sh
-        SKALE_ENDPOINT=$SCHEME$ENDPOINT:$PORT npm test
+        sleep 10
+        export SKALE_ENDPOINT=$SCHEME$ENDPOINT:$PORT 
+        npm test
         npm link; npm link @skalenetwork/filestorage.js
         npm run test test/package
     - name: Codecov
