@@ -40,18 +40,35 @@ jobs:
     - name: Install dependencies
       run: |
         npm i
-    - name: Generating test file
+    - name: Generating test file, port
       if: matrix.os != 'windows-latest'
-      run: npm run generate
-    - name: Generating test file on windows
-      if: matrix.os == 'windows-latest'
-      run: npm run generate-win
-    - name: Unit testing
       run: |
-        export PORT=$((1000 + RANDOM % 10000)) 
+        npm run generate
+        export PORT=$((1000 + RANDOM % 10000))
+        echo "sChain port: $PORT"
         bash run_test_container.sh
         sleep 10
-        export SKALE_ENDPOINT=$SCHEME$ENDPOINT:$PORT 
+        echo $SCHEME$ENDPOINT:PORT > SKALE_ENDPOINT
+    - name: Generating test file, port (win)
+      if: matrix.os == 'windows-latest'
+      run: |
+        npm run generate-win
+        $env:PORT=get-random -minimum 1000 -maximum 11000
+        echo "sChain port: $env:PORT"
+        bash run_test_container.sh
+        sleep 10
+        echo $env:SCHEME$env:ENDPOINT`:$env:PORT > SKALE_ENDPOINT
+    - name: Unit testing
+      if: matrix.os != 'windows-latest'
+      run: |
+        export SKALE_ENDPOINT=$(cat SKALE_ENDPOINT) 
+        npm test
+        npm link; npm link @skalenetwork/filestorage.js
+        npm run test test/package
+    - name: Unit testing (win)
+      if: matrix.os == 'windows-latest'
+      run: |
+        $env:SKALE_ENDPOINT=cat SKALE_ENDPOINT 
         npm test
         npm link; npm link @skalenetwork/filestorage.js
         npm run test test/package
