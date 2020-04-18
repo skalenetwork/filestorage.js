@@ -64,14 +64,14 @@ jobs:
         export SKALE_ENDPOINT=$(cat SKALE_ENDPOINT)
         npm test
         npm link; npm link @skalenetwork/filestorage.js
-        npm run test test/package
+        npx mocha test/package
     - name: Unit testing (win)
       if: matrix.os == 'windows-latest'
       run: |
         $env:SKALE_ENDPOINT=cat SKALE_ENDPOINT 
         npm test
         npm link; npm link @skalenetwork/filestorage.js
-        npm run test test/package
+        npx mocha test/package
     - name: Codecov
       run: |
         npm run coverage
