@@ -47,7 +47,7 @@ jobs:
         export PORT=$((1000 + RANDOM % 10000))
         echo "sChain port: $PORT"
         bash run_test_container.sh
-        echo $SCHEME$ENDPOINT:PORT > SKALE_ENDPOINT
+        echo $SCHEME$ENDPOINT:$PORT > SKALE_ENDPOINT
         sleep 30
     - name: Generating test file, port (win)
       if: matrix.os == 'windows-latest'
