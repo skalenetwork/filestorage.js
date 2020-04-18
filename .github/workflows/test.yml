@@ -61,7 +61,7 @@ jobs:
     - name: Unit testing
       if: matrix.os != 'windows-latest'
       run: |
-        export SKALE_ENDPOINT=$(cat SKALE_ENDPOINT) 
+        export SKALE_ENDPOINT=$(cat SKALE_ENDPOINT)
         npm test
         npm link; npm link @skalenetwork/filestorage.js
         npm run test test/package
