@@ -47,8 +47,8 @@ jobs:
         export PORT=$((1000 + RANDOM % 10000))
         echo "sChain port: $PORT"
         bash run_test_container.sh
-        sleep 10
         echo $SCHEME$ENDPOINT:PORT > SKALE_ENDPOINT
+        sleep 30
     - name: Generating test file, port (win)
       if: matrix.os == 'windows-latest'
       run: |
@@ -56,8 +56,8 @@ jobs:
         $env:PORT=get-random -minimum 1000 -maximum 11000
         echo "sChain port: $env:PORT"
         bash run_test_container.sh
-        sleep 10
         echo $env:SCHEME$env:ENDPOINT`:$env:PORT > SKALE_ENDPOINT
+        sleep 30
     - name: Unit testing
       if: matrix.os != 'windows-latest'
       run: |
