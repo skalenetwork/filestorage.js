@@ -47,7 +47,8 @@ jobs:
       if: matrix.os != 'windows-latest'
       run: |
         npm run generate
-        export PORT=$((1000 + RANDOM % 10000)) > PORT
+        export PORT=$((1000 + RANDOM % 10000))
+        echo $PORT > PORT
         echo "sChain port: $PORT"
         bash scripts/run_remote_schain.sh
         echo $SCHEME$ENDPOINT:$PORT > SKALE_ENDPOINT
