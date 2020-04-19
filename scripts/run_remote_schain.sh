@@ -9,4 +9,5 @@ ssh -o StrictHostKeyChecking=no $USER@$ENDPOINT "docker run -d -v ~/schains/$POR
                     -e NO_NTP_CHECK=1 \
                     -e DATA_DIR=/schain_data/data_dir \
                     -e CONFIG_FILE=/schain_data/config.json \
+                    --name schain_$PORT \
                     skalenetwork/schain:$VERSION"

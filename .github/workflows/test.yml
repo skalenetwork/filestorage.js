@@ -47,18 +47,18 @@ jobs:
       if: matrix.os != 'windows-latest'
       run: |
         npm run generate
-        export PORT=$((1000 + RANDOM % 10000))
+        export PORT=$((1000 + RANDOM % 10000)) > PORT
         echo "sChain port: $PORT"
-        bash run_test_container.sh
+        bash scripts/run_remote_schain.sh
         echo $SCHEME$ENDPOINT:$PORT > SKALE_ENDPOINT
         sleep 30
     - name: Generating test file, port (win)
       if: matrix.os == 'windows-latest'
       run: |
         npm run generate-win
-        $env:PORT=get-random -minimum 1000 -maximum 11000
+        $env:PORT=get-random -minimum 1000 -maximum 11000 > PORT
         echo "sChain port: $env:PORT"
-        bash run_test_container.sh
+        bash scripts/run_remote_schain.sh
         echo $env:SCHEME$env:ENDPOINT`:$env:PORT > SKALE_ENDPOINT
         sleep 30
     - name: Unit testing
@@ -78,5 +78,15 @@ jobs:
     - name: Codecov
       run: |
         npm run coverage
+    - name: Stop sChain
+      if: matrix.os != 'windows-latest'
+      run: |
+        export PORT=$(cat PORT)
+        bash script/stop_remote_schain.sh
+    - name: Stop sChain (win)
+      if: matrix.os == 'windows-latest'
+      run: |
+        $env:PORT=cat PORT
+        bash script/stop_remote_schain.sh
 
 # Fix browser testing
