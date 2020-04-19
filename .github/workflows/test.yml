@@ -83,11 +83,11 @@ jobs:
       if: matrix.os != 'windows-latest'
       run: |
         export PORT=$(cat PORT)
-        bash script/stop_remote_schain.sh
+        bash scripts/stop_remote_schain.sh
     - name: Stop sChain (win)
       if: matrix.os == 'windows-latest'
       run: |
         $env:PORT=cat PORT
-        bash script/stop_remote_schain.sh
+        bash scripts/stop_remote_schain.sh
 
 # Fix browser testing
