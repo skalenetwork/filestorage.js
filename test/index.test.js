@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +18,7 @@
 
 /**
  * @file index.test.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
@@ -60,7 +59,7 @@ describe('Test FilestorageClient', function () {
         await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, testConstants.RESERVED_SPACE);
     });
 
-    describe('Test contructor', function () {
+    describe('Test constructor', function () {
         it('should initialize with web3', function () {
             const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
             let web3 = new Web3(web3Provider);
@@ -70,14 +69,14 @@ describe('Test FilestorageClient', function () {
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
-        it('should intitialize with http endpoint', function () {
+        it('should initialize with http endpoint', function () {
             let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT);
             assert.instanceOf(filestorageClient, FilestorageClient);
             assert.instanceOf(filestorageClient.web3, Web3);
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
-        it('should intitialize with enabled logs', function () {
+        it('should initialize with enabled logs', function () {
             let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
             assert.isTrue(filestorageClient.enableLogs);
         });
@@ -130,7 +129,7 @@ describe('Test FilestorageClient', function () {
                 assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + relativePath, 'Invalid storagePath');
             });
 
-            afterEach('Checking file\'s existance', async function () {
+            afterEach('Checking file\'s existence', async function () {
                 let fileList = await filestorage.listDirectory(dirPath);
                 let isFind = fileList.find(obj => {
                     return obj.name === fileName;
@@ -215,7 +214,7 @@ describe('Test FilestorageClient', function () {
         });
 
         describe('Negative tests', function () {
-            it('Download unexisted file', async function () {
+            it('Download nonexistent file', async function () {
                 let storagePath = randomstring.generate();
                 await filestorage.downloadToBuffer(storagePath)
                     .should
@@ -268,7 +267,7 @@ describe('Test FilestorageClient', function () {
         });
 
         describe('Negative tests', function () {
-            it('should delete unexisting own file', async function () {
+            it('should delete nonexistent own file', async function () {
                 let fileName = 'delete_' + randomstring.generate();
                 await filestorage.deleteFile(address, fileName, privateKey)
                     .should
@@ -394,13 +393,13 @@ describe('Test FilestorageClient', function () {
                 assert.isFalse(dirInfo.isFile, 'Incorrect isFile');
             });
 
-            it('should return empty array wheteher user has no files', async function () {
+            it('should return empty array whether user has no files', async function () {
                 let files = await filestorage.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
                 assert.isArray(files, 'should return array');
                 assert.isEmpty(files, 'should contain files');
             });
 
-            it('should fail listing unexisted dir', async function () {
+            it('should fail listing nonexistent dir', async function () {
                 await filestorage.listDirectory(path.posix.join(helper.rmBytesSymbol(emptyAddress), 'void'))
                     .should.eventually.rejectedWith(errorMessages.INVALID_PATH);
                 await filestorage.listDirectory('')
