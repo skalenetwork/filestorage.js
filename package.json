@@ -20,7 +20,7 @@
   "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
   "dependencies": {
     "web3": "1.2.4",
-    "streamsaver": "^1.0.1"
+    "streamsaver": "^2.0.4"
   },
   "scripts": {
     "build-patch": "VER=patch scripts/build.sh",
