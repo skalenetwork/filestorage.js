@@ -41,11 +41,13 @@ async function getFunds(account) {
         if (rootBalance < valueToSend) {
             throw new Error('Insufficient funds for testing');
         }
+        let nonce = await web3.eth.getTransactionCount(rootAccount);
         let tx = {
             from: rootAccount,
             gas: 21000,
             to: account,
             value: valueToSend,
+            nonce: nonce,
             chainId: await web3.eth.getChainId()
         };
         let signedTx = await web3.eth.accounts.signTransaction(tx, rootPrivateKey);
