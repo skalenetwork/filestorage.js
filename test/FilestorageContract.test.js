@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +18,7 @@
 
 /**
  * @file FilestorageContract.test.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 const randomstring = require('randomstring');
 const FilestorageContract = require('../src/FilestorageContract');
@@ -53,7 +52,7 @@ describe('FilestorageContract', function () {
         await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
     });
 
-    describe('Test contructor', function () {
+    describe('Test constructor', function () {
         it('should initialize with web3', function () {
             const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
             let web3 = new Web3(web3Provider);
@@ -196,7 +195,7 @@ describe('FilestorageContract', function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_NONEXISTENT, 'File is not deleted');
             });
 
             it('should delete unfinished file', async function () {
@@ -208,14 +207,14 @@ describe('FilestorageContract', function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_NONEXISTENT, 'File is not deleted');
             });
 
             it('should delete file without uploading chunks', async function () {
                 await filestorageContract.deleteFile(address, fileName, privateKey);
                 let filePath = path.posix.join(helper.rmBytesSymbol(address), fileName);
                 let status = await filestorageContract.getFileStatus(filePath);
-                assert.equal(status, fileStatus.STATUS_UNEXISTENT, 'File is not deleted');
+                assert.equal(status, fileStatus.STATUS_NONEXISTENT, 'File is not deleted');
             });
         });
 
@@ -293,7 +292,7 @@ describe('FilestorageContract', function () {
 
             it('should return 0 when file is not existed', async function () {
                 let status = await filestorageContract.getFileStatus(emptyFileStoragePath);
-                assert.equal(status, fileStatus.STATUS_UNEXISTENT);
+                assert.equal(status, fileStatus.STATUS_NONEXISTENT);
             });
 
             it('should return 1 when file is loading', async function () {
@@ -401,7 +400,7 @@ describe('FilestorageContract', function () {
                 assert.isTrue(unfinishedInfo.isChunkUploaded[0] === false, 'Unfinished file: incorrect chunks');
             });
 
-            it('should return empty array wheteher user has no files', async function () {
+            it('should return empty array whether user has no files', async function () {
                 let files = await filestorageContract.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
                 assert.isArray(files, 'should return array');
                 assert.isEmpty(files, 'should contain files');
