@@ -51,8 +51,8 @@ jobs:
         echo $PORT > PORT
         echo "sChain port: $PORT"
         bash scripts/run_remote_schain.sh
+        while nc -z $ENDPOINT $PORT ; [ $? -ne 0 ]; do echo "Setup connection..."; sleep 5; done
         echo $SCHEME$ENDPOINT:$PORT > SKALE_ENDPOINT
-        sleep 30
     - name: Generating test file, port (win)
       if: matrix.os == 'windows-latest'
       run: |
@@ -61,8 +61,8 @@ jobs:
         $env:PORT > PORT
         echo "sChain port: $env:PORT"
         bash scripts/run_remote_schain.sh
+        while ((Test-NetConnection -ComputerName $env:ENDPOINT -Port $env:PORT).tcpTestSucceeded -ne $true) {echo "Setup connection..."; sleep 5}
         echo $env:SCHEME$env:ENDPOINT`:$env:PORT > SKALE_ENDPOINT
-        sleep 30
     - name: Unit testing
       if: matrix.os != 'windows-latest'
       run: |

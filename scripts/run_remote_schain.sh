@@ -18,8 +18,3 @@ ssh -o StrictHostKeyChecking=no "$USER"@"$ENDPOINT" "docker run -d -v ~/schains/
         -e CONFIG_FILE=/schain_data/config.json \
         --name schain_$PORT \
         skalenetwork/schain:$VERSION"
-
-while nc -z $ENDPOINT $PORT ; [ $? -ne 0 ]; do
-    echo "Waiting for connection"
-    sleep 1
-done
