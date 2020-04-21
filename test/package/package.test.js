@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +18,7 @@
 
 /**
  * @file package.test.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 const Filestorage = require('@skalenetwork/filestorage.js');
 const FilestorageContract = require('@skalenetwork/filestorage.js').FilestorageContract;
@@ -32,7 +31,7 @@ chai.should();
 chai.use(require('chai-as-promised'));
 
 describe('Test npm package', function () {
-    describe('Test contructor', function () {
+    describe('Test constructor', function () {
         it('should initialize with web3', function () {
             const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
             let web3 = new Web3(web3Provider);
@@ -42,14 +41,14 @@ describe('Test npm package', function () {
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
-        it('should intitialize with http endpoint', function () {
+        it('should initialize with http endpoint', function () {
             let filestorageClient = new Filestorage(process.env.SKALE_ENDPOINT);
             assert.instanceOf(filestorageClient, Filestorage);
             assert.instanceOf(filestorageClient.web3, Web3);
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
-        it('should intitialize with enabled logs', function () {
+        it('should initialize with enabled logs', function () {
             let filestorageClient = new Filestorage(process.env.SKALE_ENDPOINT, true);
             assert.isTrue(filestorageClient.enableLogs);
         });

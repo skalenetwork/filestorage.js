@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +18,7 @@
 
 /**
  * @file constants.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 const FILESTORAGE_CONTRACTNAME = 'FileStorage.sol:FileStorage';
 
