@@ -31,7 +31,7 @@ Construct new **Filestorage** object:
 new Filestorage(web3Provider, enableLogs);
 ```
 
-##### Parameters
+#### Parameters
 
 | Parameter                                  | Description                                                                                                               |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
@@ -251,7 +251,7 @@ Content `Object` for directory contains:
 
 ## Development
 
-#### Install
+### Install
 
 ```bash
 git clone git@github.com:skalenetwork/filestorage.js.git
@@ -336,11 +336,11 @@ npm run lint
 
 ## Notes
 
-#### Storage path <a name="storagePath"></a>
+### Storage path <a name="storagePath"></a>
 
 Storage path is a label used to point to file or directory in Filestorage. It contains 2 parts through slash:
-1\. File owner address (without 0x)
-2\. File/directory path in owner's root directory
+1. File owner address (without 0x)
+2. File/directory path in owner's root directory
 
 Example:
 
