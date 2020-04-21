@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "streamsaver": "^1.0.1",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -43,12 +43,12 @@
     "chai-as-promised": "^7.1.1",
     "chromedriver": "80.0.1",
     "codecov": "^3.3.0",
-    "dotenv": "^7.0.0",
+    "dotenv": "^8.2.0",
     "eslint": "^6.4.0",
     "eslint-loader": "^2.1.2",
     "eslint-plugin-jsdoc": "^23.1.0",
-    "mocha": "^6.1.4",
-    "nyc": "14.1.1",
+    "mocha": "^7.1.1",
+    "nyc": "15.0.1",
     "randomstring": "^1.1.5",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "webpack": "4.42.1",
