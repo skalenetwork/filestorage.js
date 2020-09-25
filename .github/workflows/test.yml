@@ -36,9 +36,9 @@ jobs:
         token: ${{ secrets.ACCESS_TOKEN }}
         ref: develop
         path: filestorage
-    - name: Copy config
+    - name: Generate config
       run:
-        cp filestorage/test/utils/config.json test/utils
+        bash scripts/generate_config.sh
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
       with:
