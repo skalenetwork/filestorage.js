@@ -1,13 +1,14 @@
 name: Test
 on: [push, pull_request]
 
+# TODO: Enable macOS tests
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node: [10, 12]
-        os: [ubuntu-latest, macOS, windows-latest]
+        os: [ubuntu-latest, windows-latest]
     env:
       ENDPOINT: ${{ secrets.ENDPOINT }}
       USER: ${{ secrets.USER }}
