@@ -20,14 +20,15 @@
  * @file helper.js
  * @copyright SKALE Labs 2019-Present
  */
-require('dotenv').config();
+
+const fs = require('fs');
 const Web3 = require('web3');
 const constants = require('./constants');
 const helper = require('../../src/common/helper');
+require('dotenv').config();
 
 const rootPrivateKey = process.env.SCHAIN_OWNER_PK;
 const web3 = new Web3(process.env.SKALE_ENDPOINT);
-
 
 async function getAddress(privateKey) {
     privateKey = helper.addBytesSymbol(privateKey);
@@ -68,14 +69,14 @@ async function reserveTestSpace(contract, account, space) {
 function generateConfig(artifactsPath) {
     let data = fs.readFileSync(artifactsPath);
     let artifacts = JSON.parse(data);
-    let skaledConfigPath = path.join(path.resolve(__dirname), 'config.json');
+    let skaledConfigPath = constants.CONFIG_FILE_PATH;
     let skaledConfig = require(skaledConfigPath);
     skaledConfig.accounts[artifacts.address] = {
-        "code": artifacts.bytecode,
-        "balance": "0",
-        "nonce": "0",
-        "storage": {
-            "0x00": "0xffffffffff"
+        'code': artifacts.bytecode,
+        'balance': '0',
+        'nonce': '0',
+        'storage': {
+            '0x00': '0xffffffffff'
         }
     };
     fs.writeFileSync(skaledConfigPath, JSON.stringify(skaledConfig, null, '\t'));
