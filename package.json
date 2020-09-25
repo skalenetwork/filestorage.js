@@ -32,6 +32,7 @@
     "test": "nyc --reporter=lcov mocha --exit --timeout 120000"
   },
   "dependencies": {
+    "@skalenetwork/filestorage": "0.4.0-develop.1",
     "streamsaver": "^1.0.1",
     "web3": "1.2.6"
   },
