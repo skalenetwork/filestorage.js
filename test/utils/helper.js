@@ -66,8 +66,8 @@ async function reserveTestSpace(contract, account, space) {
     return await helper.sendTransactionToContract(web3, rootAccount, rootPrivateKey, txData, 1000000);
 }
 
-function generateConfig(artifactsPath) {
-    let data = fs.readFileSync(artifactsPath);
+function generateConfig() {
+    let data = fs.readFileSync(constants.ARTIFACTS_FILE_PATH);
     let artifacts = JSON.parse(data);
     let skaledConfigPath = constants.CONFIG_FILE_PATH;
     let skaledConfig = require(skaledConfigPath);

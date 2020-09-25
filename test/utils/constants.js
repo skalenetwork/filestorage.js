@@ -58,8 +58,10 @@ const EMPTY_ADDRESS = '0x6196d135CdDb9d73A0756C1E44b5b02B11acf594';
 const TEST_DATA_DIR = path.join(__dirname, '..', 'data');
 const TEST_FILE = 'test.txt';
 const CONFIG_FILE = 'base_config.json';
+const ARTIFACTS_FILE = 'artifacts.json'
 const TEST_FILE_PATH = path.join(TEST_DATA_DIR, TEST_FILE);
 const CONFIG_FILE_PATH = path.join(TEST_DATA_DIR, CONFIG_FILE);
+const ARTIFACTS_FILE_PATH = path.join(TEST_DATA_DIR, ARTIFACTS_FILE);
 
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
@@ -73,3 +75,4 @@ module.exports.RESERVED_SPACE = RESERVED_SPACE;
 module.exports.EMPTY_ADDRESS = EMPTY_ADDRESS;
 module.exports.TEST_FILE_PATH = TEST_FILE_PATH;
 module.exports.CONFIG_FILE_PATH = CONFIG_FILE_PATH;
+module.exports.ARTIFACTS_FILE_PATH = ARTIFACTS_FILE_PATH;
