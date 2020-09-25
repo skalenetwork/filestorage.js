@@ -56,6 +56,7 @@ const RESERVED_SPACE = 10 ** 9;
 const EMPTY_ADDRESS = '0x6196d135CdDb9d73A0756C1E44b5b02B11acf594';
 const TEST_FILE = 'test.txt';
 const TEST_FILE_PATH = path.join(__dirname, '..', TEST_FILE);
+
 module.exports.errorMessages = errorMessages;
 module.exports.fileStatus = fileStatus;
 module.exports.TEST_ACCOUNT_BALANCE = TEST_ACCOUNT_BALANCE;

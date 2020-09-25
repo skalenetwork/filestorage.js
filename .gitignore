@@ -4,6 +4,7 @@
 # Test files
 test/test.txt
 test/utils/config.json
+artifacts.json
 
 # Dependency directories
 node_modules/
