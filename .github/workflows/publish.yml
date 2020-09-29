@@ -22,7 +22,7 @@ jobs:
       - name: Set version and branch
         run: |
           export BRANCH=${GITHUB_REF##*/}
-          export VERSION=$(bash ./scripts/calculate.sh)
+          export VERSION=$(bash ./scripts/calculate_version.sh)
           echo "::set-env name=VERSION::$VERSION"
           echo "::set-env name=BRANCH::$BRANCH"
           echo "Version $VERSION"
