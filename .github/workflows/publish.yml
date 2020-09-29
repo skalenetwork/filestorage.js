@@ -26,7 +26,6 @@ jobs:
           echo "::set-env name=VERSION::$VERSION"
           echo "::set-env name=BRANCH::$BRANCH"
           echo "Version $VERSION"
-          echo ${{ secrets.GITHUB_TOKEN }}
       - name: Webpack build
         run: |
           WEBPACK_ENV=build npx webpack
