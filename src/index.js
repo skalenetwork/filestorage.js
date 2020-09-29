@@ -37,7 +37,7 @@ class FilestorageClient {
      *
      * @class
      *
-     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
+     * @param {string|object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
      * @param {boolean} [enableLogs=false] - Enable/disable console logs
      */
     constructor(web3Provider, enableLogs = false) {

@@ -20,12 +20,9 @@
  * @file FilestorageContract.js
  * @copyright SKALE Labs 2019-Present
  */
+const filestorageArtifacts = require('@skalenetwork/filestorage');
 const constants = require('./common/constants');
-const configJson = require('./contracts_config.json');
 const Helper = require('./common/helper');
-
-const abi = configJson[constants.FILESTORAGE_CONTRACTNAME]['abi'];
-const contractAddress = configJson[constants.FILESTORAGE_CONTRACTNAME]['address'];
 class FilestorageContract {
 
     /**
@@ -33,11 +30,11 @@ class FilestorageContract {
      *
      * @class
      *
-     * @param {Object} web3 - Web3 instance
+     * @param {object} web3 - Web3 instance
      */
     constructor(web3) {
         this.web3 = web3;
-        this.contract = new web3.eth.Contract(abi, contractAddress);
+        this.contract = new web3.eth.Contract(filestorageArtifacts.abi, filestorageArtifacts.address);
     }
 
     /**
@@ -49,7 +46,7 @@ class FilestorageContract {
      * @param {string} filePath - Path of uploaded file in account directory
      * @param {number} size - Size of uploaded file
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async startUpload(address, filePath, size, privateKey = '') {
         let txData = this.contract.methods.startUpload(filePath, size);
@@ -66,7 +63,7 @@ class FilestorageContract {
      * @param {number} position - Position in the file from which chunk will be written
      * @param {string} data - Chunk data in hex format, started with 0x
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async uploadChunk(address, filePath, position, data, privateKey = '') {
         let txData = this.contract.methods.uploadChunk(filePath, position, data);
@@ -81,7 +78,7 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} filePath - Path to the file to be deleted
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async deleteFile(address, filePath, privateKey = '') {
         let txData = this.contract.methods.deleteFile(filePath);
@@ -97,7 +94,7 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} filePath - Path of uploaded file in account directory
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async finishUpload(address, filePath, privateKey = '') {
         let txData = this.contract.methods.finishUpload(filePath);
@@ -156,7 +153,7 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} directoryPath - Path of the directory to be created
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async createDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.createDirectory(directoryPath);
@@ -171,7 +168,7 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} directoryPath - Path of the directory to be created
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async deleteDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.deleteDirectory(directoryPath);

@@ -1,0 +1,64 @@
+name: Build and publish
+on:
+  push:
+    branches:
+      - stable
+      - develop
+      - beta
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: |
+          npm i
+      - name: Set version and branch
+        run: |
+          export BRANCH=${GITHUB_REF##*/}
+          export VERSION=$(bash ./scripts/calculate.sh)
+          echo "::set-env name=VERSION::$VERSION"
+          echo "::set-env name=BRANCH::$BRANCH"
+          echo "Version $VERSION"
+          echo ${{ secrets.GITHUB_TOKEN }}
+      - name: Webpack build
+        run: |
+          WEBPACK_ENV=build npx webpack
+      - name: Publish on npm
+        if: github.ref != 'refs/heads/stable'
+        run: |
+          npm version --no-git-tag-version ${{ env.VERSION }}
+          npm publish --access public --tag ${{ env.BRANCH }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish on npm (stable)
+        if: github.ref == 'refs/heads/stable'
+        run: |
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create Release
+        if: github.ref != 'refs/heads/stable'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: ${{ env.VERSION }}
+          draft: false
+          prerelease: true
+      - name: Create Release (stable)
+        if: github.ref == 'refs/heads/stable'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: ${{ env.VERSION }}
+          draft: false

@@ -20,12 +20,16 @@
  * @file helper.js
  * @copyright SKALE Labs 2019-Present
  */
-require('dotenv').config();
+
+const fs = require('fs');
 const Web3 = require('web3');
-const testBalance = require('./constants').TEST_ACCOUNT_BALANCE;
+const constants = require('./constants');
 const helper = require('../../src/common/helper');
+require('dotenv').config();
+
 const rootPrivateKey = process.env.SCHAIN_OWNER_PK;
 const web3 = new Web3(process.env.SKALE_ENDPOINT);
+
 async function getAddress(privateKey) {
     privateKey = helper.addBytesSymbol(privateKey);
     return await web3.eth.accounts.privateKeyToAccount(privateKey).address;
@@ -33,7 +37,7 @@ async function getAddress(privateKey) {
 
 async function getFunds(account) {
     let rootAccount = await getAddress(rootPrivateKey);
-    let testBalanceWei = await web3.utils.toWei(testBalance, 'ether');
+    let testBalanceWei = await web3.utils.toWei(constants.TEST_ACCOUNT_BALANCE, 'ether');
     let accountBalance = await web3.eth.getBalance(account);
     let rootBalance = await web3.eth.getBalance(rootAccount);
     if (accountBalance < testBalanceWei) {
@@ -62,6 +66,23 @@ async function reserveTestSpace(contract, account, space) {
     return await helper.sendTransactionToContract(web3, rootAccount, rootPrivateKey, txData, 1000000);
 }
 
+function generateConfig() {
+    let data = fs.readFileSync(constants.ARTIFACTS_FILE_PATH);
+    let artifacts = JSON.parse(data);
+    let skaledConfigPath = constants.CONFIG_FILE_PATH;
+    let skaledConfig = require(skaledConfigPath);
+    skaledConfig.accounts[artifacts.address] = {
+        'code': artifacts.bytecode,
+        'balance': '0',
+        'nonce': '0',
+        'storage': {
+            '0x00': '0xffffffffff'
+        }
+    };
+    fs.writeFileSync(skaledConfigPath, JSON.stringify(skaledConfig, null, '\t'));
+}
+
 module.exports.getFunds = getFunds;
 module.exports.getAddress = getAddress;
 module.exports.reserveTestSpace = reserveTestSpace;
+module.exports.generateConfig = generateConfig;
