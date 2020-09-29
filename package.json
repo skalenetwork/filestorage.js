@@ -29,7 +29,8 @@
     "lint-fix": "npm run lint -- --fix",
     "minify": "WEBPACK_ENV=build npx webpack",
     "prepush": "npm run lint && npm run minify && npm link && npm link @skalenetwork/filestorage.js && npm test",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 120000"
+    "test": "nyc --reporter=lcov mocha --exit --timeout 120000",
+    "version": "node -e \"console.log(require('./package.json').version);\""
   },
   "dependencies": {
     "@skalenetwork/filestorage": "0.4.0-develop.1",
