@@ -64,7 +64,7 @@ async function getFunds(account) {
 async function reserveTestSpace(contract, account, space) {
     let rootAccount = await getAddress(rootPrivateKey);
     let txData = contract.methods.reserveSpace(account, space);
-    return await transactions.sendData(web3, rootAccount, rootPrivateKey, txData, 1000000);
+    return await transactions.send(web3, rootAccount, rootPrivateKey, txData, 1000000);
 }
 
 function generateConfig() {
