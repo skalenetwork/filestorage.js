@@ -20,9 +20,11 @@
  * @file FilestorageContract.js
  * @copyright SKALE Labs 2019-Present
  */
+
 const filestorageArtifacts = require('@skalenetwork/filestorage');
 const constants = require('./common/constants');
 const Helper = require('./common/helper');
+
 class FilestorageContract {
 
     /**
@@ -112,8 +114,7 @@ class FilestorageContract {
      * @returns {Array.<string>} Chunk data splitted into 32 byte hex strings
      */
     async readChunk(storagePath, position, length) {
-        let result = await this.contract.methods.readChunk(storagePath, position, length).call();
-        return result;
+        return await this.contract.methods.readChunk(storagePath, position, length).call();
     }
 
     /**
@@ -128,8 +129,7 @@ class FilestorageContract {
      * @returns {number} File status
      */
     async getFileStatus(storagePath) {
-        let result = await this.contract.methods.getFileStatus(storagePath).call();
-        return result;
+        return await this.contract.methods.getFileStatus(storagePath).call();
     }
 
     /**
@@ -141,8 +141,7 @@ class FilestorageContract {
      * @returns {string} Size of the file in bytes
      */
     async getFileSize(storagePath) {
-        let result = await this.contract.methods.getFileSize(storagePath).call();
-        return result;
+        return await this.contract.methods.getFileSize(storagePath).call();
     }
 
     /**
@@ -185,8 +184,7 @@ class FilestorageContract {
      * List of content
      */
     async listDirectory(storagePath) {
-        let result = await this.contract.methods.listDirectory(storagePath).call();
-        return result;
+        return await this.contract.methods.listDirectory(storagePath).call();
     }
 }
 
