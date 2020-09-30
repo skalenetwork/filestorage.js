@@ -48,6 +48,7 @@ describe('Test FilestorageClient', function () {
     let filestorage;
     let address;
     let foreignAddress;
+
     before(async function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
@@ -84,10 +85,10 @@ describe('Test FilestorageClient', function () {
 
     // TODO: test big files uploading
     describe('Test uploading', function () {
-
         let fileName;
         let dirPath;
         let data;
+
         describe('Positive tests', function () {
             beforeEach(function () {
                 fileName = 'test_' + randomstring.generate();

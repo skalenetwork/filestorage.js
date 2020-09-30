@@ -24,16 +24,18 @@ const helper = require('../src/common/helper');
 const transactions = require('../src/common/transactions');
 const constants = require('../src/common/constants');
 const FilestorageContract = require('../src/FilestorageContract');
-const Web3 = require('web3');
 const testHelper = require('./utils/helper');
-require('dotenv').config();
 
+const Web3 = require('web3');
+let randomstring = require('randomstring');
 const chai = require('chai');
+
 const assert = chai.assert;
 chai.should();
 chai.use(require('chai-as-promised'));
 
-let randomstring = require('randomstring');
+require('dotenv').config();
+
 describe('Helper', function () {
     const rejectedTransactionErrorMessage = 'Returned error: Transaction rejected by user.';
     describe('bufferToHex', function () {

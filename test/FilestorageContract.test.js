@@ -42,6 +42,7 @@ describe('FilestorageContract', function () {
     let address;
     let emptyAddress;
     const smallChunkLength = 2 ** 10;
+
     before(async function () {
         const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
         let web3 = new Web3(web3Provider);
