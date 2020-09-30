@@ -23,7 +23,7 @@
 
 const filestorageArtifacts = require('@skalenetwork/filestorage');
 const constants = require('./common/constants');
-const Helper = require('./common/helper');
+const transactions = require('./common/transactions');
 
 class FilestorageContract {
 
@@ -52,7 +52,7 @@ class FilestorageContract {
      */
     async startUpload(address, filePath, size, privateKey = '') {
         let txData = this.contract.methods.startUpload(filePath, size);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -69,7 +69,7 @@ class FilestorageContract {
      */
     async uploadChunk(address, filePath, position, data, privateKey = '') {
         let txData = this.contract.methods.uploadChunk(filePath, position, data);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.WRITING_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.WRITING_GAS);
     }
 
     /**
@@ -84,7 +84,7 @@ class FilestorageContract {
      */
     async deleteFile(address, filePath, privateKey = '') {
         let txData = this.contract.methods.deleteFile(filePath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -100,7 +100,7 @@ class FilestorageContract {
      */
     async finishUpload(address, filePath, privateKey = '') {
         let txData = this.contract.methods.finishUpload(filePath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -156,7 +156,7 @@ class FilestorageContract {
      */
     async createDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.createDirectory(directoryPath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -171,7 +171,7 @@ class FilestorageContract {
      */
     async deleteDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.deleteDirectory(directoryPath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**

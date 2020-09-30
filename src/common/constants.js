@@ -20,11 +20,12 @@
  * @file constants.js
  * @copyright SKALE Labs 2019-Present
  */
-const FILESTORAGE_CONTRACTNAME = 'FileStorage.sol:FileStorage';
 
 const CHUNK_LENGTH = 1048576;
 const STANDARD_GAS = 1000000;
 const WRITING_GAS = 160000000;
+
+const PRIVATE_KEY_REGEX = /^(0x)?[0-9a-f]{64}$/i;
 
 const errorMessages = {
     FAILED_TRANSACTION: 'Transaction has been failed',
@@ -32,8 +33,9 @@ const errorMessages = {
     INVALID_KEYPAIR: 'Keypair mismatch',
     INVALID_PRIVATEKEY: 'Incorrect privateKey'
 };
+
 module.exports.WRITING_GAS = WRITING_GAS;
 module.exports.STANDARD_GAS = STANDARD_GAS;
 module.exports.CHUNK_LENGTH = CHUNK_LENGTH;
-module.exports.FILESTORAGE_CONTRACTNAME = FILESTORAGE_CONTRACTNAME;
+module.exports.PRIVATE_KEY_REGEX = PRIVATE_KEY_REGEX;
 module.exports.errorMessages = errorMessages;

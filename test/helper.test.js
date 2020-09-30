@@ -21,6 +21,7 @@
  * @copyright SKALE Labs 2019-Present
  */
 const helper = require('../src/common/helper');
+const transactions = require('../src/common/transactions');
 const constants = require('../src/common/constants');
 const FilestorageContract = require('../src/FilestorageContract');
 const Web3 = require('web3');
@@ -147,7 +148,7 @@ describe('Helper', function () {
         });
     });
 
-    describe('sendTransactionToContract', function () {
+    describe('transactions', function () {
         let privateKey = process.env.PRIVATEKEY;
         let address;
         let web3;
@@ -162,13 +163,13 @@ describe('Helper', function () {
         });
 
         it('should send transaction with privateKey', async function () {
-            let result = await helper.sendTransactionToContract(web3, address, privateKey, txData,
+            let result = await transactions.send(web3, address, privateKey, txData,
                 constants.STANDARD_GAS);
             assert.isTrue(result['status']);
         });
 
         it('should throw exception for transaction without privateKey', async function () {
-            await helper.sendTransactionToContract(web3, address, '', txData, constants.STANDARD_GAS)
+            await transactions.send(web3, address, '', txData, constants.STANDARD_GAS)
                 .should
                 .eventually
                 .rejectedWith(rejectedTransactionErrorMessage);
