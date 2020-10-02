@@ -25,6 +25,7 @@ const fs = require('fs');
 const Web3 = require('web3');
 const constants = require('./constants');
 const helper = require('../../src/common/helper');
+const transactions = require('../../src/common/transactions');
 require('dotenv').config();
 
 const rootPrivateKey = process.env.SCHAIN_OWNER_PK;
@@ -63,7 +64,7 @@ async function getFunds(account) {
 async function reserveTestSpace(contract, account, space) {
     let rootAccount = await getAddress(rootPrivateKey);
     let txData = contract.methods.reserveSpace(account, space);
-    return await helper.sendTransactionToContract(web3, rootAccount, rootPrivateKey, txData, 1000000);
+    return await transactions.send(web3, rootAccount, rootPrivateKey, txData, 1000000);
 }
 
 function generateConfig() {

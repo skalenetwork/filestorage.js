@@ -303,17 +303,8 @@ npm run test test/browser
 
 #### Build a dist version
 
-**Note:** Build scripts also do version updating in `package.json`
-
 ```bash
-# build patch version
-npm run build-patch
-
-# build minor version
-npm run build-minor
-
-# build major version
-npm run build-major
+npm run minify
 ```
 
 **Publishing on npm:** 
@@ -324,7 +315,11 @@ npm publish
 
 #### Versioning
 
-The version scheme for this repo is {major}.{minor}.{patch} For more details see: <https://semver.org/>
+The version scheme for this repo is `{major}.{minor}.{patch}`. 
+For develop version scheme is `{major}.{minor}.{patch}-develop.{number}`
+For beta version scheme is `{major}.{minor}.{patch}-beta.{number}`
+
+For more details see: <https://semver.org/>
 
 #### Lint
 

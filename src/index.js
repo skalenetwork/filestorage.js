@@ -20,10 +20,12 @@
  * @file index.js
  * @copyright SKALE Labs 2019-Present
  */
+
 const Web3 = require('web3');
 const constants = require('./common/constants');
 const Helper = require('./common/helper');
 const FilestorageContract = require('./FilestorageContract');
+
 let streamSaver = null;
 /* istanbul ignore next */
 if (typeof window !== 'undefined') {
