@@ -44,7 +44,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^6.4.0",
     "eslint-loader": "^4.0.0",
-    "eslint-plugin-jsdoc": "^24.0.0",
+    "eslint-plugin-jsdoc": "^30.6.2",
     "mocha": "^7.1.1",
     "nyc": "15.0.1",
     "randomstring": "^1.1.5",
