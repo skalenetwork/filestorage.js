@@ -433,7 +433,7 @@ describe('FilestorageContract', function () {
                     address,
                     testConstants.SPACE_TEST_ADDRESS,
                     100,
-                    privateKey
+                    process.env.SCHAIN_OWNER_PK
                 );
                 assert.isTrue(txObj['status']);
             });

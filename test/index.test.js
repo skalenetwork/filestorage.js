@@ -433,7 +433,12 @@ describe('Test FilestorageClient', function () {
     describe('test reserveSpace', function () {
         describe('Positive tests', function () {
             it('should reserve space for account', async function () {
-                await filestorage.reserveSpace(address, testConstants.SPACE_TEST_ADDRESS, 100, privateKey);
+                await filestorage.reserveSpace(
+                    address,
+                    testConstants.SPACE_TEST_ADDRESS,
+                    100,
+                    process.env.SCHAIN_OWNER_PK
+                );
             });
         });
     });
