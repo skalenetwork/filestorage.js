@@ -249,6 +249,31 @@ Content `Object` for directory contains:
 | `String` storagePath | [Path of directory in Filestorage](#storagePath) |
 | `String` isFile      | Whether content is file                          |
 
+#### Reserve space
+
+Reserve space for certain address in Filestorage in bytes.
+
+-   **Note**: could be called only by sChain owner
+
+```javascript
+filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+```
+
+Create directory using external signing (Metamask etc):
+
+```javascript
+filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace);
+```
+
+##### Parameters
+
+| Parameter                 | Description                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| `String` ownerAddress     | sChain owner address                                        |
+| `String` addressToReserve | Address to reserve space for                                |
+| `String` reservedSpace    | Reserved space in bytes                                     |
+| `String` privateKey       | _(optional)_ sChain owner private key, to sign transactions |
+
 ## Development
 
 ### Install

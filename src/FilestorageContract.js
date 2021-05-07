@@ -186,6 +186,23 @@ class FilestorageContract {
     async listDirectory(storagePath) {
         return await this.contract.methods.listDirectory(storagePath).call();
     }
+
+    /**
+     * Javascript wrapper for solidity function reserveSpace. Reserve space in Filestorage for certain address.
+     * Allowed only for sChain owner
+     *
+     * @function reserveSpace
+     *
+     * @param {string} ownerAddress - sChain owner address
+     * @param {string} addressToReserve - Address to reserve space for
+     * @param {number} reservedSpace - Reserved space in bytes
+     * @param {string} [privateKey] - sChain owner private key
+     * @returns {object} Transaction information
+     */
+    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey = '') {
+        let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
+        return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
+    }
 }
 
 module.exports = FilestorageContract;

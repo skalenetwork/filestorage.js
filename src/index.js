@@ -193,6 +193,21 @@ class FilestorageClient {
         return content;
     }
 
+    /**
+     * Reserve space in Filestorage for certain address. Allowed only for sChain owner
+     *
+     * @function reserveSpace
+     *
+     * @param {string} ownerAddress - sChain owner address
+     * @param {string} addressToReserve - Address to reserve space for
+     * @param {number} reservedSpace - Reserved space in bytes
+     * @param {string} [privateKey] - sChain owner private key
+     */
+    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey) {
+        await this.contract.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+        if (this.enableLogs) console.log('Space was allocated');
+    }
+
     async _downloadFile(storagePath, stream) {
         let ptrPosition = 0;
         let i = 0;
