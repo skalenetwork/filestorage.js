@@ -201,7 +201,7 @@ class FilestorageContract {
      */
     async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey = '') {
         let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
-        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
     }
 }
 
