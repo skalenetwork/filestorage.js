@@ -203,6 +203,18 @@ class FilestorageContract {
         let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
         return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
     }
+
+    /**
+     * Get reserved space for certain address
+     *
+     * @function getReservedSpace
+     *
+     * @param {string} address - Address to reserve space for
+     * @returns {number} Reserved space in bytes
+     */
+    async getReservedSpace(address) {
+        return await this.contract.methods.reservedStorageSpace(address).call();
+    }
 }
 
 module.exports = FilestorageContract;
