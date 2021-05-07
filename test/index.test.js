@@ -434,7 +434,7 @@ describe('Test FilestorageClient', function () {
         describe('Positive tests', function () {
             it('should reserve space for account', async function () {
                 await filestorage.reserveSpace(
-                    address,
+                    testHelper.getAddress(process.env.SCHAIN_OWNER_PK),
                     testConstants.SPACE_TEST_ADDRESS,
                     100,
                     process.env.SCHAIN_OWNER_PK
