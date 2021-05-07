@@ -429,9 +429,13 @@ describe('FilestorageContract', function () {
     describe('test reserveSpace', function () {
         describe('Positive tests', function () {
             it('should reserve space for account', async function () {
-                await filestorageContract.reserveSpace(address, testConstants.SPACE_TEST_ADDRESS, 100, privateKey);
-                let reservedSpace = await filestorageContract.getReservedSpace(testConstants.SPACE_TEST_ADDRESS);
-                assert.isTrue(reservedSpace === 100);
+                let txObj = await filestorageContract.reserveSpace(
+                    address,
+                    testConstants.SPACE_TEST_ADDRESS,
+                    100,
+                    privateKey
+                );
+                assert.isTrue(txObj['status']);
             });
         });
     });
