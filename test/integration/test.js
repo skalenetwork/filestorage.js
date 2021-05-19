@@ -17,7 +17,10 @@ let fileNumber = {
     'large': 50
 }
 
+const reservedSpace = 7 * 10 ** 8;
+
 async function upload(){
+    await filestorage.reserveSpace(address, address, reservedSpace, pk);
     let balanceStart = await web3.eth.getBalance(address);
     for (let i = 1; i < fileNumber[type] ; ++i) {
         let directoryPath = __dirname+'/testFiles/'+type+'/'+type+i+'.txt';
