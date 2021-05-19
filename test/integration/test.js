@@ -21,7 +21,6 @@ async function upload(){
     console.log(type);
     let balanceStart = await web3.eth.getBalance(address);
     let timeStart = new Date();
-    console.log(balanceStart);
     console.log('timeStart: ', timeStart);
     for (let i = 1; i < fileNumber[type] ; ++i) {
         let directoryPath = __dirname+'/testFiles/'+type+'/'+type+i+'.txt';
@@ -32,15 +31,10 @@ async function upload(){
         console.log(contentPath);
         let balanceFinish = await web3.eth.getBalance(address)
         let balanceFinishEth = await web3.utils.fromWei((balanceStart - balanceFinish).toString(),"ether")
-        let receipt = contentPath.txs[0];
-        console.log('contentPath ', receipt.contentPath)
-        console.log('gasUsed ',receipt.gasUsed)
-        console.log('blockNumber ', receipt.blockNumber)
         let timeEnd = new Date()
         console.log('balance:  ', balanceFinishEth)
-        console.log('end: ', timeEnd)
+        console.log('end: ', timeEnd);
     }
-
 }
 
 upload();
