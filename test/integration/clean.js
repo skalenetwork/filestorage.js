@@ -21,7 +21,7 @@ async function clean(){
                 await filestorage.deleteFile(address, file.name, pk);
             }
         } else {
-            if (file.name.startsWith('tiny')) {
+            if (file.name.startsWith(type)) {
                 await filestorage.deleteFile(address, file.name, pk);
             }
         }
