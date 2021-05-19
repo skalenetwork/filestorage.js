@@ -17,7 +17,7 @@ let fileNumber = {
     'large': 50
 }
 
-const reservedSpace = 7 * 10 ** 8;
+const reservedSpace = 3 * 10 ** 8;
 
 async function upload(){
     await filestorage.reserveSpace(address, address, reservedSpace, pk);
