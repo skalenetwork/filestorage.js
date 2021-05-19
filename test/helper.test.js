@@ -157,7 +157,7 @@ describe('Helper', function () {
         let contract;
         let txData;
         before(async function () {
-            address = await testHelper.getAddress(privateKey);
+            address = testHelper.getAddress(privateKey);
             web3 = new Web3(process.env.SKALE_ENDPOINT);
             contract = new FilestorageContract(web3).contract;
             txData = contract.methods.startUpload(randomstring.generate(), 0);
