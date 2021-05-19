@@ -18,10 +18,7 @@ let fileNumber = {
 }
 
 async function upload(){
-    console.log(type);
     let balanceStart = await web3.eth.getBalance(address);
-    let timeStart = new Date();
-    console.log('timeStart: ', timeStart);
     for (let i = 1; i < fileNumber[type] ; ++i) {
         let directoryPath = __dirname+'/testFiles/'+type+'/'+type+i+'.txt';
         var content;
