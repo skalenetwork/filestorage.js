@@ -26,13 +26,13 @@ async function upload(){
         let directoryPath = __dirname+'/testFiles/'+type+'/'+type+i+'.txt';
         var content;
         var contentPath;
-        content = await fs.readFileSync(directoryPath)
+        content = await fs.readFileSync(directoryPath);
         contentPath = await filestorage.uploadFile(address,type+i+'.txt', content,  pk);
         console.log(contentPath);
-        let balanceFinish = await web3.eth.getBalance(address)
-        let balanceFinishEth = await web3.utils.fromWei((balanceStart - balanceFinish).toString(),"ether")
-        let timeEnd = new Date()
-        console.log('balance:  ', balanceFinishEth)
+        let balanceFinish = await web3.eth.getBalance(address);
+        let balanceFinishEth = await web3.utils.fromWei((balanceStart - balanceFinish).toString(),"ether");
+        let timeEnd = new Date();
+        console.log('balance:  ', balanceFinishEth);
         console.log('end: ', timeEnd);
     }
 }
