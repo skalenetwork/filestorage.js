@@ -31,13 +31,13 @@ require('dotenv').config();
 const rootPrivateKey = process.env.SCHAIN_OWNER_PK;
 const web3 = new Web3(process.env.SKALE_ENDPOINT);
 
-async function getAddress(privateKey) {
+function getAddress(privateKey) {
     privateKey = helper.addBytesSymbol(privateKey);
-    return await web3.eth.accounts.privateKeyToAccount(privateKey).address;
+    return web3.eth.accounts.privateKeyToAccount(privateKey).address;
 }
 
 async function getFunds(account) {
-    let rootAccount = await getAddress(rootPrivateKey);
+    let rootAccount = getAddress(rootPrivateKey);
     let testBalanceWei = await web3.utils.toWei(constants.TEST_ACCOUNT_BALANCE, 'ether');
     let accountBalance = await web3.eth.getBalance(account);
     let rootBalance = await web3.eth.getBalance(rootAccount);
@@ -62,7 +62,7 @@ async function getFunds(account) {
 }
 
 async function reserveTestSpace(contract, account, space) {
-    let rootAccount = await getAddress(rootPrivateKey);
+    let rootAccount = getAddress(rootPrivateKey);
     let txData = contract.methods.reserveSpace(account, space);
     return await transactions.send(web3, rootAccount, rootPrivateKey, txData, 1000000);
 }

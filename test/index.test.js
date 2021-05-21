@@ -52,8 +52,8 @@ describe('Test FilestorageClient', function () {
     before(async function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
-        address = await testHelper.getAddress(privateKey);
-        foreignAddress = await testHelper.getAddress(foreignPrivateKey);
+        address = testHelper.getAddress(privateKey);
+        foreignAddress = testHelper.getAddress(foreignPrivateKey);
         await testHelper.getFunds(address);
         await testHelper.getFunds(foreignAddress);
         await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
@@ -433,7 +433,7 @@ describe('Test FilestorageClient', function () {
     describe('test reserveSpace', function () {
         describe('Positive tests', function () {
             it('should reserve space for account', async function () {
-                let owner = await testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+                let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
                 await filestorage.reserveSpace(
                     owner,
                     testConstants.SPACE_TEST_ADDRESS,

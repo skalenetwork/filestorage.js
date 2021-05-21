@@ -47,7 +47,7 @@ describe('FilestorageContract', function () {
         const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
         let web3 = new Web3(web3Provider);
         filestorageContract = new FilestorageContract(web3);
-        address = await testHelper.getAddress(privateKey);
+        address = testHelper.getAddress(privateKey);
         emptyAddress = testConstants.EMPTY_ADDRESS;
         await testHelper.getFunds(address);
         await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
@@ -429,7 +429,7 @@ describe('FilestorageContract', function () {
     describe('test reserveSpace', function () {
         describe('Positive tests', function () {
             it('should reserve space for account', async function () {
-                let owner = await testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+                let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
                 let txObj = await filestorageContract.reserveSpace(
                     owner,
                     testConstants.SPACE_TEST_ADDRESS,
