@@ -2,7 +2,8 @@
 .env
 
 # Test files
-test/test.txt
+test/data/test.txt
+artifacts.json
 
 # Dependency directories
 node_modules/
@@ -12,3 +13,5 @@ node_modules/
 
 # Temporary files
 .eslintcache
+.nyc_output
+coverage

@@ -1,32 +1,33 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
  * @file index.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
+
 const Web3 = require('web3');
-const path = require('path');
 const constants = require('./common/constants');
 const Helper = require('./common/helper');
 const FilestorageContract = require('./FilestorageContract');
+
 let streamSaver = null;
+/* istanbul ignore next */
 if (typeof window !== 'undefined') {
     streamSaver = require('streamsaver');
 }
@@ -36,10 +37,10 @@ class FilestorageClient {
     /**
      * Initialization of Filestorage API client
      *
-     * @constructor
+     * @class
      *
-     * @param {string|object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes.
-     * @param {boolean} [enableLogs=false] - Enable/disable console logs.
+     * @param {string|object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
+     * @param {boolean} [enableLogs=false] - Enable/disable console logs
      */
     constructor(web3Provider, enableLogs = false) {
         this.web3 = new Web3(web3Provider);
@@ -50,17 +51,17 @@ class FilestorageClient {
     /**
      * Upload file into Filestorage
      *
-     * @method uploadFile
+     * @function uploadFile
      *
-     * @param {string} address - Account address.
-     * @param {string} fileName - Name of uploaded file.
-     * @param {ArrayBuffer} fileBuffer - Data of the file, in bytes.
-     * @param {string} [privateKey] - Account private key.
-     * @returns {string} Storage path.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path of uploaded file in account directory
+     * @param {Buffer} fileBuffer - Uploaded file data
+     * @param {string} [privateKey] - Account private key
+     * @returns {string} Storage path
      */
-    async uploadFile(address, fileName, fileBuffer, privateKey) {
+    async uploadFile(address, filePath, fileBuffer, privateKey) {
         let fileSize = fileBuffer.length;
-        await this.contract.startUpload(address, fileName, fileSize, privateKey);
+        await this.contract.startUpload(address, filePath, fileSize, privateKey);
         if (this.enableLogs) console.log('File was created!');
 
         let ptrPosition = 0;
@@ -69,7 +70,7 @@ class FilestorageClient {
             let rawChunk = fileBuffer.slice(ptrPosition, ptrPosition +
                 Math.min(fileSize - ptrPosition, constants.CHUNK_LENGTH));
             let chunk = Helper.bufferToHex(rawChunk);
-            await this.contract.uploadChunk(address, fileName, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
+            await this.contract.uploadChunk(address, filePath, ptrPosition, Helper.addBytesSymbol(chunk), privateKey);
             ptrPosition += chunk.length / 2;
             if (this.enableLogs) {
                 console.log('Chunk ' + i + ' was loaded ' + ptrPosition);
@@ -78,24 +79,24 @@ class FilestorageClient {
         }
 
         if (this.enableLogs) console.log('Checking file validity...');
-        await this.contract.finishUpload(address, fileName, privateKey);
+        await this.contract.finishUpload(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was uploaded!');
-        return path.join(Helper.rmBytesSymbol(address), fileName);
+        return Helper.rmBytesSymbol(address).concat('/', filePath);
     }
 
     /**
      * Download file from Filestorage into browser downloads folder
      *
-     * @method downloadToFile
+     * @function downloadToFile
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
+     * @param {string} storagePath - Path of the file in Filestorage
      */
+    /* istanbul ignore next */
     async downloadToFile(storagePath) {
         if (!streamSaver) {
             throw new Error('Method downloadToFile can only be used with a browser');
         }
-
-        const fileName = path.basename(storagePath);
+        const fileName = Helper.getBasename(storagePath);
         let wstream = streamSaver.createWriteStream(fileName).getWriter();
         await this._downloadFile(storagePath, wstream);
         wstream.close();
@@ -104,10 +105,10 @@ class FilestorageClient {
     /**
      * Download file from Filestorage into buffer
      *
-     * @method downloadToBuffer
+     * @function downloadToBuffer
      *
-     * @param {string} storagePath - Path of the file in Filestorage.
-     * @returns {Buffer} - File data in bytes.
+     * @param {string} storagePath - Path of the file in Filestorage
+     * @returns {Buffer} - File data in bytes
      */
     async downloadToBuffer(storagePath) {
         return await this._downloadFile(storagePath);
@@ -116,40 +117,95 @@ class FilestorageClient {
     /**
      * Delete file from Filestorage
      *
-     * @method deleteFile
+     * @function deleteFile
      *
-     * @param {string} address - Account address.
-     * @param {string} fileName - Name of the file to be deleted.
-     * @param {string} [privateKey] - Account private key.
+     * @param {string} address - Account address
+     * @param {string} filePath - Path to the file to be deleted
+     * @param {string} [privateKey] - Account private key
      */
-    async deleteFile(address, fileName, privateKey) {
-        await this.contract.deleteFile(address, fileName, privateKey);
+    async deleteFile(address, filePath, privateKey) {
+        await this.contract.deleteFile(address, filePath, privateKey);
         if (this.enableLogs) console.log('File was deleted');
     }
 
     /**
-     * Get information about files in Filestorage of the specific account
+     * Create directory in Filestorage
      *
-     * @method getFileInfoListByAddress
+     * @function createDirectory
      *
-     * @param {string} address - Account address.
-     * @returns {{name:string, size:number, storagePath:string, uploadingProgress:number}} - File description.
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be created
+     * @param {string} [privateKey] - Account private key
+     * @returns {string} Storage path
      */
-    async getFileInfoListByAddress(address) {
-        let rawFiles = await this.contract.getFileInfoList(address);
-        let files = rawFiles.map(file => {
-            let storagePath = path.join(Helper.rmBytesSymbol(address), file['name']);
-            let chunkStatusList = file['isChunkUploaded'];
+    async createDirectory(address, directoryPath, privateKey) {
+        await this.contract.createDirectory(address, directoryPath, privateKey);
+        if (this.enableLogs) console.log('Directory was created');
+        return Helper.rmBytesSymbol(address).concat('/', directoryPath);
+    }
+
+    /**
+     * Delete directory from Filestorage
+     *
+     * @function deleteDirectory
+     *
+     * @param {string} address - Account address
+     * @param {string} directoryPath - Path of the directory to be deleted
+     * @param {string} [privateKey] - Account private key
+     */
+    async deleteDirectory(address, directoryPath, privateKey) {
+        await this.contract.deleteDirectory(address, directoryPath, privateKey);
+        if (this.enableLogs) console.log('Directory was deleted');
+    }
+
+    /**
+     * List information about content of the directory
+     *
+     * @function listDirectory
+     *
+     * @param {string} storagePath - Path of the directory in Filestorage
+     * @returns {Array.<{name:string, storagePath:string, isFile:boolean, size:number, status:number,
+     * uploadingProgress:number}|{name:string, storagePath:string, isFile:boolean}>} - List of content:
+     * files or directories
+     */
+    async listDirectory(storagePath) {
+        if (storagePath.slice(-1) !== '/') storagePath += '/';
+        let rawContent = await this.contract.listDirectory(storagePath);
+        let content = rawContent.map(contentInfo => {
+            let contentStoragePath = storagePath.concat(contentInfo['name']);
+            let contentInfoObject = {
+                name: contentInfo['name'],
+                storagePath: contentStoragePath,
+                isFile: contentInfo['isFile']
+            };
+            if (!contentInfoObject.isFile) {return contentInfoObject;}
+            let chunkStatusList = contentInfo['isChunkUploaded'];
             let uploadedChunksCount = chunkStatusList.filter(x => x === true).length;
-            let uploadingProgress = Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
-            return {
-                name: file['name'],
-                size: parseInt(file['size'], 10),
-                storagePath: storagePath,
+            let uploadingProgress = (chunkStatusList.length === 0) ? 100 :
+                Math.floor(uploadedChunksCount / chunkStatusList.length * 100);
+            let fileInfoObject = {
+                size: Number(contentInfo['size']),
+                status: Number(contentInfo['status']),
                 uploadingProgress: uploadingProgress
             };
+            return Object.assign(contentInfoObject, fileInfoObject);
         });
-        return files;
+        return content;
+    }
+
+    /**
+     * Reserve space in Filestorage for certain address. Allowed only for sChain owner
+     *
+     * @function reserveSpace
+     *
+     * @param {string} ownerAddress - sChain owner address
+     * @param {string} addressToReserve - Address to reserve space for
+     * @param {number} reservedSpace - Reserved space in bytes
+     * @param {string} [privateKey] - sChain owner private key
+     */
+    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey) {
+        await this.contract.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+        if (this.enableLogs) console.log('Space was allocated');
     }
 
     async _downloadFile(storagePath, stream) {
@@ -165,7 +221,7 @@ class FilestorageClient {
             let data = Helper.concatBytes32Array(rawData, 2 * currentLength);
             // eslint-disable-next-line
             let buffer = new Buffer.from(data, 'hex');
-
+            /* istanbul ignore next */
             if (stream) stream.write(buffer);
             buffers.push(buffer);
             ptrPosition += currentLength;
