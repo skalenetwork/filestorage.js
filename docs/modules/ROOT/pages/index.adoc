@@ -1,0 +1,228 @@
+= Filestorage JS
+
+* A JS Library for decentralized storage in SKALE Network.
+
+    * Flexible upgradeable scheme.
+    * Uses special storage layer provisioned on each node of a SKALE Chain.
+
+== Overview
+
+[[install]]
+=== Installation
+
+```console
+$ npm install @skalenetwork/filestorage.js
+```
+
+[[usage]]
+=== Usage
+
+Once installed, you can instantiate the client by passing a SKALE endpoint into the constructor.
+
+[tabs]
+====
+Javascript::
++
+--
+In Javascipt...
+
+[source,javascript]
+----
+const Filestorage = require('@skalenetwork/filestorage.js');
+const Web3 = require('web3');
+
+const web3Provider = new Web3.providers.HttpProvider('----SKALE ENDPOINT----');
+let filestorage = new Filestorage(web3Provider);
+----
+--
+HTML::
++
+--
+In HTML...
+
+[source,html]
+----
+<script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
+<script type="text/javascript">
+    async function downloadFile() {
+        let fs = new filestorage('----SKALE ENDPOINT----', true);
+        await fs.downloadToFile('----STORAGEPATH----');
+    }
+</script>
+----
+--
+====
+
+=== Upload Files
+
+Uploading files can be accomplished by using the uploadFile method available within the NPM package.
+
+specificDirectory - (Optional) path to the directory inside account's root directory to create file: dirA/dirB
+
+[source,javascript]
+----
+//Input field to add to your HTML
+<input onChange={(e) => upload(e)} 
+type="file" id="files" / >
+
+//JavaScript function for handling the file upload
+async function upload(event, specificDirectory=''){
+  event.preventDefault();
+  //create web3 connection
+  const web3Provider = new Web3.providers.HttpProvider(
+    "[YOUR_SKALE_CHAIN_ENDPOINT]"
+  );
+  let web3 = new Web3(web3Provider);
+
+  //get filestorage instance
+  let filestorage = new Filestorage(web3, true);
+
+  //provide your account & private key
+  //note this must include the 0x prefix
+  let privateKey = '0x' + '[YOUR_PRIVATE_KEY]';
+  let account = "[YOUR_ACCOUNT_ADDRESS]";
+
+  //get file data from file upload input field
+  let file = document.getElementById('files').files[0];
+  let reader = new FileReader();
+
+  //file path in account tree (dirA/file.name)
+  let filePath;
+  if (specificDirectory === '') {
+    filePath = file.name;
+  } else {
+    filePath = specificDirectory + '/' + file.name;
+  }
+
+  //file storage method to upload file
+  reader.onload = async function(e) {
+    const arrayBuffer = reader.result
+    const bytes = new Uint8Array(arrayBuffer);
+    let link = filestorage.uploadFile(
+      account, 
+      filePath, 
+      bytes,
+      privateKey
+    );
+  };
+  reader.readAsArrayBuffer(file);
+}
+----
+
+=== Show Contents
+
+[source,javascript]
+----
+async function getFiles(storagePath){
+  //create web3 connection
+  const web3Provider = new Web3.providers.HttpProvider(
+    "[YOUR_SKALE_CHAIN_ENDPOINT]"
+  );
+  let web3 = new Web3(web3Provider);
+
+  //get filestorage instance
+  let filestorage = new Filestorage(web3, true);
+
+  //provide your account & private key
+  let account = "[YOUR_ACCOUNT_ADDRESS]";
+
+  let files = await filestorage.listDirectory(storagePath);
+}
+----
+
+=== Download Files
+
+[source,javascript]
+----
+async function downloadFileToDesktop(storagePath) {
+  //create web3 connection
+  const web3Provider = new Web3.providers.HttpProvider(
+    "[YOUR_SKALE_CHAIN_ENDPOINT]"
+  );
+  let web3 = new Web3(web3Provider);
+
+  //get filestorage instance
+  let filestorage = new Filestorage(web3, true);
+
+  await filestorage.downloadToFile(storagePath);
+}
+
+async function downloadFileToVariable(storagePath) {
+  //create web3 connection
+  const web3Provider = new Web3.providers.HttpProvider(
+    "[YOUR_SKALE_CHAIN_ENDPOINT]"
+  );
+  let web3 = new Web3(web3Provider);
+
+  //get filestorage instance
+  let filestorage = new Filestorage(web3, true);
+
+  let file = await filestorage.downloadToBuffer(storagePath);
+  file = 'data:image/png;base64,' + file.toString('base64');
+}
+----
+=== Delete Files
+
+[source,javascript]
+----
+async function deleteFile(filePath) {
+  //create web3 connection
+  const web3Provider = new Web3.providers.HttpProvider(
+    "[YOUR_SKALE_CHAIN_ENDPOINT]"
+  );
+  let web3 = new Web3(web3Provider);
+
+  //get filestorage instance
+  let filestorage = new Filestorage(web3, true);
+
+  //provide your account & private key
+  //note this must include the 0x prefix
+  let privateKey = '[YOUR_PRIVATE_KEY]';
+  let account = "[YOUR_ACCOUNT_ADDRESS]";
+
+  await filestorage.deleteFile(account, filePath, privateKey);
+----
+=== Create Directory
+
+[source,javascript]
+----
+async function createDirectory(directoryPath) {
+    //create web3 connection
+    const web3Provider = new Web3.providers.HttpProvider(
+        "[YOUR_SKALE_CHAIN_ENDPOINT]"
+    );
+    let web3 = new Web3(web3Provider);
+
+    //get filestorage instance
+    let filestorage = new Filestorage(web3, true);
+
+    //provide your account & private key
+    //note this must include the 0x prefix
+    let privateKey = '[YOUR_PRIVATE_KEY]';
+    let account = "[YOUR_ACCOUNT_ADDRESS]";
+
+    await filestorage.createDirectory(account, directoryPath, privateKey);
+}
+----
+=== Delete Directory
+
+[source,javascript]
+----
+async function deleteDirectory(directoryPath) {
+    //create web3 connection
+    const web3Provider = new Web3.providers.HttpProvider(
+        "[YOUR_SKALE_CHAIN_ENDPOINT]"
+    );
+    let web3 = new Web3(web3Provider);
+
+    //get filestorage instance
+    let filestorage = new Filestorage(web3, true);
+
+    //provide your account & private key
+    //note this must include the 0x prefix
+    let privateKey = '[YOUR_PRIVATE_KEY]';
+    let account = "[YOUR_ACCOUNT_ADDRESS]";
+
+    await filestorage.deleteDirectory(account, directoryPath, privateKey);
+}
+----
