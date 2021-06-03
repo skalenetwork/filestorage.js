@@ -7,11 +7,15 @@
 
 == Overview
 
+Storing files on the blockchain is possible within the SKALE Network. You can use SKALE to host your text, image, HTML, and other file formats through the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10[Filestorage.js NPM package].
+
+See the file storage demo on Github.
+
 [[install]]
 === Installation
 
 ```console
-$ npm install @skalenetwork/filestorage.js
+$ npm install @skalenetwork/filestorage.js@~0.2.x
 ```
 
 [[usage]]
@@ -24,7 +28,7 @@ Once installed, you can instantiate the client by passing a SKALE endpoint into 
 Javascript::
 +
 --
-In Javascipt...
+In Javascript, you should import `filestorage.js` from the npm package:
 
 [source,javascript]
 ----
@@ -38,7 +42,7 @@ let filestorage = new Filestorage(web3Provider);
 HTML::
 +
 --
-In HTML...
+To use filestorage.js in HTML you should import `filestorage.min.js` from the npm package:
 
 [source,html]
 ----
@@ -46,7 +50,7 @@ In HTML...
 <script type="text/javascript">
     async function downloadFile() {
         let fs = new filestorage('----SKALE ENDPOINT----', true);
-        await fs.downloadToFile('----STORAGEPATH----');
+        await fs.downloadToFile('----STORAGE_PATH----');
     }
 </script>
 ----
@@ -55,15 +59,15 @@ In HTML...
 
 === Upload Files
 
-Uploading files can be accomplished by using the uploadFile method available within the NPM package.
+Uploading files can be accomplished by using the **uploadFile** method available within the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10[Filestorage.js NPM package].
 
-specificDirectory - (Optional) path to the directory inside account's root directory to create file: dirA/dirB
+`specificDirectory` - (Optional) path to the directory inside account's root directory to create file: `dirA/dirB`
 
 [source,javascript]
 ----
+
 //Input field to add to your HTML
-<input onChange={(e) => upload(e)} 
-type="file" id="files" / >
+<input onChange={(e) => upload(e)} type="file" id="files" />
 
 //JavaScript function for handling the file upload
 async function upload(event, specificDirectory=''){
@@ -111,6 +115,10 @@ async function upload(event, specificDirectory=''){
 
 === Show Contents
 
+Displaying files and directories can be accomplished by using the **listDirectory** method available within the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10[Filestorage.js NPM package].  
+
+`storagePath` - <<_storage_path>> to the certain directory in File Storage
+
 [source,javascript]
 ----
 async function getFiles(storagePath){
@@ -131,6 +139,10 @@ async function getFiles(storagePath){
 ----
 
 === Download Files
+
+Downloading files can be accomplished by using the FilestorageClient.downloadToFile or the **downloadToBuffer** method available within the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10[Filestorage.js NPM package].
+
+`storagePath` - <<_storage_path>> to the certain directory in File Storage
 
 [source,javascript]
 ----
@@ -161,7 +173,12 @@ async function downloadFileToVariable(storagePath) {
   file = 'data:image/png;base64,' + file.toString('base64');
 }
 ----
+
 === Delete Files
+
+Deleting files can be accomplished by using the **deleteFile** method available within the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10[Filestorage.js NPM package].
+
+`filePath` - path to the file inside account's root directory: `dirA/dirB/file.txt`
 
 [source,javascript]
 ----
@@ -182,7 +199,12 @@ async function deleteFile(filePath) {
 
   await filestorage.deleteFile(account, filePath, privateKey);
 ----
+
 === Create Directory
+
+Creating directory can be accomplished by using the **createDirectory** method available within the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10)[Filestorage.js NPM package].
+
+`directoryPath` - path to the directory inside account's root directory: `dirA/dirB/newDir`
 
 [source,javascript]
 ----
@@ -206,6 +228,10 @@ async function createDirectory(directoryPath) {
 ----
 === Delete Directory
 
+Deleting directory can be accomplished by using the **deleteDirectory**  method available within the https://www.npmjs.com/package/@skalenetwork/filestorage.js/v/0.2.10[Filestorage.js NPM package]. The directory should be empty to delete it.
+
+`directoryPath` - path to the directory inside account's root directory: `dirA/dirB/newDir`
+
 [source,javascript]
 ----
 async function deleteDirectory(directoryPath) {
@@ -226,3 +252,20 @@ async function deleteDirectory(directoryPath) {
     await filestorage.deleteDirectory(account, directoryPath, privateKey);
 }
 ----
+
+== Additional Notes
+
+=== Storage path
+
+Storage path is a label used to point to file or directory in Filestorage. It contains 2 parts through slash:
+
+1. File owner address (without 0x)
+2. File/directory path in owner's root directory
+
+Examples:
+
+```shell
+77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/directoryA/random_text.txt
+77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt
+0x77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt #Invalid storagePath
+```
