@@ -17,18 +17,18 @@ let address = getAddress(pk);
 let web3 = new Web3(endpoint);
 let filestorage = new Filestorage(endpoint, true);
 
-async function upload(){
+async function upload() {
     await filestorage.reserveSpace(address, address, reservedSpace, pk);
-    let balanceStart = await web3.eth.getBalance(address)
-    let timeStart = new Date()
-    console.log(balanceStart)
-    console.log('start: ', timeStart)
+    let balanceStart = await web3.eth.getBalance(address);
+    let timeStart = new Date();
+    console.log(balanceStart);
+    console.log('start: ', timeStart);
     let contentPath;
     let content = await fs.readFileSync(filePath);
     for (let i = 0; i < iterations ; ++i) {
-        contentPath = await filestorage.uploadFile(address,'loopTest.txt', content,  pk);
+        contentPath = await filestorage.uploadFile(address, 'loopTest.txt', content, pk);
         console.log(contentPath);
-        await filestorage.deleteFile(address, 'loopTest.txt',  pk);
+        await filestorage.deleteFile(address, 'loopTest.txt', pk);
     }
 
 }
