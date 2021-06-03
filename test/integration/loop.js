@@ -8,6 +8,7 @@ let path = require('path');
 
 let endpoint = process.env.SCHAIN_ENDPOINT;
 let pk = process.env.PK;
+let iterations = process.env.ITERATIONS || 1;
 
 const filePath = path.join(__dirname, '..', 'data', 'loopTest.txt');
 const reservedSpace = 3 * 10 ** 8;
@@ -24,7 +25,7 @@ async function upload(){
     console.log('start: ', timeStart)
     let contentPath;
     let content = await fs.readFileSync(filePath);
-    for (let i = 1; i < 10 ; ++i) {
+    for (let i = 0; i < iterations ; ++i) {
         contentPath = await filestorage.uploadFile(address,'loopTest.txt', content,  pk);
         console.log(contentPath);
         await filestorage.deleteFile(address, 'loopTest.txt',  pk);
