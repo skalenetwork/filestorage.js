@@ -9,7 +9,7 @@ let path = require('path');
 let endpoint = process.env.SCHAIN_ENDPOINT;
 let pk = process.env.PK;
 
-const filePath = path.join(__dirname, '..', 'data', 'loopFile.txt');
+const filePath = path.join(__dirname, '..', 'data', 'loopTest.txt');
 const reservedSpace = 3 * 10 ** 8;
 
 let address = getAddress(pk);
@@ -25,9 +25,9 @@ async function upload(){
     let contentPath;
     let content = await fs.readFileSync(filePath);
     for (let i = 1; i < 10 ; ++i) {
-        contentPath = await filestorage.uploadFile(address,'loopFile.txt', content,  pk);
+        contentPath = await filestorage.uploadFile(address,'loopTest.txt', content,  pk);
         console.log(contentPath);
-        removeFile = await filestorage.deleteFile(address, 'tinyFile.txt',  pk);
+        await filestorage.deleteFile(address, 'loopTest.txt',  pk);
     }
 
 }
