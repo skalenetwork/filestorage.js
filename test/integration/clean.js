@@ -11,9 +11,9 @@ let filestorage = new Filestorage(endpoint, true);
 
 async function clean() {
     if (type) {
-        console.log(`Clean up ${type} files`)
+        console.log(`Clean up ${type} files`);
     } else {
-        console.log(`Clean up tiny, medium, large files`)
+        console.log('Clean up tiny, medium, large files');
     }
     let files = await filestorage.listDirectory(helper.rmBytesSymbol(address));
     for (const file of files) {
@@ -29,7 +29,7 @@ async function clean() {
             }
         }
     }
-    console.log('Clean up finished')
+    console.log('Clean up finished');
 }
 
 clean();
