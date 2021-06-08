@@ -26,6 +26,7 @@ async function upload() {
     let contentPath;
     let content = await fs.readFileSync(filePath);
     for (let i = 0; i < iterations ; ++i) {
+        console.log('Time: ', new Date(), '; iteration: ', i);
         contentPath = await filestorage.uploadFile(address, 'loopTest.txt', content, pk);
         console.log(contentPath);
         await filestorage.deleteFile(address, 'loopTest.txt', pk);

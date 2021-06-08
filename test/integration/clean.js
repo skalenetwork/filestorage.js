@@ -7,9 +7,14 @@ let pk = process.env.PK;
 let endpoint = process.env.SCHAIN_ENDPOINT;
 let type = process.env.TYPE || null;
 let address = getAddress(pk);
-let filestorage = new Filestorage(endpoint);
+let filestorage = new Filestorage(endpoint, true);
 
 async function clean() {
+    if (type) {
+        console.log(`Clean up ${type} files`)
+    } else {
+        console.log(`Clean up tiny, medium, large files`)
+    }
     let files = await filestorage.listDirectory(helper.rmBytesSymbol(address));
     for (const file of files) {
         if (type === null) {
@@ -24,6 +29,7 @@ async function clean() {
             }
         }
     }
+    console.log('Clean up finished')
 }
 
 clean();
