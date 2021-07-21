@@ -31,7 +31,7 @@ Construct new **Filestorage** object:
 new Filestorage(web3Provider, enableLogs);
 ```
 
-##### Parameters
+#### Parameters
 
 | Parameter                                  | Description                                                                                                               |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
@@ -63,7 +63,7 @@ To use filestorage.js in HTML you should import `filestorage.min.js` from npm pa
 
 ```html
 <script src="PATH_TO_PACKAGE/@skalenetwork/filestorage.js/dist/filestorage.min.js"></script>
-``` 
+```
 
 **Example**:
 
@@ -169,6 +169,7 @@ Creates directory on the specific path. To create directory using internal signi
 ```javascript
 filestorage.createDirectory(address, directoryPath, privateKey);
 ```
+
 Create directory using external signing (Metamask etc):
 
 ```javascript
@@ -177,11 +178,11 @@ filestorage.createDirectory(address, directoryPath);
 
 ##### Parameters
 
-| Parameter                | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `String` address         | Account address                                        |
-| `String` directoryPath   | Path of the directory to be created                    |
-| `String` privateKey      | _(optional)_ Account private key, to sign transactions |
+| Parameter              | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `String` address       | Account address                                        |
+| `String` directoryPath | Path of the directory to be created                    |
+| `String` privateKey    | _(optional)_ Account private key, to sign transactions |
 
 ##### Returns
 
@@ -196,6 +197,7 @@ Deletes directory on the specific path. To delete directory using internal signi
 ```javascript
 filestorage.deleteDirectory(address, directoryPath, privateKey);
 ```
+
 Create directory using external signing (Metamask etc):
 
 ```javascript
@@ -204,11 +206,11 @@ filestorage.deleteDirectory(address, directoryPath);
 
 ##### Parameters
 
-| Parameter                | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `String` address         | Account address                                        |
-| `String` directoryPath   | Path of the directory to be deleted                    |
-| `String` privateKey      | _(optional)_ Account private key, to sign transactions |
+| Parameter              | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `String` address       | Account address                                        |
+| `String` directoryPath | Path of the directory to be deleted                    |
+| `String` privateKey    | _(optional)_ Account private key, to sign transactions |
 
 #### List directory
 
@@ -225,6 +227,7 @@ filestorage.listDirectory(storagePath);
 | `String` storagePath | [Path of directory in Filestorage](#storagePath) |
 
 ##### Returns
+
 `Array` of content. Each content could be file or directory.
 
 Content `Object` for file contains:
@@ -240,15 +243,40 @@ Content `Object` for file contains:
 
 Content `Object` for directory contains:
 
-| Field                      | Description                                      |
-| -------------------------- | ------------------------------------------------ |
-| `String` name              | Directory name                                   |
-| `String` storagePath       | [Path of directory in Filestorage](#storagePath) |
-| `String` isFile            | Whether content is file                          |
+| Field                | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `String` name        | Directory name                                   |
+| `String` storagePath | [Path of directory in Filestorage](#storagePath) |
+| `String` isFile      | Whether content is file                          |
+
+#### Reserve space
+
+Reserve space for certain address in Filestorage in bytes.
+
+-   **Note**: could be called only by sChain owner
+
+```javascript
+filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+```
+
+Create directory using external signing (Metamask etc):
+
+```javascript
+filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace);
+```
+
+##### Parameters
+
+| Parameter                 | Description                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| `String` ownerAddress     | sChain owner address                                        |
+| `String` addressToReserve | Address to reserve space for                                |
+| `String` reservedSpace    | Reserved space in bytes                                     |
+| `String` privateKey       | _(optional)_ sChain owner private key, to sign transactions |
 
 ## Development
 
-#### Install
+### Install
 
 ```bash
 git clone git@github.com:skalenetwork/filestorage.js.git
@@ -264,44 +292,44 @@ First of all, please create random files for testing:
 npm run generate
 ```
 
-To run tests locally you need environment variables defining test file path
-and three keypairs (address, foreign, empty):
+To run tests locally you need environment variables defining two keypairs (account, foreign account):
 
--   `TEST_FILE_PATH`: path to generated file. Default `./test.txt`
 -   `SKALE_ENDPOINT`: SKALE endpoint
--   `SCHAIN_OWNER`: SKALE chain owner address
 -   `SCHAIN_OWNER_PK`: SKALE chain owner privatekey
--   `ADDRESS`: test account address
 -   `PRIVATEKEY`: test account privatekey
--   `FOREIGN_ADDRESS`: second test account address
 -   `FOREIGN_PRIVATEKEY`: second test account privatekey
--   `EMPTY_ADDRESS`: third test account address
--   `EMPTY_PRIVATEKEY`: third test account privatekey
--   `SEED_PHRASE`: seed phrase to run metamask tests
--   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
 
-Requirements to run chrome integration tests:
--   Chrome v77
-   
 Then execute:
 
 ```bash
 npm test
 ```
 
-#### Build a dist version
+#### Browser testing
 
-**Note:** Build scripts also do version updating in `package.json`
+Requirements to run chrome integration tests:
+
+-   Chrome v80
+
+Required environment variables to run browser integration tests locally:
+
+-   `SKALE_ENDPOINT`: SKALE endpoint
+-   `SCHAIN_OWNER_PK`: SKALE chain owner privatekey
+-   `PRIVATEKEY`: test account privatekey
+-   `FOREIGN_PRIVATEKEY`: second test account privatekey
+-   `SEED_PHRASE`: seed phrase to run metamask tests
+-   `METAMASK_PASSWORD`: password to run metamask tests (> 7 chars)
+
+Run tests:
 
 ```bash
-# build patch version
-npm run build-patch
+npm run test test/browser
+```
 
-# build minor version
-npm run build-minor
+#### Build a dist version
 
-# build major version
-npm run build-major
+```bash
+npm run minify
 ```
 
 **Publishing on npm:** 
@@ -312,7 +340,11 @@ npm publish
 
 #### Versioning
 
-The version scheme for this repo is {major}.{minor}.{patch} For more details see: <https://semver.org/>
+The version scheme for this repo is `{major}.{minor}.{patch}`. 
+For develop version scheme is `{major}.{minor}.{patch}-develop.{number}`
+For beta version scheme is `{major}.{minor}.{patch}-beta.{number}`
+
+For more details see: <https://semver.org/>
 
 #### Lint
 
@@ -324,7 +356,7 @@ npm run lint
 
 ## Notes
 
-#### Storage path <a name="storagePath"></a>
+### Storage path <a name="storagePath"></a>
 
 Storage path is a label used to point to file or directory in Filestorage. It contains 2 parts through slash:
 1. File owner address (without 0x)

@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,12 +18,14 @@
 
 /**
  * @file index.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
+
 const Web3 = require('web3');
 const constants = require('./common/constants');
 const Helper = require('./common/helper');
 const FilestorageContract = require('./FilestorageContract');
+
 let streamSaver = null;
 /* istanbul ignore next */
 if (typeof window !== 'undefined') {
@@ -38,7 +39,7 @@ class FilestorageClient {
      *
      * @class
      *
-     * @param {string|Object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
+     * @param {string|object} web3Provider - A URL of SKALE endpoint or one of the Web3 provider classes
      * @param {boolean} [enableLogs=false] - Enable/disable console logs
      */
     constructor(web3Provider, enableLogs = false) {
@@ -190,6 +191,21 @@ class FilestorageClient {
             return Object.assign(contentInfoObject, fileInfoObject);
         });
         return content;
+    }
+
+    /**
+     * Reserve space in Filestorage for certain address. Allowed only for sChain owner
+     *
+     * @function reserveSpace
+     *
+     * @param {string} ownerAddress - sChain owner address
+     * @param {string} addressToReserve - Address to reserve space for
+     * @param {number} reservedSpace - Reserved space in bytes
+     * @param {string} [privateKey] - sChain owner private key
+     */
+    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey) {
+        await this.contract.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+        if (this.enableLogs) console.log('Space was allocated');
     }
 
     async _downloadFile(storagePath, stream) {

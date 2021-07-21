@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,14 +18,13 @@
 
 /**
  * @file FilestorageContract.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
-const constants = require('./common/constants');
-const configJson = require('./contracts_config.json');
-const Helper = require('./common/helper');
 
-const abi = configJson[constants.FILESTORAGE_CONTRACTNAME]['abi'];
-const contractAddress = configJson[constants.FILESTORAGE_CONTRACTNAME]['address'];
+const filestorageArtifacts = require('@skalenetwork/filestorage');
+const constants = require('./common/constants');
+const transactions = require('./common/transactions');
+
 class FilestorageContract {
 
     /**
@@ -34,11 +32,11 @@ class FilestorageContract {
      *
      * @class
      *
-     * @param {Object} web3 - Web3 instance
+     * @param {object} web3 - Web3 instance
      */
     constructor(web3) {
         this.web3 = web3;
-        this.contract = new web3.eth.Contract(abi, contractAddress);
+        this.contract = new web3.eth.Contract(filestorageArtifacts.abi, filestorageArtifacts.address);
     }
 
     /**
@@ -50,11 +48,11 @@ class FilestorageContract {
      * @param {string} filePath - Path of uploaded file in account directory
      * @param {number} size - Size of uploaded file
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async startUpload(address, filePath, size, privateKey = '') {
         let txData = this.contract.methods.startUpload(filePath, size);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -67,11 +65,11 @@ class FilestorageContract {
      * @param {number} position - Position in the file from which chunk will be written
      * @param {string} data - Chunk data in hex format, started with 0x
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async uploadChunk(address, filePath, position, data, privateKey = '') {
         let txData = this.contract.methods.uploadChunk(filePath, position, data);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.WRITING_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.WRITING_GAS);
     }
 
     /**
@@ -82,11 +80,11 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} filePath - Path to the file to be deleted
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async deleteFile(address, filePath, privateKey = '') {
         let txData = this.contract.methods.deleteFile(filePath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -98,11 +96,11 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} filePath - Path of uploaded file in account directory
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async finishUpload(address, filePath, privateKey = '') {
         let txData = this.contract.methods.finishUpload(filePath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -116,8 +114,7 @@ class FilestorageContract {
      * @returns {Array.<string>} Chunk data splitted into 32 byte hex strings
      */
     async readChunk(storagePath, position, length) {
-        let result = await this.contract.methods.readChunk(storagePath, position, length).call();
-        return result;
+        return await this.contract.methods.readChunk(storagePath, position, length).call();
     }
 
     /**
@@ -132,8 +129,7 @@ class FilestorageContract {
      * @returns {number} File status
      */
     async getFileStatus(storagePath) {
-        let result = await this.contract.methods.getFileStatus(storagePath).call();
-        return result;
+        return await this.contract.methods.getFileStatus(storagePath).call();
     }
 
     /**
@@ -145,8 +141,7 @@ class FilestorageContract {
      * @returns {string} Size of the file in bytes
      */
     async getFileSize(storagePath) {
-        let result = await this.contract.methods.getFileSize(storagePath).call();
-        return result;
+        return await this.contract.methods.getFileSize(storagePath).call();
     }
 
     /**
@@ -157,11 +152,11 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} directoryPath - Path of the directory to be created
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async createDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.createDirectory(directoryPath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -172,11 +167,11 @@ class FilestorageContract {
      * @param {string} address - Account address
      * @param {string} directoryPath - Path of the directory to be created
      * @param {string} [privateKey] - Account private key
-     * @returns {Object} Transaction information
+     * @returns {object} Transaction information
      */
     async deleteDirectory(address, directoryPath, privateKey = '') {
         let txData = this.contract.methods.deleteDirectory(directoryPath);
-        return await Helper.sendTransactionToContract(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, address, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**
@@ -189,8 +184,24 @@ class FilestorageContract {
      * List of content
      */
     async listDirectory(storagePath) {
-        let result = await this.contract.methods.listDirectory(storagePath).call();
-        return result;
+        return await this.contract.methods.listDirectory(storagePath).call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function reserveSpace. Reserve space in Filestorage for certain address.
+     * Allowed only for sChain owner
+     *
+     * @function reserveSpace
+     *
+     * @param {string} ownerAddress - sChain owner address
+     * @param {string} addressToReserve - Address to reserve space for
+     * @param {number} reservedSpace - Reserved space in bytes
+     * @param {string} [privateKey] - sChain owner private key
+     * @returns {object} Transaction information
+     */
+    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey = '') {
+        let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
+        return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
     }
 }
 

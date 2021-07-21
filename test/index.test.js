@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,14 +18,13 @@
 
 /**
  * @file index.test.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 const FilestorageClient = require('../src/index');
 const FilestorageContract = require('../src/FilestorageContract');
 const helper = require('../src/common/helper');
-const errorMessages = require('./utils/constants').errorMessages;
-const fileStatus = require('./utils/constants').fileStatus;
-const getFunds = require('./utils/getFunds');
+const testConstants = require('./utils/constants');
+const testHelper = require('./utils/helper');
 const constants = require('../src/common/constants');
 const path = require('path');
 const Web3 = require('web3');
@@ -37,31 +35,32 @@ require('dotenv').config();
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
+const errorMessages = testConstants.errorMessages;
+const fileStatus = testConstants.fileStatus;
 chai.should();
 chai.use(require('chai-as-promised'));
 
 describe('Test FilestorageClient', function () {
+    let privateKey = process.env.PRIVATEKEY;
+    let foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
+    let emptyAddress = testConstants.EMPTY_ADDRESS;
+    let bigFilePath = testConstants.TEST_FILE_PATH;
     let filestorage;
     let address;
-    let privateKey;
     let foreignAddress;
-    let foreignPrivateKey;
-    let emptyAddress;
-    let bigFilePath;
+
     before(async function () {
         // eslint-disable-next-line
         filestorage = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
-        address = process.env.ADDRESS;
-        privateKey = process.env.PRIVATEKEY;
-        foreignAddress = process.env.FOREIGN_ADDRESS;
-        foreignPrivateKey = process.env.FOREIGN_PRIVATEKEY;
-        emptyAddress = process.env.EMPTY_ADDRESS;
-        bigFilePath = path.join(__dirname, process.env.TEST_FILE_PATH);
-        await getFunds(address);
-        await getFunds(foreignAddress);
+        address = testHelper.getAddress(privateKey);
+        foreignAddress = testHelper.getAddress(foreignPrivateKey);
+        await testHelper.getFunds(address);
+        await testHelper.getFunds(foreignAddress);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, testConstants.RESERVED_SPACE);
     });
 
-    describe('Test contructor', function () {
+    describe('Test constructor', function () {
         it('should initialize with web3', function () {
             const web3Provider = new Web3.providers.HttpProvider(process.env.SKALE_ENDPOINT);
             let web3 = new Web3(web3Provider);
@@ -71,14 +70,14 @@ describe('Test FilestorageClient', function () {
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
-        it('should intitialize with http endpoint', function () {
+        it('should initialize with http endpoint', function () {
             let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT);
             assert.instanceOf(filestorageClient, FilestorageClient);
             assert.instanceOf(filestorageClient.web3, Web3);
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
-        it('should intitialize with enabled logs', function () {
+        it('should initialize with enabled logs', function () {
             let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
             assert.isTrue(filestorageClient.enableLogs);
         });
@@ -86,10 +85,10 @@ describe('Test FilestorageClient', function () {
 
     // TODO: test big files uploading
     describe('Test uploading', function () {
-
         let fileName;
         let dirPath;
         let data;
+
         describe('Positive tests', function () {
             beforeEach(function () {
                 fileName = 'test_' + randomstring.generate();
@@ -131,7 +130,7 @@ describe('Test FilestorageClient', function () {
                 assert.isTrue(filePath === helper.rmBytesSymbol(address) + '/' + relativePath, 'Invalid storagePath');
             });
 
-            afterEach('Checking file\'s existance', async function () {
+            afterEach('Checking file\'s existence', async function () {
                 let fileList = await filestorage.listDirectory(dirPath);
                 let isFind = fileList.find(obj => {
                     return obj.name === fileName;
@@ -216,7 +215,7 @@ describe('Test FilestorageClient', function () {
         });
 
         describe('Negative tests', function () {
-            it('Download unexisted file', async function () {
+            it('Download nonexistent file', async function () {
                 let storagePath = randomstring.generate();
                 await filestorage.downloadToBuffer(storagePath)
                     .should
@@ -269,7 +268,7 @@ describe('Test FilestorageClient', function () {
         });
 
         describe('Negative tests', function () {
-            it('should delete unexisting own file', async function () {
+            it('should delete nonexistent own file', async function () {
                 let fileName = 'delete_' + randomstring.generate();
                 await filestorage.deleteFile(address, fileName, privateKey)
                     .should
@@ -395,13 +394,13 @@ describe('Test FilestorageClient', function () {
                 assert.isFalse(dirInfo.isFile, 'Incorrect isFile');
             });
 
-            it('should return empty array wheteher user has no files', async function () {
+            it('should return empty array whether user has no files', async function () {
                 let files = await filestorage.listDirectory(helper.rmBytesSymbol(emptyAddress) + '/');
                 assert.isArray(files, 'should return array');
                 assert.isEmpty(files, 'should contain files');
             });
 
-            it('should fail listing unexisted dir', async function () {
+            it('should fail listing nonexistent dir', async function () {
                 await filestorage.listDirectory(path.posix.join(helper.rmBytesSymbol(emptyAddress), 'void'))
                     .should.eventually.rejectedWith(errorMessages.INVALID_PATH);
                 await filestorage.listDirectory('')
@@ -427,6 +426,20 @@ describe('Test FilestorageClient', function () {
                 let contents = await filestorage.listDirectory(helper.rmBytesSymbol(address) + '/');
                 assert.isNotEmpty(contents);
                 assert.isTrue(contents.indexOf(directoryName) === -1);
+            });
+        });
+    });
+
+    describe('test reserveSpace', function () {
+        describe('Positive tests', function () {
+            it('should reserve space for account', async function () {
+                let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+                await filestorage.reserveSpace(
+                    owner,
+                    testConstants.SPACE_TEST_ADDRESS,
+                    100,
+                    process.env.SCHAIN_OWNER_PK
+                );
             });
         });
     });

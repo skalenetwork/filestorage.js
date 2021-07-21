@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +18,7 @@
 
 /**
  * @file chrome.test.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 let webdriver = require('selenium-webdriver');
 let Options = require('selenium-webdriver/chrome').Options;
@@ -29,9 +28,10 @@ let fs = require('fs');
 let Filestorage = require('../../src/index');
 let constants = require('../utils/constants');
 let helper = require('../../src/common/helper');
-let getFunds = require('../utils/getFunds');
+let testHelper = require('../utils/helper');
 let server = require('../utils/testServer');
 let Metamask = require('../utils/MetamaskStub');
+const randomstring = require('randomstring');
 require('dotenv').config();
 
 // eslint-disable-next-line
@@ -49,9 +49,12 @@ const encodeExt = file => {
 describe('Chrome integration', async function () {
     let htmlPage;
     let downloadDir;
-    let endpoint = process.env.SKALE_ENDPOINT;
-    let address = process.env.ADDRESS;
+    let filestorage;
+    let fileName;
+    let data;
+    let address;
     let chromeCapabilities;
+    let endpoint = process.env.SKALE_ENDPOINT;
     const smallTimeOut = constants.SHORT_TIMEOUT;
     const bigTimeOut = constants.LARGE_TIMEOUT;
     before(async function () {
@@ -66,14 +69,16 @@ describe('Chrome integration', async function () {
             'args': ['--test-type', '--start-maximized', '--no-sandbox']
         };
         chromeCapabilities.set('chromeOptions', chromeOptions);
-        await getFunds(address);
+        filestorage = new Filestorage(endpoint);
+        address = testHelper.getAddress(process.env.PRIVATEKEY);
+        await testHelper.getFunds(address);
+        await testHelper.reserveTestSpace(filestorage.contract.contract, address, constants.RESERVED_SPACE);
+        fileName = randomstring.generate();
+        data = Buffer.from(fileName);
     });
 
     describe('downloadToFile', async function () {
-        let fileName = 'testFile';
-        let data = Buffer.from(fileName);
         let storagePath;
-        let filestorage;
         let pathToFile;
         let driver;
         before(async function () {
@@ -82,7 +87,6 @@ describe('Chrome integration', async function () {
                 .build();
             await driver.setDownloadPath(downloadDir);
             pathToFile = path.join(downloadDir, fileName);
-            filestorage = new Filestorage(endpoint);
             storagePath = await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
             driver.get(htmlPage);
         });
@@ -105,7 +109,6 @@ describe('Chrome integration', async function () {
     });
 
     describe('metamask', async function () {
-        let fileName;
         let directoryName;
         let driver;
         let metamask;
@@ -124,18 +127,15 @@ describe('Chrome integration', async function () {
         });
 
         it('should delete with metamask', async function () {
-            fileName = 'testFile';
-            let data = Buffer.from(fileName);
-            let filestorage = new Filestorage(endpoint);
             await filestorage.uploadFile(address, fileName, data, process.env.PRIVATEKEY);
             driver.get(htmlPage);
-            await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
+            await driver.findElement(webdriver.By.id('account')).sendKeys(address);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(fileName);
             await driver.findElement(webdriver.By.id('deleteFile')).click();
             await driver.sleep(smallTimeOut);
             await metamask.confirmTransaction(driver);
             await driver.wait(webdriver.until.titleIs('Deleted'), bigTimeOut);
-            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
+            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
             let isFind = fileList.find(obj => {
                 return obj.name === fileName;
             });
@@ -143,10 +143,8 @@ describe('Chrome integration', async function () {
         });
 
         it('should upload with metamask', async function () {
-            fileName = 'testFile';
             driver.get(htmlPage);
-            let filestorage = new Filestorage(endpoint);
-            await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
+            await driver.findElement(webdriver.By.id('account')).sendKeys(address);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(fileName);
             await driver.findElement(webdriver.By.id('uploadFile')).click();
             await driver.sleep(smallTimeOut);
@@ -156,7 +154,7 @@ describe('Chrome integration', async function () {
             await driver.sleep(smallTimeOut);
             await metamask.confirmTransaction(driver);
             await driver.wait(webdriver.until.titleIs('Uploaded'), bigTimeOut);
-            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
+            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
             let isFind = fileList.find(obj => {
                 return obj.name === fileName;
             });
@@ -166,15 +164,14 @@ describe('Chrome integration', async function () {
 
         it('should create directory with metamask', async function () {
             directoryName = 'testDirectory';
-            let filestorage = new Filestorage(endpoint);
             driver.get(htmlPage);
-            await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
+            await driver.findElement(webdriver.By.id('account')).sendKeys(address);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(directoryName);
             await driver.findElement(webdriver.By.id('createDirectory')).click();
             await driver.sleep(smallTimeOut);
             await metamask.confirmTransaction(driver);
             await driver.wait(webdriver.until.titleIs('Directory created'), bigTimeOut);
-            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
+            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
             let isFind = fileList.find(obj => {
                 return obj.name === directoryName;
             });
@@ -184,16 +181,15 @@ describe('Chrome integration', async function () {
 
         it('should delete directory with metamask', async function () {
             directoryName = 'testDirectory';
-            let filestorage = new Filestorage(endpoint);
             await filestorage.createDirectory(address, directoryName, process.env.PRIVATEKEY);
             driver.get(htmlPage);
-            await driver.findElement(webdriver.By.id('account')).sendKeys(process.env.ADDRESS);
+            await driver.findElement(webdriver.By.id('account')).sendKeys(address);
             await driver.findElement(webdriver.By.id('storagePath')).sendKeys(directoryName);
             await driver.findElement(webdriver.By.id('deleteDirectory')).click();
             await driver.sleep(smallTimeOut);
             await metamask.confirmTransaction(driver);
             await driver.wait(webdriver.until.titleIs('Directory deleted'), bigTimeOut);
-            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
+            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
             let isFind = fileList.find(obj => {
                 return obj.name === directoryName;
             });
@@ -201,8 +197,7 @@ describe('Chrome integration', async function () {
         });
 
         afterEach(async function () {
-            let filestorage = new Filestorage(endpoint);
-            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(process.env.ADDRESS));
+            let fileList = await filestorage.listDirectory(helper.rmBytesSymbol(address));
             let isFind = fileList.find(obj => {
                 return obj.name === fileName;
             });

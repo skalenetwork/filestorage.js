@@ -1,7 +1,6 @@
 /**
  * @license
  * SKALE Filestorage-js
- * Copyright (C) 2019-Present SKALE Labs
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,21 +18,24 @@
 
 /**
  * @file helper.test.js
- * @date 2019
+ * @copyright SKALE Labs 2019-Present
  */
 const helper = require('../src/common/helper');
+const transactions = require('../src/common/transactions');
 const constants = require('../src/common/constants');
 const FilestorageContract = require('../src/FilestorageContract');
-const Web3 = require('web3');
-const getFunds = require('./utils/getFunds');
-require('dotenv').config();
+const testHelper = require('./utils/helper');
 
+const Web3 = require('web3');
+let randomstring = require('randomstring');
 const chai = require('chai');
+
 const assert = chai.assert;
 chai.should();
 chai.use(require('chai-as-promised'));
 
-let randomstring = require('randomstring');
+require('dotenv').config();
+
 describe('Helper', function () {
     const rejectedTransactionErrorMessage = 'Returned error: Transaction rejected by user.';
     describe('bufferToHex', function () {
@@ -148,29 +150,28 @@ describe('Helper', function () {
         });
     });
 
-    describe('sendTransactionToContract', function () {
+    describe('transactions', function () {
+        let privateKey = process.env.PRIVATEKEY;
         let address;
-        let privateKey;
         let web3;
         let contract;
         let txData;
         before(async function () {
-            address = process.env.ADDRESS;
-            privateKey = process.env.PRIVATEKEY;
+            address = testHelper.getAddress(privateKey);
             web3 = new Web3(process.env.SKALE_ENDPOINT);
             contract = new FilestorageContract(web3).contract;
             txData = contract.methods.startUpload(randomstring.generate(), 0);
-            await getFunds(address);
+            await testHelper.getFunds(address);
         });
 
         it('should send transaction with privateKey', async function () {
-            let result = await helper.sendTransactionToContract(web3, address, privateKey, txData,
+            let result = await transactions.send(web3, address, privateKey, txData,
                 constants.STANDARD_GAS);
             assert.isTrue(result['status']);
         });
 
         it('should throw exception for transaction without privateKey', async function () {
-            await helper.sendTransactionToContract(web3, address, '', txData, constants.STANDARD_GAS)
+            await transactions.send(web3, address, '', txData, constants.STANDARD_GAS)
                 .should
                 .eventually
                 .rejectedWith(rejectedTransactionErrorMessage);

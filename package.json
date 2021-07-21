@@ -1,57 +1,55 @@
 {
   "name": "@skalenetwork/filestorage.js",
-  "author": "SKALE Labs and contributors",
+  "version": "0.2.11",
+  "description": "SKALE Filestorage client tools",
   "keywords": [
     "SKALE",
     "ethereum",
     "blockchain"
   ],
-  "version": "0.2.10",
-  "description": "SKALE Filestorage client tools",
-  "license": "AGPL-3.0",
-  "main": "src/index.js",
+  "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
+  "bugs": {
+    "url": "https://github.com/skalenetwork/filestorage.js/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/skalenetwork/filestorage.js.git"
   },
-  "bugs": {
-    "url": "https://github.com/skalenetwork/filestorage.js/issues"
-  },
-  "homepage": "https://github.com/skalenetwork/filestorage.js#readme",
-  "dependencies": {
-    "web3": "1.2.4",
-    "streamsaver": "^1.0.1"
-  },
+  "license": "AGPL-3.0-only",
+  "author": "SKALE Labs and contributors",
+  "main": "src/index.js",
   "scripts": {
-    "build-patch": "VER=patch ./build.sh",
-    "build-minor": "VER=minor ./build.sh",
-    "build-major": "VER=major ./build.sh",
     "coverage": "codecov",
-    "generate": "if [ ! -f test/test.txt ]; then dd if=/dev/urandom of=./test/test.txt bs=1048576 count=100; fi",
-    "generate-win": "IF NOT EXIST .\\test\\test.txt fsutil file createnew .\\test\\test.txt 104857600",
-    "lint": "eslint --cache --fix src/**/*.js test/**/*.js",
+    "generate": "if [ ! -f test/data/test.txt ]; then dd if=/dev/urandom of=./test/data/test.txt bs=1048576 count=100; fi",
+    "generate-win": "IF NOT EXIST .\\test\\data\\test.txt fsutil file createnew .\\test\\data\\test.txt 104857600",
+    "lint": "eslint --cache \"src/**/*.js\" \"test/**/*.js\"",
+    "lint-fix": "npm run lint -- --fix",
     "minify": "WEBPACK_ENV=build npx webpack",
-    "prepush": "npm run lint && npm run minify && npm link && npm link @skalenetwork/filestorage.js && npm test",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 120000"
+    "test": "nyc --reporter=lcov mocha --exit --timeout 120000",
+    "version": "node -e \"console.log(require('./package.json').version);\""
+  },
+  "dependencies": {
+    "@skalenetwork/filestorage": "0.4.0-develop.1",
+    "streamsaver": "^1.0.1",
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
-    "babel-loader": "^7.1.4",
+    "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chromedriver": "80.0.1",
     "codecov": "^3.3.0",
-    "dotenv": "^7.0.0",
+    "dotenv": "^8.2.0",
     "eslint": "^6.4.0",
-    "eslint-loader": "^2.1.2",
-    "eslint-plugin-jsdoc": "^4.8.3",
-    "mocha": "^6.1.4",
-    "nyc": "14.1.1",
+    "eslint-loader": "^4.0.0",
+    "eslint-plugin-jsdoc": "^24.0.0",
+    "mocha": "^7.1.1",
+    "nyc": "15.0.1",
     "randomstring": "^1.1.5",
-    "selenium-webdriver": "^4.0.0-alpha.5",
-    "semver": "^5.6.0",
-    "webpack": "4.35.3",
+    "selenium-webdriver": "^4.0.0-alpha.7",
+    "webpack": "4.43.0",
     "webpack-cli": "^3.3.6"
   }
 }
