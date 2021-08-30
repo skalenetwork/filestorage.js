@@ -74,7 +74,7 @@ function generateConfig() {
     let skaledConfig = require(skaledConfigPath);
     let owner = skaledConfig.skaleConfig.sChain.schainOwner;
 
-    let fsPredeployed = {}
+    let fsPredeployed = {};
     for (let name in artifacts.predeployedConfig) {
         let contract = artifacts.predeployedConfig[name];
         fsPredeployed[contract.address] = {
@@ -82,18 +82,18 @@ function generateConfig() {
             'balance': '0',
             'nonce': '0',
             'storage': contract.storage
-        }
+        };
         if (name === 'proxyAdmin') {
-            fsPredeployed[contract.address].storage['0x0'] = owner
+            fsPredeployed[contract.address].storage['0x0'] = owner;
         }
         if (name === 'filestorageProxy') {
-            fsPredeployed[contract.address].storage['0x0'] = '0xffffffffff'
+            fsPredeployed[contract.address].storage['0x0'] = '0xffffffffff';
         }
     }
     skaledConfig.accounts = {
         ...skaledConfig.accounts,
         ...fsPredeployed
-    }
+    };
     fs.writeFileSync(skaledConfigPath, JSON.stringify(skaledConfig, null, '\t'));
 }
 
