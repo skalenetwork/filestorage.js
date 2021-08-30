@@ -1,6 +1,6 @@
 {
   "name": "@skalenetwork/filestorage.js",
-  "version": "0.2.11",
+  "version": "1.0.0",
   "description": "SKALE Filestorage client tools",
   "keywords": [
     "SKALE",
