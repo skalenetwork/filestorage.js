@@ -456,5 +456,5 @@ describe('Test FilestorageClient', function () {
             assert.isNumber(space);
             assert(space > 0);
         });
-    })
+    });
 });
