@@ -203,6 +203,54 @@ class FilestorageContract {
         let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
         return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
     }
+
+    /**
+     * Javascript wrapper for solidity function getReservedSpace. Get information about reserved space for account
+     *
+     * @function getReservedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Reserved space in bytes
+     */
+    async getReservedSpace(address) {
+        return await this.contract.methods.getReservedSpace(address).call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function getOccupiedSpace. Get information about occupied space for account
+     *
+     * @function getReservedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Occupied space in bytes
+     */
+    async getOccupiedSpace(address) {
+        return await this.contract.methods.getOccupiedSpace(address).call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function getOccupiedSpace. Get information about total allocated space for
+     * Filestorage
+     *
+     * @function getReservedSpace
+     *
+     * @returns {number} Total space in Filestorage in bytes
+     */
+    async getTotalSpace() {
+        return await this.contract.methods.getTotalStorageSpace().call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function getOccupiedSpace. Get information about total reserved space in
+     * Filestorage
+     *
+     * @function getReservedSpace
+     *
+     * @returns {number} Total reserved space in Filestorage in bytes
+     */
+    async getTotalReservedSpace() {
+        return await this.contract.methods.getTotalReservedSpace().call();
+    }
 }
 
 module.exports = FilestorageContract;
