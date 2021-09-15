@@ -443,4 +443,18 @@ describe('Test FilestorageClient', function () {
             });
         });
     });
+
+    describe('getters', function () {
+        it('should return total storage space', async function () {
+            let space = await filestorage.getTotalSpace();
+            assert.isNumber(space);
+            assert(space > 0);
+        });
+
+        it('should return total reserved storage space', async function () {
+            let space = await filestorage.getTotalReservedSpace();
+            assert.isNumber(space);
+            assert(space > 0);
+        });
+    })
 });
