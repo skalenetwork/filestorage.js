@@ -208,6 +208,52 @@ class FilestorageClient {
         if (this.enableLogs) console.log('Space was allocated');
     }
 
+    /**
+     * Get information about reserved space for account
+     *
+     * @function getReservedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Reserved space in bytes
+     */
+    async getReservedSpace(address) {
+        return this.contract.getReservedSpace(address);
+    }
+
+    /**
+     * Get information about occupied space for account
+     *
+     * @function getOccupiedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Occupied space in bytes
+     */
+    async getOccupiedSpace(address) {
+        return this.contract.getOccupiedSpace(address);
+    }
+
+    /**
+     * Get information about total allocated space for Filestorage
+     *
+     * @function getTotalSpace
+     *
+     * @returns {number} Total space in Filestorage in bytes
+     */
+    async getTotalSpace() {
+        return this.contract.getTotalSpace();
+    }
+
+    /**
+     * Get information about total reserved space in Filestorage
+     *
+     * @function getTotalReservedSpace
+     *
+     * @returns {number} Total reserved space in Filestorage in bytes
+     */
+    async getTotalReservedSpace() {
+        return this.contract.getTotalReservedSpace();
+    }
+
     async _downloadFile(storagePath, stream) {
         let ptrPosition = 0;
         let i = 0;

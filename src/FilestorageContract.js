@@ -219,7 +219,7 @@ class FilestorageContract {
     /**
      * Javascript wrapper for solidity function getOccupiedSpace. Get information about occupied space for account
      *
-     * @function getReservedSpace
+     * @function getOccupiedSpace
      *
      * @param {string} address - Account address
      * @returns {number} Occupied space in bytes
@@ -232,7 +232,7 @@ class FilestorageContract {
      * Javascript wrapper for solidity function getOccupiedSpace. Get information about total allocated space for
      * Filestorage
      *
-     * @function getReservedSpace
+     * @function getTotalSpace
      *
      * @returns {number} Total space in Filestorage in bytes
      */
@@ -244,7 +244,7 @@ class FilestorageContract {
      * Javascript wrapper for solidity function getOccupiedSpace. Get information about total reserved space in
      * Filestorage
      *
-     * @function getReservedSpace
+     * @function getTotalReservedSpace
      *
      * @returns {number} Total reserved space in Filestorage in bytes
      */
