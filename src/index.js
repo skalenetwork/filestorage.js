@@ -217,7 +217,8 @@ class FilestorageClient {
      * @returns {number} Reserved space in bytes
      */
     async getReservedSpace(address) {
-        return this.contract.getReservedSpace(address);
+        let space = await this.contract.getReservedSpace(address);
+        return Number(space);
     }
 
     /**
@@ -229,7 +230,8 @@ class FilestorageClient {
      * @returns {number} Occupied space in bytes
      */
     async getOccupiedSpace(address) {
-        return this.contract.getOccupiedSpace(address);
+        let space = await this.contract.getOccupiedSpace(address);
+        return Number(space);
     }
 
     /**
@@ -240,7 +242,8 @@ class FilestorageClient {
      * @returns {number} Total space in Filestorage in bytes
      */
     async getTotalSpace() {
-        return this.contract.getTotalSpace();
+        let space = await this.contract.getTotalSpace();
+        return Number(space);
     }
 
     /**
@@ -251,7 +254,8 @@ class FilestorageClient {
      * @returns {number} Total reserved space in Filestorage in bytes
      */
     async getTotalReservedSpace() {
-        return this.contract.getTotalReservedSpace();
+        let space = await this.contract.getTotalReservedSpace();
+        return Number(space);
     }
 
     async _downloadFile(storagePath, stream) {

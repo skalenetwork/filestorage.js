@@ -222,7 +222,7 @@ class FilestorageContract {
      * @function getOccupiedSpace
      *
      * @param {string} address - Account address
-     * @returns {number} Occupied space in bytes
+     * @returns {string} Occupied space in bytes
      */
     async getOccupiedSpace(address) {
         return await this.contract.methods.getOccupiedSpace(address).call();
@@ -234,7 +234,7 @@ class FilestorageContract {
      *
      * @function getTotalSpace
      *
-     * @returns {number} Total space in Filestorage in bytes
+     * @returns {string} Total space in Filestorage in bytes
      */
     async getTotalSpace() {
         return await this.contract.methods.getTotalStorageSpace().call();
@@ -246,7 +246,7 @@ class FilestorageContract {
      *
      * @function getTotalReservedSpace
      *
-     * @returns {number} Total reserved space in Filestorage in bytes
+     * @returns {string} Total reserved space in Filestorage in bytes
      */
     async getTotalReservedSpace() {
         return await this.contract.methods.getTotalReservedSpace().call();
