@@ -443,4 +443,49 @@ describe('Test FilestorageClient', function () {
             });
         });
     });
+
+    describe('getters', function () {
+        it('should return total storage space', async function () {
+            let space = await filestorage.getTotalSpace();
+            assert.isNumber(space);
+            assert(space > 0);
+        });
+
+        it('should return total reserved storage space', async function () {
+            let space = await filestorage.getTotalReservedSpace();
+            assert.isNumber(space);
+            assert(space > 0);
+        });
+
+        it('should return reserved storage space for account', async function () {
+            let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+            await filestorage.reserveSpace(
+                owner,
+                testConstants.SPACE_TEST_ADDRESS,
+                200,
+                process.env.SCHAIN_OWNER_PK
+            );
+            let space = await filestorage.getReservedSpace(testConstants.SPACE_TEST_ADDRESS);
+            assert.isNumber(space);
+            assert(space === 200);
+            await filestorage.reserveSpace(
+                owner,
+                testConstants.SPACE_TEST_ADDRESS,
+                300,
+                process.env.SCHAIN_OWNER_PK
+            );
+            space = await filestorage.getReservedSpace(testConstants.SPACE_TEST_ADDRESS);
+            assert(space === 300);
+        });
+
+        it('should return total occupied storage space', async function () {
+            let initSpace = await filestorage.getOccupiedSpace(address);
+            assert.isNumber(initSpace);
+            let fileName = 'test_' + randomstring.generate();
+            let data = Buffer.from(fileName);
+            await filestorage.uploadFile(address, fileName, data, privateKey);
+            let afterSpace = await filestorage.getOccupiedSpace(address);
+            assert(afterSpace - initSpace === data.length);
+        });
+    });
 });
