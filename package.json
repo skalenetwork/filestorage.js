@@ -31,7 +31,7 @@
   "dependencies": {
     "@skalenetwork/filestorage": "1.0.0-develop.5",
     "streamsaver": "^1.0.1",
-    "web3": "1.2.6"
+    "web3": "1.5.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
