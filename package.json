@@ -29,7 +29,7 @@
     "version": "node -e \"console.log(require('./package.json').version);\""
   },
   "dependencies": {
-    "@skalenetwork/filestorage": "1.0.0-develop.5",
+    "@skalenetwork/filestorage": "1.0.1-develop.1",
     "streamsaver": "^1.0.1",
     "web3": "1.2.6"
   },
