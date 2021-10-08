@@ -77,6 +77,13 @@ describe('Test FilestorageClient', function () {
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
         });
 
+        it('should initialize with ws endpoint', async function () {
+            let filestorageClient = new FilestorageClient('ws://127.0.0.1:1234');
+            assert.instanceOf(filestorageClient, FilestorageClient);
+            assert.instanceOf(filestorageClient.web3, Web3);
+            assert.instanceOf(filestorageClient.contract, FilestorageContract);
+        });
+
         it('should initialize with enabled logs', function () {
             let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT, true);
             assert.isTrue(filestorageClient.enableLogs);
