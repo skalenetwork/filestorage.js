@@ -6,7 +6,7 @@ let endpoint = process.env.SCHAIN_ENDPOINT;
 let pk = process.env.PK;
 let addressToReserve = process.env.USER_ADDRESS;
 
-const reservedSpace =  3 * 10 ** 8;
+const reservedSpace = process.env.RESERVED_SPACE || 3 * 10 ** 8;
 
 let ownerAddress = getAddress(pk);
 let filestorage = new Filestorage(endpoint, true);

@@ -20,7 +20,8 @@ async function clean() {
         if (type === null) {
             if (file.name.startsWith('tiny') ||
                 file.name.startsWith('medium') ||
-                file.name.startsWith('large')) {
+                file.name.startsWith('large') ||
+                file.name.startsWith('loop')) {
                 await filestorage.deleteFile(address, file.name, pk);
             }
         } else {
