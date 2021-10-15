@@ -37,6 +37,9 @@ const Web3 = require('web3');
 
 const web3Provider = new Web3.providers.HttpProvider('----SKALE ENDPOINT----');
 let filestorage = new Filestorage(web3Provider);
+
+// Direcrtly with http(s)/ws(s) endpoints 
+let filestorage = new Filestorage('----HTTP(s)/WS(s) SKALE ENDPOINT----');
 ----
 --
 HTML::
