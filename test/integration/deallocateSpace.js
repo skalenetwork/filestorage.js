@@ -15,7 +15,9 @@ async function allocateSpace() {
     let availableSpaceToDeallocate = (getReservedSpace - totalUsedSpace);
     console.log('Available space to deallocate for user :', addressToDeallocate, 'is ', availableSpaceToDeallocate);
     await filestorage.reserveSpace(ownerAddress, addressToDeallocate, totalUsedSpace, pk);
-    console.log('Available space to deallocate after for user :', addressToDeallocate, 'is ', availableSpaceToDeallocate);
+    console.log(
+        'Available space to deallocate after for user :', addressToDeallocate,
+        'is ', availableSpaceToDeallocate);
 }
 
 allocateSpace();

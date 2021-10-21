@@ -11,10 +11,10 @@ let address = getAddress(pk);
 let filestorage = new Filestorage(endpoint);
 
 async function singleUpload() {
-    const directoryPath = __dirname + '/testFiles/' + type + '/' +type + '.' + extention ;
+    const directoryPath = __dirname + '/testFiles/' + type + '/' + type + '.' + extention ;
     const content = await fs.readFileSync(directoryPath);
     const contentPath = await filestorage.uploadFile(address, type + '.' + extention, content, pk);
-    console.log("contentPath", contentPath); 
+    console.log('contentPath', contentPath);
     let timeEnd = new Date();
     console.log('end: ', timeEnd);
 }
