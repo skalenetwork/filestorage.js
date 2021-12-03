@@ -258,6 +258,44 @@ async function deleteDirectory(directoryPath) {
 }
 ----
 
+=== Reserve space
+
+Reserve space for certain address in Filestorage in bytes.
+
+[NOTE]
+Can only be called by SKALE Chain owner.
+
+`addressToReserve` - User address to reserve space for
+`reservedSpace` - Reserved space in bytes
+
+[source,javascript]
+----
+async function reserveSpace(addressToReserve, reservedSpace) {
+    //create web3 connection
+    const web3Provider = new Web3.providers.HttpProvider(
+        "[YOUR_SKALE_CHAIN_ENDPOINT]"
+    );
+    let web3 = new Web3(web3Provider);
+
+    //get filestorage instance
+    let filestorage = new Filestorage(web3, true);
+
+    //provide your SKALE Chain owner account & private key
+    //note this must include the 0x prefix
+    let privateKey = '[YOUR_PRIVATE_KEY]';
+    let account = "[YOUR_ACCOUNT_ADDRESS]";
+
+    await filestorage.reserveSpace(account, addressToReserve, reservedSpace, privateKey);
+}
+----
+
+[NOTE]
+If you are using external signing (Metamask), then omit the privateKey:
+
+```javascript
+filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace);
+```
+
 == Additional Notes
 
 === Storage path

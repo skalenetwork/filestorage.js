@@ -7,7 +7,7 @@
 
 Javascript library which implements client for decentralized file storage on SKALE chains.
 
--   Node.js v8 and v10+ support
+-   Node.js v10, 12, and v14 support
 
 ## Install
 
