@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/skalenetwork/filestorage.js.git"
   },
-  "license": "AGPL-3.0-only",
+  "license": "LGPL-3.0-only",
   "author": "SKALE Labs and contributors",
   "main": "src/index.js",
   "scripts": {
