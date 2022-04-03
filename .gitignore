@@ -7,6 +7,7 @@ artifacts.json
 
 # Dependency directories
 node_modules/
+venv/
 
 # Idea files
 .idea/
