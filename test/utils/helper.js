@@ -63,9 +63,10 @@ async function getFunds(account) {
 
 async function reserveTestSpace(fsInstance, account, space) {
     let rootAccount = getAddress(rootPrivateKey);
-    let allocatorRole = await fsInstance.ALLOCATOR_ROLE();
-    await fsInstance.grantRole(allocatorRole, rootAccount, rootPrivateKey);
-    let txData = fsInstance.contract.methods.reserveSpace(account, space);
+    let allocatorRole = await fsInstance.methods.ALLOCATOR_ROLE().call();
+    let txData = fsInstance.methods.grantRole(allocatorRole, rootAccount);
+    await transactions.send(web3, rootAccount, rootPrivateKey, txData, 1000000);
+    txData = fsInstance.methods.reserveSpace(account, space);
     return await transactions.send(web3, rootAccount, rootPrivateKey, txData, 1000000);
 }
 
