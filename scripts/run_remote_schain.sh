@@ -17,4 +17,5 @@ ssh -o StrictHostKeyChecking=no "$USER"@"$ENDPOINT" "docker run -d -v ~/schains/
         --name schain_$PORT \
         skalenetwork/schain:$VERSION \
         --config /schain_data/config.json \
-        -d /schain_data/data_dir"
+        -d /schain_data/data_dir \
+        --aa no"
