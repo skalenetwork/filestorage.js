@@ -10,10 +10,10 @@ jobs:
         node: [10, 12, 14]
         os: [ubuntu-latest, windows-latest]
     env:
+      VERSION: 3.9.1-develop.4
       ENDPOINT: ${{ secrets.ENDPOINT }}
       USER: ${{ secrets.USER }}
       SCHEME: ${{ secrets.SCHEME }}
-      VERSION: ${{ secrets.VERSION }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SCHAIN_OWNER_PK: ${{ secrets.SCHAIN_OWNER_PK }}
       PRIVATEKEY: ${{ secrets.PRIVATEKEY }}

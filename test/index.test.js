@@ -492,7 +492,7 @@ describe('Test FilestorageClient', function () {
             let data = Buffer.from(fileName);
             await filestorage.uploadFile(address, fileName, data, privateKey);
             let afterSpace = await filestorage.getOccupiedSpace(address);
-            assert(afterSpace - initSpace === data.length);
+            assert(afterSpace - initSpace === 4096);
         });
     });
 });
