@@ -56,8 +56,8 @@ describe('Test FilestorageClient', function () {
         foreignAddress = testHelper.getAddress(foreignPrivateKey);
         await testHelper.getFunds(address);
         await testHelper.getFunds(foreignAddress);
-        await testHelper.reserveTestSpace(filestorage.contract.contract, address, testConstants.RESERVED_SPACE);
-        await testHelper.reserveTestSpace(filestorage.contract.contract, foreignAddress, testConstants.RESERVED_SPACE);
+        await testHelper.reserveTestSpace(filestorage.contract, address, testConstants.RESERVED_SPACE);
+        await testHelper.reserveTestSpace(filestorage.contract, foreignAddress, testConstants.RESERVED_SPACE);
     });
 
     describe('Test constructor', function () {

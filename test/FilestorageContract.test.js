@@ -50,7 +50,7 @@ describe('FilestorageContract', function () {
         address = testHelper.getAddress(privateKey);
         emptyAddress = testConstants.EMPTY_ADDRESS;
         await testHelper.getFunds(address);
-        await testHelper.reserveTestSpace(filestorageContract.contract, address, testConstants.RESERVED_SPACE);
+        await testHelper.reserveTestSpace(filestorageContract, address, testConstants.RESERVED_SPACE);
     });
 
     describe('Test constructor', function () {
