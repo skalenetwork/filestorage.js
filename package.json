@@ -20,7 +20,7 @@
   "main": "src/index.js",
   "scripts": {
     "coverage": "codecov",
-    "generate": "if [ ! -f test/data/test.txt ]; then dd if=/dev/urandom of=./test/data/test.txt bs=104857601 count=1; fi",
+    "generate": "if [ ! -f test/data/test.txt ]; then head -c 104857601 /dev/urandom > ./test/data/test.txt; fi",
     "generate-win": "IF NOT EXIST .\\test\\data\\test.txt fsutil file createnew .\\test\\data\\test.txt 104857601",
     "lint": "eslint --cache \"src/**/*.js\" \"test/**/*.js\"",
     "lint-fix": "npm run lint -- --fix",
