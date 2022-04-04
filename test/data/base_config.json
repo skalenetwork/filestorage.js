@@ -1400,7 +1400,8 @@
 			"httpsRpcPort": 10002,
 			"wsRpcPort": 10003,
 			"wssRpcPort": 10008,
-			"bindIP": "0.0.0.0"
+			"bindIP": "0.0.0.0",
+			"ecdsaKeyName": ""
 		},
 		"sChain": {
 			"schainID": 1,
