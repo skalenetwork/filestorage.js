@@ -14,7 +14,7 @@ ssh -o StrictHostKeyChecking=no "$USER"@"$ENDPOINT" "docker run -d -v ~/schains/
         -e SSL_CERT_PATH=None \
         -e HTTP_RPC_PORT=2234 \
         -e NO_NTP_CHECK=1 \
-        -e DATA_DIR=/schain_data/data_dir \
-        -e CONFIG_FILE=/schain_data/config.json \
         --name schain_$PORT \
-        skalenetwork/schain:$VERSION"
+        skalenetwork/schain:$VERSION \
+        --config /schain_data/config.json \
+        -d /schain_data/data_dir"
