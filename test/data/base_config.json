@@ -1400,12 +1400,14 @@
 			"httpsRpcPort": 10002,
 			"wsRpcPort": 10003,
 			"wssRpcPort": 10008,
-			"bindIP": "0.0.0.0"
+			"bindIP": "0.0.0.0",
+			"ecdsaKeyName": ""
 		},
 		"sChain": {
 			"schainID": 1,
 			"schainName": "test-chain",
 			"schainOwner": "0xd2c5b39B4e735C17612Bb5a08FD024ccc5dBCb23",
+			"contractStorageLimit": 1000000000,
 			"nodes": [
 				{
 					"nodeID": 1,
