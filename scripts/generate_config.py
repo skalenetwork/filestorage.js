@@ -23,7 +23,7 @@ if __name__ == '__main__':
         contract_address=FILESTORAGE_ADDRESS,
         proxy_admin_address=FILESTORAGE_ADMIN_ADDRESS,
         implementation_address=FILESTORAGE_IMPLEMENTATION_ADDRESS,
-        allocated_storage=10000000,
+        allocated_storage=1000000000,
         schain_owner=schain_owner
     )
     config['accounts'].update(proxy_admin)
