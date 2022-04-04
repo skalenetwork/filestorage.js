@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@skalenetwork/filestorage": "1.0.1-beta.0",
-    "streamsaver": "^1.0.1",
+    "streamsaver": "^2.0.6",
     "web3": "1.2.6"
   },
   "devDependencies": {
