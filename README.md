@@ -253,7 +253,7 @@ Content `Object` for directory contains:
 
 Reserve space for certain address in Filestorage in bytes.
 
--   **Note**: could be called only by sChain owner
+-   **Note**: can be called only by ALLOCATOR_ROLE (or schain owner in v1 chains)
 
 ```javascript
 filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
