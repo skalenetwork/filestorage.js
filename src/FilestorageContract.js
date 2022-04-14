@@ -189,19 +189,36 @@ class FilestorageContract {
 
     /**
      * Javascript wrapper for solidity function reserveSpace. Reserve space in Filestorage for certain address.
-     * Allowed only for sChain owner
+     * Allowed only for address with ALLOCATOR_ROLE
      *
      * @function reserveSpace
      *
-     * @param {string} ownerAddress - sChain owner address
+     * @param {string} allocatorAddress - Address with ALLOCATOR_ROLE
      * @param {string} addressToReserve - Address to reserve space for
      * @param {number} reservedSpace - Reserved space in bytes
      * @param {string} [privateKey] - sChain owner private key
      * @returns {object} Transaction information
      */
-    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey = '') {
+    async reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey = '') {
         let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
-        return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, allocatorAddress, privateKey, txData, constants.STANDARD_GAS);
+    }
+
+    /**
+     * Javascript wrapper for function granting Allocator role
+     * Allowed only for DEFAULT_ADMIN
+     *
+     * @function grantAllocatorRole
+     *
+     * @param {string} adminAddress - Address with DEFAULT_ADMIN_ROLE
+     * @param {string} allocatorAddress - Address to grant role for
+     * @param {string} [privateKey] - Admin private key
+     * @returns {object} Transaction information
+     */
+    async grantAllocatorRole(adminAddress, allocatorAddress, privateKey = '') {
+        let allocatorRole = await this.contract.methods.ALLOCATOR_ROLE().call();
+        let txData = this.contract.methods.grantRole(allocatorRole, allocatorAddress);
+        return await transactions.send(this.web3, adminAddress, privateKey, txData, constants.STANDARD_GAS);
     }
 
     /**

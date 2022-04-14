@@ -256,23 +256,47 @@ Reserve space for certain address in Filestorage in bytes.
 -   **Note**: can be called only by ALLOCATOR_ROLE (or schain owner in v1 chains)
 
 ```javascript
-filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+filestorage.reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey);
 ```
 
 Reserve space using external signing (Metamask etc):
 
 ```javascript
-filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace);
+filestorage.reserveSpace(allocatorAddress, addressToReserve, reservedSpace);
 ```
 
 ##### Parameters
 
 | Parameter                 | Description                                                 |
 | ------------------------- | ----------------------------------------------------------- |
-| `String` ownerAddress     | sChain owner address                                        |
+| `String` allocatorAddress | Address with ALLOCATOR_ROLE                                 |
 | `String` addressToReserve | Address to reserve space for                                |
 | `String` reservedSpace    | Reserved space in bytes                                     |
 | `String` privateKey       | _(optional)_ sChain owner private key, to sign transactions |
+
+#### Grant allocator role
+
+Granting allocator role to be able to reserve space in Filestorage
+
+-   **Note**: can be called only by ADMIN_ROLE (on v2+ chains)
+
+```javascript
+filestorage.grantAllocatorRole(adminAddress, allocatorAddress, adminPrivateKey);
+```
+
+Grant allocator role using external signing (Metamask etc):
+
+```javascript
+filestorage.grantAllocatorRole(adminAddress, allocatorAddress, adminPrivateKey);
+```
+
+##### Parameters
+
+| Parameter                 | Description                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| `String` adminAddress     | DEFAULT_ADMIN address                                       |
+| `String` allocatorAddress | Address to grant role for                                   |
+| `String` adminPrivateKey  | _(optional)_ DEFAULT_ADMIN private key, to sign transactions|
 
 #### Get reserved space
 

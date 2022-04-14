@@ -451,6 +451,24 @@ describe('Test FilestorageClient', function () {
         });
     });
 
+    describe.only('test grantAllocatorRole', function () {
+        describe('Positive tests', function () {
+            it('should grant allocator role for account', async function () {
+                let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+                let account = await filestorage.web3.eth.accounts.create();
+                await filestorage.grantAllocatorRole(
+                    owner,
+                    account.address,
+                    process.env.SCHAIN_OWNER_PK);
+                let isGranted = await filestorage.contract.contract.methods.hasRole(
+                    await filestorage.contract.contract.methods.ALLOCATOR_ROLE().call(),
+                    account.address
+                ).call();
+                assert(isGranted === true);
+            });
+        });
+    });
+
     describe('getters', function () {
         it('should return total storage space', async function () {
             let space = await filestorage.getTotalSpace();
