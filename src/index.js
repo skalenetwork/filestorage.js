@@ -194,18 +194,32 @@ class FilestorageClient {
     }
 
     /**
-     * Reserve space in Filestorage for certain address. Allowed only for sChain owner
+     * Reserve space in Filestorage for certain address. Allowed only for address with ALLOCATOR_ROLE
      *
      * @function reserveSpace
      *
-     * @param {string} ownerAddress - sChain owner address
+     * @param {string} allocatorAddress - Address with ALLOCATOR_ROLE
      * @param {string} addressToReserve - Address to reserve space for
      * @param {number} reservedSpace - Reserved space in bytes
-     * @param {string} [privateKey] - sChain owner private key
+     * @param {string} [privateKey] - Allocator private key
      */
-    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey) {
-        await this.contract.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+    async reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey) {
+        await this.contract.reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey);
         if (this.enableLogs) console.log('Space was allocated');
+    }
+
+    /**
+     * Grant allocator role for certain address. Allowed only for DEFAULT_ADMIN
+     *
+     * @function grantAllocatorRole
+     *
+     * @param {string} adminAddress - Address with DEFAULT_ADMIN_ROLE
+     * @param {string} allocatorAddress - Address to grant role for
+     * @param {string} [privateKey] - Admin private key
+     */
+    async grantAllocatorRole(adminAddress, allocatorAddress, privateKey) {
+        await this.contract.grantAllocatorRole(adminAddress, allocatorAddress, privateKey);
+        if (this.enableLogs) console.log('Allocator role was granted');
     }
 
     /**
