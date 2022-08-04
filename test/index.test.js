@@ -451,7 +451,7 @@ describe('Test FilestorageClient', function () {
         });
     });
 
-    describe.only('test grantAllocatorRole', function () {
+    describe('test grantAllocatorRole', function () {
         describe('Positive tests', function () {
             it('should grant allocator role for account', async function () {
                 let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
