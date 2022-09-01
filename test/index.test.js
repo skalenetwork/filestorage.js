@@ -3,16 +3,16 @@
  * SKALE Filestorage-js
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -72,6 +72,13 @@ describe('Test FilestorageClient', function () {
 
         it('should initialize with http endpoint', function () {
             let filestorageClient = new FilestorageClient(process.env.SKALE_ENDPOINT);
+            assert.instanceOf(filestorageClient, FilestorageClient);
+            assert.instanceOf(filestorageClient.web3, Web3);
+            assert.instanceOf(filestorageClient.contract, FilestorageContract);
+        });
+
+        it('should initialize with ws endpoint', async function () {
+            let filestorageClient = new FilestorageClient('ws://127.0.0.1:1234');
             assert.instanceOf(filestorageClient, FilestorageClient);
             assert.instanceOf(filestorageClient.web3, Web3);
             assert.instanceOf(filestorageClient.contract, FilestorageContract);
@@ -441,6 +448,69 @@ describe('Test FilestorageClient', function () {
                     process.env.SCHAIN_OWNER_PK
                 );
             });
+        });
+    });
+
+    describe('test grantAllocatorRole', function () {
+        describe('Positive tests', function () {
+            it('should grant allocator role for account', async function () {
+                let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+                let account = await filestorage.web3.eth.accounts.create();
+                await filestorage.grantAllocatorRole(
+                    owner,
+                    account.address,
+                    process.env.SCHAIN_OWNER_PK);
+                let isGranted = await filestorage.contract.contract.methods.hasRole(
+                    await filestorage.contract.contract.methods.ALLOCATOR_ROLE().call(),
+                    account.address
+                ).call();
+                assert(isGranted === true);
+            });
+        });
+    });
+
+    describe('getters', function () {
+        it('should return total storage space', async function () {
+            let space = await filestorage.getTotalSpace();
+            assert.isNumber(space);
+            assert(space > 0);
+        });
+
+        it('should return total reserved storage space', async function () {
+            let space = await filestorage.getTotalReservedSpace();
+            assert.isNumber(space);
+            assert(space > 0);
+        });
+
+        it('should return reserved storage space for account', async function () {
+            let owner = testHelper.getAddress(process.env.SCHAIN_OWNER_PK);
+            await filestorage.reserveSpace(
+                owner,
+                testConstants.SPACE_TEST_ADDRESS,
+                200,
+                process.env.SCHAIN_OWNER_PK
+            );
+            let space = await filestorage.getReservedSpace(testConstants.SPACE_TEST_ADDRESS);
+            assert.isNumber(space);
+            assert(space === 200);
+            await filestorage.reserveSpace(
+                owner,
+                testConstants.SPACE_TEST_ADDRESS,
+                300,
+                process.env.SCHAIN_OWNER_PK
+            );
+            space = await filestorage.getReservedSpace(testConstants.SPACE_TEST_ADDRESS);
+            assert(space === 300);
+        });
+
+        it('should return total occupied storage space', async function () {
+            let initSpace = await filestorage.getOccupiedSpace(address);
+            assert.isNumber(initSpace);
+            let fileName = 'test_' + randomstring.generate();
+            let data = Buffer.from(fileName);
+            await filestorage.uploadFile(address, fileName, data, privateKey);
+            let afterSpace = await filestorage.getOccupiedSpace(address);
+            assert(afterSpace - initSpace === 4096);
         });
     });
 });

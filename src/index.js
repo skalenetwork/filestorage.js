@@ -3,16 +3,16 @@
  * SKALE Filestorage-js
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -194,18 +194,82 @@ class FilestorageClient {
     }
 
     /**
-     * Reserve space in Filestorage for certain address. Allowed only for sChain owner
+     * Reserve space in Filestorage for certain address. Allowed only for address with ALLOCATOR_ROLE
      *
      * @function reserveSpace
      *
-     * @param {string} ownerAddress - sChain owner address
+     * @param {string} allocatorAddress - Address with ALLOCATOR_ROLE
      * @param {string} addressToReserve - Address to reserve space for
      * @param {number} reservedSpace - Reserved space in bytes
-     * @param {string} [privateKey] - sChain owner private key
+     * @param {string} [privateKey] - Allocator private key
      */
-    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey) {
-        await this.contract.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+    async reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey) {
+        await this.contract.reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey);
         if (this.enableLogs) console.log('Space was allocated');
+    }
+
+    /**
+     * Grant allocator role for certain address. Allowed only for DEFAULT_ADMIN
+     *
+     * @function grantAllocatorRole
+     *
+     * @param {string} adminAddress - Address with DEFAULT_ADMIN_ROLE
+     * @param {string} allocatorAddress - Address to grant role for
+     * @param {string} [privateKey] - Admin private key
+     */
+    async grantAllocatorRole(adminAddress, allocatorAddress, privateKey) {
+        await this.contract.grantAllocatorRole(adminAddress, allocatorAddress, privateKey);
+        if (this.enableLogs) console.log('Allocator role was granted');
+    }
+
+    /**
+     * Get information about reserved space for account
+     *
+     * @function getReservedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Reserved space in bytes
+     */
+    async getReservedSpace(address) {
+        let space = await this.contract.getReservedSpace(address);
+        return Number(space);
+    }
+
+    /**
+     * Get information about occupied space for account
+     *
+     * @function getOccupiedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Occupied space in bytes
+     */
+    async getOccupiedSpace(address) {
+        let space = await this.contract.getOccupiedSpace(address);
+        return Number(space);
+    }
+
+    /**
+     * Get information about total allocated space for Filestorage
+     *
+     * @function getTotalSpace
+     *
+     * @returns {number} Total space in Filestorage in bytes
+     */
+    async getTotalSpace() {
+        let space = await this.contract.getTotalSpace();
+        return Number(space);
+    }
+
+    /**
+     * Get information about total reserved space in Filestorage
+     *
+     * @function getTotalReservedSpace
+     *
+     * @returns {number} Total reserved space in Filestorage in bytes
+     */
+    async getTotalReservedSpace() {
+        let space = await this.contract.getTotalReservedSpace();
+        return Number(space);
     }
 
     async _downloadFile(storagePath, stream) {

@@ -3,16 +3,16 @@
  * SKALE Filestorage-js
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -189,19 +189,84 @@ class FilestorageContract {
 
     /**
      * Javascript wrapper for solidity function reserveSpace. Reserve space in Filestorage for certain address.
-     * Allowed only for sChain owner
+     * Allowed only for address with ALLOCATOR_ROLE
      *
      * @function reserveSpace
      *
-     * @param {string} ownerAddress - sChain owner address
+     * @param {string} allocatorAddress - Address with ALLOCATOR_ROLE
      * @param {string} addressToReserve - Address to reserve space for
      * @param {number} reservedSpace - Reserved space in bytes
      * @param {string} [privateKey] - sChain owner private key
      * @returns {object} Transaction information
      */
-    async reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey = '') {
+    async reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey = '') {
         let txData = this.contract.methods.reserveSpace(addressToReserve, reservedSpace);
-        return await transactions.send(this.web3, ownerAddress, privateKey, txData, constants.STANDARD_GAS);
+        return await transactions.send(this.web3, allocatorAddress, privateKey, txData, constants.STANDARD_GAS);
+    }
+
+    /**
+     * Javascript wrapper for function granting Allocator role
+     * Allowed only for DEFAULT_ADMIN
+     *
+     * @function grantAllocatorRole
+     *
+     * @param {string} adminAddress - Address with DEFAULT_ADMIN_ROLE
+     * @param {string} allocatorAddress - Address to grant role for
+     * @param {string} [privateKey] - Admin private key
+     * @returns {object} Transaction information
+     */
+    async grantAllocatorRole(adminAddress, allocatorAddress, privateKey = '') {
+        let allocatorRole = await this.contract.methods.ALLOCATOR_ROLE().call();
+        let txData = this.contract.methods.grantRole(allocatorRole, allocatorAddress);
+        return await transactions.send(this.web3, adminAddress, privateKey, txData, constants.STANDARD_GAS);
+    }
+
+    /**
+     * Javascript wrapper for solidity function getReservedSpace. Get information about reserved space for account
+     *
+     * @function getReservedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {number} Reserved space in bytes
+     */
+    async getReservedSpace(address) {
+        return await this.contract.methods.getReservedSpace(address).call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function getOccupiedSpace. Get information about occupied space for account
+     *
+     * @function getOccupiedSpace
+     *
+     * @param {string} address - Account address
+     * @returns {string} Occupied space in bytes
+     */
+    async getOccupiedSpace(address) {
+        return await this.contract.methods.getOccupiedSpace(address).call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function getOccupiedSpace. Get information about total allocated space for
+     * Filestorage
+     *
+     * @function getTotalSpace
+     *
+     * @returns {string} Total space in Filestorage in bytes
+     */
+    async getTotalSpace() {
+        return await this.contract.methods.getTotalStorageSpace().call();
+    }
+
+    /**
+     * Javascript wrapper for solidity function getOccupiedSpace. Get information about total reserved space in
+     * Filestorage
+     *
+     * @function getTotalReservedSpace
+     *
+     * @returns {string} Total reserved space in Filestorage in bytes
+     */
+    async getTotalReservedSpace() {
+        return await this.contract.methods.getTotalReservedSpace().call();
     }
 }
 

@@ -1,2 +1,3 @@
 * @dmytronazarenko @kladkogex
-*.md @cstrangedk
+/docs/ @skalenetwork/docowners
+*.md @skalenetwork/docowners

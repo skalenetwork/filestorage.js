@@ -253,26 +253,118 @@ Content `Object` for directory contains:
 
 Reserve space for certain address in Filestorage in bytes.
 
--   **Note**: could be called only by sChain owner
+-   **Note**: can be called only by ALLOCATOR_ROLE (or schain owner in v1 chains)
 
 ```javascript
-filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace, privateKey);
+filestorage.reserveSpace(allocatorAddress, addressToReserve, reservedSpace, privateKey);
 ```
 
-Create directory using external signing (Metamask etc):
+Reserve space using external signing (Metamask etc):
 
 ```javascript
-filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace);
+filestorage.reserveSpace(allocatorAddress, addressToReserve, reservedSpace);
 ```
 
 ##### Parameters
 
 | Parameter                 | Description                                                 |
 | ------------------------- | ----------------------------------------------------------- |
-| `String` ownerAddress     | sChain owner address                                        |
+| `String` allocatorAddress | Address with ALLOCATOR_ROLE                                 |
 | `String` addressToReserve | Address to reserve space for                                |
 | `String` reservedSpace    | Reserved space in bytes                                     |
 | `String` privateKey       | _(optional)_ sChain owner private key, to sign transactions |
+
+#### Grant allocator role
+
+Granting allocator role to be able to reserve space in Filestorage
+
+-   **Note**: can be called only by ADMIN_ROLE (on v2+ chains)
+
+```javascript
+filestorage.grantAllocatorRole(adminAddress, allocatorAddress, adminPrivateKey);
+```
+
+Grant allocator role using external signing (Metamask etc):
+
+```javascript
+filestorage.grantAllocatorRole(adminAddress, allocatorAddress, adminPrivateKey);
+```
+
+##### Parameters
+
+| Parameter                 | Description                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| `String` adminAddress     | DEFAULT_ADMIN address                                       |
+| `String` allocatorAddress | Address to grant role for                                   |
+| `String` adminPrivateKey  | _(optional)_ DEFAULT_ADMIN private key, to sign transactions|
+
+#### Get reserved space
+
+Get information about reserved space for account in bytes.
+
+```javascript
+filestorage.getReservedSpace(address);
+```
+
+##### Parameters
+
+| Parameter                 | Description                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| `String` address          | Account address                                             |
+
+##### Returns
+
+| Parameter              | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `Number` reservedSpace | Reserved space in bytes                          |
+
+#### Get occupied space
+
+Get information about occupied (actually used) space for account in bytes.
+
+```javascript
+filestorage.getOccupiedSpace(address);
+```
+
+##### Parameters
+
+| Parameter                 | Description                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| `String` address          | Account address                                             |
+
+##### Returns
+
+| Parameter              | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `Number` occupiedSpace | Occupied space in bytes                          |
+
+#### Get total space in Filestorage
+
+Get information about total space in Filestorage in bytes.
+
+```javascript
+filestorage.getTotalSpace();
+```
+
+##### Returns
+
+| Parameter              | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `Number` space         | Total space in Filestorage in bytes              |
+
+#### Get total reserved space
+
+Get information about total reserved space (sum of all reserved spaces) in bytes.
+
+```javascript
+filestorage.getTotalReservedSpace();
+```
+
+##### Returns
+
+| Parameter              | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `Number` reservedSpace | Total reserved space in bytes                    |
 
 ## Development
 
@@ -380,4 +472,4 @@ Example:
 
 ![GitHub](https://img.shields.io/github/license/skalenetwork/filestorage.js.svg)
 
-All contributions are made under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html). See [LICENSE](LICENSE).
+All contributions are made under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl-3.0.en.html). See [LICENSE](LICENSE).
