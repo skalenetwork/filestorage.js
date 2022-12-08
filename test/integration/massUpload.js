@@ -19,7 +19,7 @@ let fileNumber = {
 
 const reservedSpace = 3 * 10 ** 8;
 
-async function upload() {
+async function massUpload() {
     await filestorage.reserveSpace(address, address, reservedSpace, pk);
     let balanceStart = await web3.eth.getBalance(address);
     for (let i = 1; i < fileNumber[type] ; ++i) {
@@ -37,4 +37,4 @@ async function upload() {
     }
 }
 
-upload();
+massUpload();
