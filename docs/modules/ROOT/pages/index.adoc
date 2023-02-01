@@ -302,13 +302,13 @@ filestorage.reserveSpace(ownerAddress, addressToReserve, reservedSpace);
 
 Storage path is a label used to point to file or directory in Filestorage. It contains 2 parts through slash:
 
-1. File owner address (without 0x)
+1. File owner address (LOWERCASE & without 0x)
 2. File/directory path in owner's root directory
 
 Examples:
 
 ```shell
-77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/directoryA/random_text.txt
-77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt
-0x77333Da3492C4BBB9CCF3EA5BB63D6202F86CDA8/random_text.txt #Invalid storagePath
+77333da3492c4bbb9ccf3ea5bb63d6202f86cda8/directorya/random_text.txt
+77333da3492c4bbb9ccf3ea5bb63d6202f86cda8/random_text.txt
+0x77333da3492c4bbb9ccf3ea5bb63d6202f86cda8/random_text.txt #invalid storagepath
 ```
