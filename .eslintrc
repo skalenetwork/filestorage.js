@@ -52,7 +52,7 @@
       "last"
     ],
     "complexity": 0,
-    "consistent-return": 2,
+    "consistent-return": 0,
     "consistent-this": 0,
     "curly": [
       2,
@@ -154,7 +154,7 @@
     "no-dupe-args": 2,
     "no-dupe-keys": 2,
     "no-duplicate-case": 2,
-    "no-else-return": 2,
+    "no-else-return": 0,
     "no-empty": 0,
     "no-empty-character-class": 2,
     "no-eq-null": 0,
@@ -298,7 +298,7 @@
     "use-isnan": 2,
     "valid-jsdoc": 0,
     "valid-typeof": 2,
-    "vars-on-top": 2,
+    "vars-on-top": 0, 
     "wrap-iife": [
       2,
       "any"
