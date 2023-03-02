@@ -15,3 +15,5 @@ node_modules/
 .eslintcache
 .nyc_output
 coverage
+package-lock.json
+build
