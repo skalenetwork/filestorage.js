@@ -40,7 +40,7 @@ const Web3 = require('web3');
 const web3Provider = new Web3.providers.HttpProvider('----SKALE ENDPOINT----');
 let filestorage = new Filestorage(web3Provider);
 
-// Directly with http(s)/ws(s) endpoints 
+// OR directly with http(s)/ws(s) endpoints 
 let filestorage = new Filestorage('----HTTP(s)/WS(s) SKALE ENDPOINT----');
 ----
 --
@@ -127,19 +127,16 @@ Displaying files and directories can be accomplished by using the **listDirector
 [source,javascript]
 ----
 async function getFiles(storagePath){
-  //create web3 connection
-  const web3Provider = new Web3.providers.HttpProvider(
-    "[YOUR_SKALE_CHAIN_ENDPOINT]"
-  );
-  let web3 = new Web3(web3Provider);
 
   //get filestorage instance
-  let filestorage = new Filestorage(web3, true);
+  let filestorage = new Filestorage('----HTTP(s)/WS(s) SKALE ENDPOINT----');
 
-  //provide your account & private key
+  //provide the account address which made the upload
+  //root directory is this account address in lower case, without initial 0x
   let account = "[YOUR_ACCOUNT_ADDRESS]";
+  let rootDir = account.substring(2).toLowerCase();
 
-  let files = await filestorage.listDirectory(storagePath);
+  let files = await filestorage.listDirectory(rootDir+storagePath);
 }
 ----
 
