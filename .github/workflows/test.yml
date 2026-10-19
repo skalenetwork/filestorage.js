@@ -41,7 +41,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: skalenetwork/filestorage
-        token: ${{ secrets.ACCESS_TOKEN }}
         ref: develop
         path: filestorage
     - name: Generate config
